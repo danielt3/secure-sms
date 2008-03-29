@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="Lib"/>
+	<classpathentry kind="src" path="res"/>
+	<classpathentry exported="true" kind="con" path="J2MELIB"/>
+	<classpathentry exported="true" kind="lib" path="/media/disk/lib/lcrypto-j2me-138.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
