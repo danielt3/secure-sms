@@ -1,0 +1,315 @@
+\documentclass[12pt]{article}
+
+\usepackage{sbc-template}
+\usepackage{amsmath,amssymb}
+\usepackage{txfonts}
+\usepackage{graphicx,url,ifthen}
+\usepackage[latin1]{inputenc}
+\usepackage{textcomp}
+%\usepackage[portuges]{babel}
+\usepackage[brazil]{babel}
+
+\newboolean{Anonymous}
+%\setboolean{Anonymous}{false}
+\setboolean{Anonymous}{false}
+
+\newcommand{\emailx}[1]{\footnotesize\texttt{#1}}
+
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\G}{\mathbb{G}}
+\newcommand{\ID}{\mathsf{ID}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\newcommand{\LComment}[1]{\(\triangleright\) #1}
+
+\newtheorem{definition}{Definition}
+
+\sloppy
+
+\title{Construção de um Sistema de SMS Seguro}
+
+\ifthenelse{\boolean{Anonymous}}
+{%
+\author{(Anonimizado para submissão)\inst{1}}
+\address{(Anonimizado para submissão)}
+} %Anonymous (then)
+{%
+\author{
+Eduardo de Souza Cruz\inst{1}, Geovandro C. F. Pereira\inst{1},\\
+Rodrigo Rodrigues da Silva\inst{1}, Paulo S. L. M. Barreto\inst{1}\thanks{Orientador do trabalho. Bolsista de Produtividade em Pesquisa CNPq, processo 312005/2006-7.}.
+}
+\address{
+    Departamento de Engenharia de Computação e Sistemas Digitais,\\
+    Escola Politécnica, Universidade de São Paulo, Brasil.\\
+    \emailx{\{eduardo.cruz,geovandro.pereira,rodrigo.silva1\}@poli.usp.br}, \emailx{pbarreto@larc.usp.br}
+}
+} %Anonymous (else)
+
+\begin{document}
+
+\pagestyle{empty}
+
+\maketitle
+
+\begin{resumo}
+Este artigo visa a apresentar o projeto de formatura que vem sendo desenvolvido por alunos formandos em Engenharia de Computação pela Escola Politécnica da Universidade de São Paulo. O trabalho consiste na implementação de uma solução que garanta segurança e integridade no envio de mensagens SMS, utilizando criptografia convencional sem certificados e criptografia baseada em identidades para validação da chave pública. 
+
+Ao longo do artigo, apresentaremos aspectos da nossa solução, um esquema criptográfico inovador, métricas, resultados de testes de desempenho, além de considerações sobre o andamento do trabalho.
+
+\end{resumo}
+
+\section{Introdução}
+
+A motivação do projeto surgiu da ausência de soluções universalmente adotadas para garantir segurança em mensagens SMS. As mensagens trafegam pela rede celular de forma insegura, passando obrigatoriamente por pelo menos um intermediário não 100\% confiável: a operadora do serviço de telefonia. As mensagens podem ficar armazenadas em texto plano no banco de dados da operadora \cite{loon}, de forma que pessoas mal intencionadas infiltradas no sistema podem ser capazes de visualizar, alterar e até enviar mensagens em nome de outra pessoa. Há também outros métodos para interceptar mensagens SMS. \cite{smsanalysis}.
+
+Como possíveis aplicações de nossa solução, podemos citar a realização de transações bancárias usando mensagens SMS, sistemas de comunicação que requeiram confidencialidade e integridade (órgãos militares e governamentais, executivos de grandes empresas) ou apenas usuários comuns em busca de maiores níveis de privacidade.
+
+Este artigo compreende a descrição do cenário e desafios encontrados no levantamento dos requisitos de um sistema de troca de mensagens SMS seguro e na escolha e aplicação de um esquema de criptografia que garantisse esses requisitos. Desse modo, são discutidos os conceitos dos algoritmos BLMQ (baseado em identidades) e BDCPS (CL-PKC), criado devido ao insucesso do primeiro em atender aos requisitos do projeto. 
+
+Os algoritmos citados anteriormente utilizam os conceitos de cifrassinatura e vericifração de mensagens. A cifrassinatura consiste em um método de criptografia de chave pública que garante infalsificabilidade e confidencialidade simultaneamente com um overhead menor do que o requerido pela assinatura digital seguida de encriptação de chave pública. Isto é alcançado assinando e encriptando uma mensagem em um único passo. A vericifração consiste da operação inversa, ou seja, a verificação da validade do autor da mensagem e sua decriptação de chave pública, simultaneamente. \cite{signcryption}.
+
+\section{Objetivo}\label{sec:obj}
+
+O objetivo principal de nosso projeto é criar uma aplicação capaz de prover confidencialidade, integridade e autenticidade a mensagens SMS (\emph{Short Message Service}) sem extrapolar as limitações de recursos computacionais e de ocupação de banda típicas desse ambiente.
+
+Esse objetivo deve ser alcançado sem comprometer a usabilidade do serviço. Nossos principais desafios foram as limitações presentes no ambiente, tal como o pequeno poder de processamento dos aparelhos celulares e, principalmente, a pequena largura de banda e espaço disponíveis, já que, de acordo com a especificação do padrão GSM, as mensagens SMS não comportam mais do que 160 caracteres \cite{loon}.
+
+\section{Cenário e métricas}\label{sec:cen}
+
+O processo de escolha do algoritmo mais adequado a ser integrado ao projeto foi iniciado apenas após termos definido e avaliado os requisitos do sistema e suas respectivas métricas - em especial para os requisitos de segurança de acesso e usabilidade. 
+
+A seguir, definimos as métricas e suas limitações.
+
+\begin{itemize}
+
+\item Tempo de espera: Consiste nos tempos para cifrassinar e vericifrar uma mensagem. Baseando-se em aplicações já existentes e satisfazendo os requisitos de usabilidade de nosso projeto, estimamos que um intervalo de espera para processamento de uma mensagem de no máximo 5 segundos seja tolerável pelo usuário.
+
+\item Tamanho máximo da mensagem: Consiste da soma dos bytes úteis da mensagem com os bytes de controle do algoritmo. Implementações SMS baseadas em \emph{Sun Wireless Messaging API (WMA)} podem dividir uma única mensagem em, no máximo, 3 segmentos. Recomenda-se que as aplicações SMS utilizem mensagens com menos de 399 bytes binários de modo a não comprometer sua portabilidade \cite{ortiz}. Desse modo, estabelecemos um tamanho máximo de 399 bytes para as mensagens transmitidas, sendo este espaço compartilhado entre os dados de controle do algoritmo criptográfico utilizado e a mensagem criptografada em si.
+
+\item Tamanho das chaves privada/pública e da assinatura: Devido às limitações de espaço de armazenamento das mensagens, estabeleceu-se que a assinatura de uma mensagem, bem como a chave privada do usuário, não deveriam exceder 200 bits. No entanto, essa restrição não deveria comprometer os requisitos de segurança do sistema.
+
+\end{itemize}
+
+Sabendo que um certificado digital típico ocupa entre 2KB e 4KB, nota-se aqui que uma solução baseada em infra-estrutura convencional de chaves públicas inviabilizaria completamente o sistema: antes de se enviar uma mensagem SMS segura para algum usuário, seria necessário receber o certificado desse usuário particionado em 15 a 30 mensagens SMS, além de enviar em resposta outro certificado em mais 15 a 30 mensagens SMS. Esse esforço precisaria ser efetuado novamente para cada novo destinatário a quem determinado usuário desejasse enviar mensagens, ou em cada caso de renovação ou revogação de certificado. Some-se a isto o espaço ocupado por uma única assinatura convencional, tipicamente de 128 bytes por estar baseada no algoritmo RSA com 1024 bits; este \emph{overhead} seria duplicado com o requisito de cifrar e assinar a mensagem, isto é, tomaria 256 bytes do espaço disponível. 
+
+Por outro lado, a manutenção de um diretório confiável de chaves públicas, típico de sistemas de criptografia convencionais, seria impraticável em uma rede de telefonia celular.  Uma solução tecnológica baseada em alternativas à criptografia convencional é, portanto, imprescindível.
+
+Sendo assim, foi considerado o uso de criptografia com assinatura baseada em identidades, de acordo com o conceito proposto inicialmente por Shamir \cite{shamir}. Aprofundando-se na especificação, percebeu-se ainda que a chave pública do usuário poderia ser estabelecida essencialmente a partir de sua identificação única no sistema, ou seja, seu próprio número de celular. Desse modo, a criptografia baseada em identidades com emparelhamentos bilineares parecia atender aos requisitos do nosso aplicativo e foi inicialmente adotada na solução do projeto.
+
+\section{Proposta}\label{sec:prop}
+
+A primeira tentativa de solução adotava o esquema de cifrassinatura baseada em identidades BLMQ \cite{barreto-libert-mccullagh-quisquater}. O esquema foi escolhido por, aparentemente, atender aos requisitos estabelecidos inicialmente. O BLMQ era notadamente mais eficiente que esquemas de criptografia baseada em identidades anteriores, como o de Boneh-Franklin \cite{boneh-franklin}, o que poderia tornar o uso desse tipo de criptografia viável em ambientes produtivos. Além disso, uma assinatura de 160 bits garantiria um nível de segurança de aproximadamente 80 bits equivalente ao do RSA de 1024 bits\cite{rsalabs}.
+
+O esquema foi implementado na linguagem de programação Java, e testes foram realizados em um aparelho celular Nokia 6275.
+
+O desempenho observado inicialmente foi insatisfatório, não atendendo aos requisitos de usabilidade estabelecidos na especificação. Foram feitas tentativas de melhoria do desempenho, como variação do tamanho das chaves, uso de diferentes funções de emparelhamento (Ate, Eta)\cite{freeman-scott-teske}, e implementações com diferentes bibliotecas que fornecessem a classe \emph{BigInteger} - a implementação da Sun se mostrou mais eficiente do que a implementação da Bouncy Castle. Algumas adaptações no esquema em si foram feitas, como inversão da ordem das curvas utilizadas. 
+
+Os melhores resultados obtidos são apresentados na tabela~\ref{tab:BLMQ}.
+
+\begin{table}[htr!]\centering
+\caption{Testes com BLMQ}\label{tab:BLMQ}
+\begin{tabular}{cccccc}\hline
+Operação                   &  Tempo (s)\\\hline
+Inicialização das classes  &  12.9\\\hline
+Emparelhamento Eta         &  4.2\\\hline
+Emparelhamento Ate          &  3.9\\\hline
+\end{tabular}
+\end{table}
+
+Como estes tempos não atendiam aos requisitos de usabilidade do projeto, fez-se necessário buscar alternativas. Estas dificuldades serviram como motivação para a criação de um esquema inovador. Como resultado de pesquisas realizadas, foi idealizado um novo esquema, apresentado em \cite{bdcps} e brevemente descrito a seguir.
+
+\subsection{Esquema de Cifrassinatura proposto - BDCPS}
+
+Na criação do novo esquema, em vez de utilizarmos exclusivamente criptografia e assinaturas baseadas em identidades, estendemos um esquema de criptografia sem certificados com um esquema de assinatura convencional, mas utilizando técnicas baseadas em identidades para validar a chave pública, evitando o uso de certificados \cite{bdcps}. A nova técnica mescla esses dois paradigmas, garantindo baixo tempo de cifrassinatura e de vericifração, tamanhos de chaves dentro dos limites adotados e níveis de segurança satisfatórios.
+
+O esquema proposto integra esquemas preexistentes como as assinaturas BLMQ e Schnorr \cite{schnorr} e o esquema isento de certificados de Zheng\cite{zheng}. Neste esquema, a geração das chaves dos usuários dispensa a necessidade de uma autoridade certificadora e a utilização de certificados para validar sua chave pública. Estas características implicaram em importantes, mas não únicas, melhorias em relação ao esquema anteriormente implementado e serão discutidas na seção "Análise da Proposta". 
+Por criptografia convencional entende-se o fato de o usuário poder escolher seu par de chaves não certificado, ou seja, ele escolhe apropriadamente uma chave privada e gera sua chave pública a partir dela. Desse modo, somente o usuário gerador de seu par de chaves convencional conhece sua chave privada, e este fato elimina a possibilidade de "Key Escrow", que é o comprometimento da chave e conseqüentemente das mensagens com ela encriptadas. 
+O par de chaves não certificado é combinado com a solução de criptografia baseada em identidades para que seja posteriormente validado por outro usuário do sistema.
+
+O novo esquema consiste dos seguintes algoritmos: 
+
+
+\begin{itemize}
+
+\item \textbf{Setup:} Algoritmo gerador do conjunto dos parâmetros públicos necessários. 
+O algoritmo escolhe um parâmetro de segurança $k$ e define:
+
+$n:$  Um inteiro primo de k bits. 
+
+$(\G_1,\G_2,\G_T)$ Grupos de mapeamento bilinear de ordem $n$  
+
+$e: \G_1 \times \G_2 \rightarrow \G_T$: Emparelhamento eficientemente computável e não-degradado.
+
+$P \in \G_1$, $Q \in \G_2$: Os pontos geradores dos grupos $\G_1$ e $\G_2$ respectivamente.
+
+Resumos criptográficos \emph{(hashes)} 
+
+$h_0: \G_T^2 \times \{0, 1\}^\ast \rightarrow \Z_n^\ast$,
+
+$h_1: \G_T \times \{0, 1\}^\ast \rightarrow \Z_n^\ast$, % id hash
+
+$h_2: \G_T \rightarrow \{0, 1\}^\ast$, % msg encryption hash
+
+$h_3: (\G_T \times \{0, 1\}^\ast)^3 \rightarrow \Z_n^\ast$. % msg auth hash
+
+Uma chave mestra $s \stackrel{R}{\gets} \Z_n^\ast$ também é escolhida, à qual a chave pública 
+$P_{pub} = sP \in \G_1$ é associada. 
+
+O gerador $g = e(P, Q) \in \G_T$ também é incluso entre os parâmetros públicos do sistema, $\texttt{params} = (k, n, \G_1, \G_2, \G_T, e, P, Q, g, P_{pub}, h_0, h_1, h_2, h_3)$.
+
+
+\item \textbf{Set-Secret-Value:} dados $\texttt{params}$, o algoritmo toma $x_A \stackrel{R}{\gets} \Z_n^\ast$ como o valor secreto da identidade $A$. O usuário $A$ pode definir $x_A$, sua chave parcial privada, independente do algoritmo e, neste caso, será usada como uma senha comum.
+
+\item \textbf{Set-Public-Value:} dado o valor secreto $x_A \in \Z_n^\ast$ da identidade $A$, computa $y_A \gets g^{x_A} \in \G_T$ como o valor público de $A$.
+
+\item \textbf{Private-Key-Extract:} Obtém $\ID_A \in \{0, 1\}^\ast$, o identificador de $A$  e  o valor público $y_A \in \G_T$, e calcula a chave privada baseada em identidade de $A$, $Q_A \gets (h_1(y_A, \ID_A) + s)^{-1}Q \in \G_2$. A entidade $A$ consegue verificar a consistência desta chave checando se $e(h_1(y_A, \ID_A)P + P_{pub}, Q_A) = g$. Esta configuração é denominada estilo de chave Sakai-Kasahara ~\cite{sakai-kasahara}.
+
+\item \textbf{Set-Private-Key:} dada a chave privada parcial da entidade $A$, $Q_A \in \G_2$ e o valor secreto $x_A \in \Z_n^\ast$, este algoritmo estabelece o par $(x_A, Q_A) \in \Z_n^\ast \times \G_2$ como o par completo da chave privada de $A$.
+
+\item \textbf{Set-Public-Key:} dada a chave privada parcial de $A$, $Q_A \in \G_2$, o valor secreto $x_A \in \Z_n^\ast$, e o correspondente valor público $y_A \in \G_T$, o assinante toma $u_A \stackrel{R}{\gets} \Z_n^\ast$ e calcula
+\begin{enumerate}
+\item $r_A \gets g^{u_A}$
+\item $h_A \gets h_0(r_A, y_A, \ID_A)$
+\item $T_A \gets (u_A - x_A h_A) Q_A$
+\end{enumerate}
+A chave pública completa da entidade $A$ é a tripla $(y_A, h_A, T_A) \in \G_T \times \Z_n^\ast \times \G_2$. Este configuração é uma combinação da assinatura de Schnorr (sob a chave $x_A$) com a assinatura BLMQ (sob a chave $Q_A$) no valor público $y_A$ e a identidade $\ID_A$. 
+% Na dúvida, comentei isso. Seria melhor se tivéssemos referências (de FAPIP, DLP)
+% O difícil problema da falsificação de tal assinatura é o FAPIP em vez do DLP como em Schnorr; em outras palavras, ele consiste em calcular $Q_A' := x_A Q_A$ dados $y_A := g^{x_A}$ e $P_A' := h_1(y_A, \ID_A)P + P_{pub}$. Perceba-se que é fácil calcular $y_A$ dados $Q_A'$ e $P_A'$, uma vez que equivale a calcular $e(P_A', Q_A')$ (e verificando que $P_A' = h_1(e(P_A', Q_A'), \ID_A)P + P_{pub}$).
+
+\item \textbf{Public-Key-Validate:} dada a chave pública completa da entidade $A$, $(y_A, h_A, T_A)$, este algoritmo verifica que $y_A$ tem ordem $n$ (i.e. que $y_A \neq 1$ mas $y_A^n = 1$) e calcula
+\begin{enumerate}
+\item $r_A \gets e(h_1(y_A, \ID_A)P + P_{pub}, T_A) y_A^{h_A}$
+\item $v_A \gets h_0(r_A, y_A, \ID_A)$
+\end{enumerate}
+O verificador aceita a mensagem se, e somente se $v_A = h_A$. O processo de validação combina a verificação da assinatura Schnorr com a verificação da assinatura BLMQ.
+
+\item \textbf{Signcrypt:} Para encriptar $m \in \{0, 1\}^\ast$ sob a chave pública do receptor $y_B \in \G_T$ previamente validade para a identidade $\ID_B$ e $P_{pub}$, e a chave privada do emissor $x_A \in \Z_n^\ast$, chave pública $y_A \in \G_T$ e a identidade $\ID_A$, o emissor toma $u \stackrel{R}{\gets} \Z_n^\ast$ e calcula
+\begin{enumerate}
+\item $r \gets y_B^u$
+\item $c \gets h_2(r) \oplus m$
+\item $h \gets h_3(r, m, y_A, \ID_A, y_B, \ID_B)$ \label{eq:auth}
+\item $z \gets u - x_A h$ \label{eq:sign}
+\end{enumerate}
+O criptograma de assinatura é a tripla $(c, h, z) \in \{0, 1\}^\ast \times \Z_n^2$. Comparado ao método de cifrassinatura de Zheng, as identidades de ambos o emissor e o destinatário são inclusas na equação de autenticação~\ref{eq:auth}, e a equação de assinatura~\ref{eq:sign} segue o estilo Schnorr em vez do dedicado, porém levemente mais complicado(devido à presença da inversão de campos), estilo Zheng, similar ao DSA \cite{nist-fips-186-2}.
+
+\item \textbf{Unsigncrypt:} dada a chave pública do emissor $y_A \in \G_T$ previamente validade para a identidade $\ID_A$ e $P_{pub}$, e a chave privada do receptor $x_B \in \Z_n^\ast$, a chave pública $y_B \in \G_T$ e a identidade $\ID_B$, sob a recepção da tripla $(c, h, z)$ o receptor verifica se $h, z \in \Z_n^\ast$ e calcula
+\begin{enumerate}
+\item $r \gets y_A^{h x_B} y_B^z$ \label{eq:nonce-rec}
+\item $m \gets h_2(r) \oplus c$
+\item $v \gets h_3(r, m, y_A, \ID_A, y_B, \ID_B)$
+\end{enumerate}
+O receptor aceita a mensagem se, e somente se, $v = h$. A equação \ref{eq:nonce-rec} é levemente mais simples que seu correlato em Zheng devido ao estilo Schnorr adotado para a cifrassinatura.
+
+\end{itemize}
+
+%Como uma observação, notamos que o mecanismo de validação da chave pública(algoritmos \textbf{Set-Public-Key} e \textbf{Public-Key-Validate}), pela sua combinação de assinaturas convencionais Schnorr e assinaturas baseadas em identidade BLMQ, constitui-se de um esquema de assinatura sem certificado e portanto tem interesse independente.
+
+\section{Análise da Proposta}\label{sec:analise}
+
+\subsection{Implementação}
+
+A linguagem de programação Java e a plataforma JME, adotadas na implementação da aplicação, permitem sua implantação na maioria dos dispositivos móveis atuais e futuros, em virtude de a máquina virtual Java já ser instalada por padrão pelos principais fabricantes.
+O acesso à infra-estrutura de mensagens se dá-se através da \emph{Sun Wireless Messaging API (WMA)}, uma biblioteca que permite a transmissão e recepção de mensagens binárias. Além disso, é possível trocar mensagens SMS de forma segura também com a \emph{WEB} via conexões HTTP.
+
+%[TODO melhorar a clareza dessa parte - ou mesmo cortar, falei q isso ta em andamento]
+%O formato da mensagem: a mensagem deverá conter, respeitando o tamanho máximo permitido, na seguinte ordem, os parâmetros para envio, em %formato binário: 
+%Um cabeçalho de 6 bytes contendo, nos primeiros 4 bytes, o texto "SSMS" (em codificação ASCII de 8 bits) que será a \emph{tag} que %identificará nossa aplicação; 
+%no quinto byte o número de versão do aplicativo SMS que a gerou;
+%no sexto byte o número de sub versão;
+%os parâmetros (c,h,Z) da mensagem cifrassinada, consecutivamente.
+
+
+\subsection{Utilização}
+
+O funcionamento da solução SMS, do ponto de vista do usuário, pode ser descrito pelas seguintes etapas: 
+
+\begin{itemize}
+\item Implantação: O usuário recebe a aplicação de SMS seguro por meio confiável, instalando-a em seu aparelho. 
+
+\item Cadastro: Um novo usuário que deve cadastrar sua senha, denominada $x_A$ que é usada toda vez que um SMS seguro for enviado ou recebido. A aplicação realiza, então, as operações necessárias para a geração de suas chaves pública e privada. Nesta etapa um SMS é para que o valor $y_A$ seja enviado ao provedor de serviço e este calcule e retorne o valor de $Q_A$ (encriptado sob $y_A$), parte de sua  chave privada, para o usuário. Observe que no cálculo de $Q_A$ utilizam-se ambos  $y_A$ e $\ID_A$ (o número do celular). Esse fato possibilita a reutilização do mesmo número de celular por outro usuário caso o primeiro desligue-se de seu número e este seja reutilizado pela operadora de telefonia celular.
+
+\item Validação de chave pública: Para enviar mensagens seguras a um destinatário o usuário envia, inicialmente, uma mensagem de validação de chave pública. Esta operação de validação demanda tempo computacional em torno de quinze vezes maior que o tempo gasto pelas operações de cifrassinatura e vericifração. Contudo, o impacto ao usuário pode ser considerado pequeno já que esta operação é realizada uma única vez para cada destinatário que determinado usuário deseje contatar.
+
+\item Troca de mensagens: Após validada a chave pública por ambos os usuários em comunicação, a aplicação é transparente ao esquema de criptografia,  permitindo que um usuário escreva sua mensagem normalmente, sendo requisitado apenas a inserir sua senha $x_A$ para concluir a operação.
+ 
+\end{itemize}
+
+Além disso, existem dois modos de envio seguro: simples assinatura da mensagem (o esquema permite o uso de um algoritmo de encriptação nulo), ou cifrassinatura.
+
+\section{Resultados}\label{sec:res}
+
+O novo esquema também foi implementado na plataforma JME (\emph{Java Platform Micro Edition}), e testes para validar a viabilidade foram feitos em diversos modelos de aparelhos celulares, além dos emuladores dos ambientes de desenvolvimento \emph{Eclipse} e \emph{NetBeans}.
+
+Os resultados foram satisfatórios, já que os tempos de cifrassinatura e vericifração estão de acordo com as métricas estabelecidas e bem mais eficientes em relação ao esquema inicialmente adotado. 
+
+O tempo necessário para validar uma chave pública é um pouco maior do que para as demais operações. Porém, conforme observado anteriormente, esta é uma operação que será executada apenas uma vez para cada nova identidade que se deseje validar. A chave validada fica armazenada na memória do aplicativo, não sendo necessário validá-la novamente em uma comunicação futura com o mesmo par.
+
+Os resultados dos testes são apresentados nas tabelas \ref{tab:bdcps127} e \ref{tab:bdcps160}. Foram feitos testes com chaves de 127 e 160 bits, para dois modelos distintos de celulares, Nokia 6275 e Sony Ericsson W200i.
+
+\begin{table}[htr!]\centering
+\caption{Testes com o novo esquema (chaves de 127 bits) e comparação com o RSA}\label{tab:bdcps127}
+\begin{tabular}{cccccc}\hline
+Operação                   & Tempo Nokia 6275 (s)   &  Tempo Sony Ericsson W200i (s) \\\hline
+Emparelhamento Eta         & 7,30                   &  2,37                          \\\hline
+Emparelhamento Ate         & 7,43                   &  2,38                          \\\hline
+Private-Key-Extract        & 2,63                   &  0,93                          \\\hline
+Check-Private-Key          & 9,31                   &  2,92                          \\\hline
+Set-Public-Value           & 0,66                   &  0,22                          \\\hline
+Set-Public-Key             & 3,40                   &  1,15                          \\\hline
+Public-Key-Validate        & 10,50                  &  3,35                          \\\hline
+Signcrypt                  & 0,57                   &  0,21                          \\\hline
+Unsigncrypt                & 0,80                   &  0,29                          \\\hline
+Private RSA-508            & 1,05                   &  0,39                          \\\hline
+Public RSA-508             & 0,03                   &  0,02                          \\\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htr!]\centering
+\caption{Testes com o novo esquema (chaves de 160 bits) e comparação com o RSA}\label{tab:bdcps160}
+\begin{tabular}{cccccc}\hline
+Operação                   & Tempo Nokia 6275 (s)   &  Tempo Sony Ericsson W200i (s) \\\hline
+Emparelhamento Eta         & 10,53                  &  3,59                          \\\hline
+Emparelhamento Ate         & 10,54                  &  3,64                          \\\hline
+Private-Key-Extract        & 3,72                   &  1,32                          \\\hline
+Check-Private-Key          & 12,70                  &  4,46                          \\\hline
+Set-Public-Value           & 0,96                   &  0,33                          \\\hline
+Set-Public-Key             & 4,96                   &  1,63                          \\\hline
+Public-Key-Validate        & 14,94                  &  5,12                          \\\hline
+Signcrypt                  & 0,77                   &  0,31                          \\\hline
+Unsigncrypt                & 1,22                   &  0,45                          \\\hline
+Private RSA-640            & 1,85                   &  0,74                          \\\hline
+Public RSA-640             & 0,16                   &  0,03                          \\\hline
+\end{tabular}
+\end{table}
+
+Pode-se verificar a partir das tabelas \ref{tab:bdcps127} e \ref{tab:bdcps160} que os tempos de assinatura e verificação no algoritmo proposto são menores do que os tempos do RSA, para o mesmo nível de segurança. 
+
+Dado que o tempo de uso do RSA de 1024 bits está no fim, uma nova versão será necessária \cite{rsalabs}. Contudo, para um aumento no nível de segurança do RSA, é preciso aumentar o tamanho das chaves, o que será um impacto razoável nos tempos de assinatura e verificação, uma vez que o aumento é relativamente grande. Em paralelo, um aumento equivalente no nível de segurança do BDCPS, acarreta menor aumento no tamanho das chaves e os impactos nos tempos das operações são menores. Este fato ocorre devido à relação entre o nível de segurança do BDCPS e o tamanho das chaves, que é uma relação diretamente proporcional.
+
+A tabela \ref{tab:rsacomp} ilustra, para um mesmo nível de segurança, os tamanhos correspondentes de chaves para o RSA e para os algoritmos baseados em curvas elípticas.
+
+\begin{table}[htr!]\centering
+\caption{Comparação dos tamanhos das chaves em bits}\label{tab:rsacomp}
+\begin{tabular}{cccccc}\hline
+Nível de segurança  & RSA   &  Curvas elípticas \\\hline
+1  & 512   &  128 \\\hline
+2  & 704   &  131 \\\hline
+3  & 1024   &  163 \\\hline
+4  & 1536   &  193 \\\hline
+\end{tabular}
+\end{table}
+
+O código já implementado contempla apenas as operações efetuadas pelo protocolo. No momento, estamos em fase de aperfeiçoamento da especificação de requisitos do software, de modo a descrever melhor as interfaces com o sistema de controle de mensagens do aparelho celular e com usuário final. No entanto, testes com um maior número de modelos de aparelhos celulares ainda são necessários, uma vez que o desempenho pode variar muito entre fabricantes. 
+
+\section{Conclusão}\label{sec:conc}
+
+Apresentamos uma aplicação prática de um novo esquema de criptografia viável em ambientes com recursos computacionais tipicamente limitados. Se, por um lado, nossa abordagem inicial não nos conduziu a resultados satisfatórios, a necessidade de um protocolo que atendesse aos requisitos inicialmente propostos estimulou o desenvolvimento do esquema BDCPS, inovando no campo de criptografia em aplicações móveis.
+
+Os resultados dos testes com o novo esquema mostram que este é uma alternativa viável ao uso de certificados, e que o projeto pode ser facilmente implantado para uso prático em um curto espaço de tempo.
+
+Os próximos passos no desenvolvimento do projeto envolvem, ainda, uma especificação mais clara do formato da mensagem SMS cifrassinada, permitindo a acomodação dos parâmetros do esquema BDCPS sem comprometer o espaço útil disponível para a mensagem em si e de modo que esta possa ser reconhecida e processada por versões futuras do software e por outras implementações, permitindo que esta solução possa ser universalmente adotada.
+            
+\bibliographystyle{sbc}
+\bibliography{CLSC}
+
+\end{document}

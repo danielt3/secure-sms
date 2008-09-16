@@ -1,0 +1,85 @@
+\begin{thebibliography}{}
+
+\bibitem[Barreto et~al. 2008]{bdcps}
+Barreto, P.~S.~L.~M., Deusajute, A., Cruz, E., Pereira, G., and Silva, R.
+  (2008).
+\newblock Toward efficient certificateless signcryption from (and without)
+  bilinear pairings.
+\newblock Preprint.
+
+\bibitem[Barreto et~al. 2005]{barreto-libert-mccullagh-quisquater}
+Barreto, P.~S.~L.~M., Libert, B., McCullagh, N., and Quisquater, J.-J. (2005).
+\newblock Efficient and provably-secure identity-based signatures and
+  signcryption from bilinear maps.
+\newblock In {\em Advanced in Cryptology -- Asiacrypt'2005}, volume 3788 of
+  {\em Lecture Notes in Computer Science}, pages 515--532. Springer.
+
+\bibitem[Boneh and Franklin 2001]{boneh-franklin}
+Boneh, D. and Franklin, M. (2001).
+\newblock Identity-based encryption from the {Weil} pairing.
+\newblock In {\em Advanced in Cryptology -- Crypto'2001}, volume 2139 of {\em
+  Lecture Notes in Computer Science}, pages 213--229. Springer.
+
+\bibitem[Enck et~al. 2005]{smsanalysis}
+Enck, W., Traynor, P., McDaniel, P., and Porta, T.~L. (2005).
+\newblock Exploiting open functionality in sms-capable cellular networks.
+\newblock In {\em Proceedings of the 12th ACM conference on Computer and
+  communications security}, pages 393--404, New York, NY, {USA}. {ACM} Press.
+
+\bibitem[Freeman et~al. 2006]{freeman-scott-teske}
+Freeman, D., Scott, M., and Teske, E. (2006).
+\newblock A taxonomy of pairing-friendly elliptic curves.
+\newblock {IACR} ePrint Archive, report 2006/372.
+\newblock \url{http://eprint.iacr.org/2006/372}.
+
+\bibitem[Kaliski 2003]{rsalabs}
+Kaliski, B. (2003).
+\newblock Twirl and rsa key size.
+\newblock \url{http://www.rsa.com/rsalabs/node.asp?id=2004}.
+
+\bibitem[Ng 2006]{loon}
+Ng, Y.~L. (2006).
+\newblock Short message service (sms) security solution for mobile devices.
+
+\bibitem[{NIST} 2000]{nist-fips-186-2}
+{NIST} (2000).
+\newblock {\em Federal Information Processing Standard ({FIPS 186-2}) --
+  Digital Signature Standard ({DSS})}.
+\newblock National Institute of Standards and Technology -- {NIST}.
+
+\bibitem[Ortiz 2002]{ortiz}
+Ortiz, C. (2002).
+\newblock The wireless messaging api.
+\newblock Sun Developer Network ({SDN}) article.
+\newblock
+  \url{http://developers.sun.com/mobility/midp/articles/wma/index.html}.
+
+\bibitem[Sakai and Kasahara 2003]{sakai-kasahara}
+Sakai, R. and Kasahara, M. (2003).
+\newblock {ID} based cryptosystems with pairing on elliptic curve.
+\newblock In {\em {SCIS}'2003}, Hamamatsu, Japan.
+
+\bibitem[Schnorr 1991]{schnorr}
+Schnorr, C.~P. (1991).
+\newblock Efficient signature generation by smart cards.
+\newblock {\em Journal of Cryptology}, 4(3):161--174.
+
+\bibitem[Shamir 1984]{shamir}
+Shamir, A. (1984).
+\newblock Identity based cryptosystems and signature schemes.
+\newblock In {\em Advances in Cryptology -- Crypto'84}, volume 0196 of {\em
+  Lecture Notes in Computer Science}, pages 47--53. Springer.
+
+\bibitem[Zheng 1997]{zheng}
+Zheng, Y. (1997).
+\newblock Digital signcryption or how to achieve cost(signature \& encryption)
+  << cost(signature) + cost(encryption).
+\newblock In {\em Advanced in Cryptology -- Crypto'97}, volume 1294 of {\em
+  Lecture Notes in Computer Science}, pages 165--179. Springer.
+
+\bibitem[Zheng 2005]{signcryption}
+Zheng, Y. (2005).
+\newblock Signcryption central.
+\newblock \url{http://www.signcryption.net}.
+
+\end{thebibliography}
