@@ -1,8 +1,0 @@
-MIDlet-Version: 1.0
-MIDlet-Vendor: Sun Microsystems
-MIDlet-Push-1: sms://:50000, ssms.SMSPushDemo, *
-MIDlet-Jar-URL: SSMS.jar
-MicroEdition-Configuration: CLDC-1.1
-MIDlet-1: SMSPushDemo, , ssms.SMSPushDemo
-MicroEdition-Profile: MIDP-2.0
-MIDlet-Name: SMSPushDemo
