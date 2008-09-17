@@ -1,5 +1,7 @@
+package br.usp.larc.smspairing;
+
 /**
- * SMSCurve2.java
+ * SMSCurve.java
  *
  * Copyright (C) Paulo S. L. M. Barreto.
  *
@@ -18,82 +20,68 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-import java.io.InputStream;
-import java.math.BigInteger;
-import java.security.SecureRandom;
-import java.util.Random;
+import pseudojava.BigInteger;
+import pseudojava.SecureRandom;
 
-public class SMSCurve2 {
+public class SMSCurve {
 
     /**
      * Convenient BigInteger constants
      */
     static final BigInteger
-        _0 = BigInteger.valueOf(0L),
         _1 = BigInteger.valueOf(1L),
+        _2 = BigInteger.valueOf(2L),
         _3 = BigInteger.valueOf(3L);
 
     /**
-     * Underlying curve E/GF(p) of which this curve is a sextic twist
+     * BN parameters (singleton)
      */
-    SMSCurve E;
-
-	SMSParams sms;
+    SMSParams sms;
 
     /**
-     * The base point of the cryptographic subgroup
+     * The base point of large prime order n
      */
-    SMSPoint2 Gt;
+    SMSPoint G;
 
     /**
      * The point at infinity
      */
-    SMSPoint2 Ot;
+    SMSPoint O;
 
     /**
-     * Multiples of the base point Gt by simple multiples of powers of 16.
+     * Multiples of the base point G by simple multiples of powers of 16.
      */
-    //protected SMSPoint2[][] pp16Gt;
+    //protected SMSPoint[][] pp16G;
 
     /**
-     * Build the quadratic twist MNT4'(F_{p^2}): y'^2 = x'^3 - 3*v^2*x' - b*v^3 of the curve MNT4(F_p): y^2 = x^3 - 3*x + b.
+     * Build the standard MNT4 curve E: y^2 = x^3 - 3x + b.
      *
-     * @param   E   given MNT4 curve
+     * @param   sms  MNT4 parameters of the curve
      *
-     * @return  the desired curve, or null if E does not have a suitable twist of the above form.
+     * @return  the desired curve, or null if the given index does not define suitable parameters
      */
-    public SMSCurve2(SMSCurve E) {
-        this.E = E;
-        this.sms = E.sms;
-        Ot = new SMSPoint2(this);
-        //BigInteger nt = sms.p.subtract(_1).pow(2).add(sms.t.pow(2));
-        //BigInteger nt = sms.t.multiply(sms.t).multiply(sms.n);
-        Gt = new SMSPoint2(this, sms.xt, sms.yt);
-		/*
-		System.out.println("Gt    = " + Gt);
-		System.out.println("n*Gt  = " + Gt.multiply0(sms.n));
-		System.out.println("t2*Gt = " + Gt.multiply0(sms.t).multiply0(sms.t).normalize());
-		System.out.println("nt*Gt = " + Gt.multiply0(nt));
-		//*/
+    public SMSCurve(SMSParams sms) {
+        this.sms = sms;
+        O = new SMSPoint(this); // caveat: must be set *after* p but *before* G!
+        G = new SMSPoint(this, _1, sms.y);
         /*
-        System.out.println(
-"            yt = new SMSField2(this,\n" +
-"                new BigInteger(\"" + Gt.y.re + "\"),\n" +
-"                new BigInteger(\"" + Gt.y.im + "\"),\n" +
-"                false);");
-		//*/
+        System.out.println("G = " + G);
+        System.out.println("n*G = " + G.multiply(sms.n));
+        //*/
+        //assert (G.multiply(sms.n).isZero());
         /*
-        pp16Gt = new SMSPoint2[(sms.n.bitLength() + 3)/4][16];
-        SMSPoint2[] pp16Gi = pp16Gt[0];
-        pp16Gi[0] = Ot;
-        pp16Gi[1] = Gt;
+        pp16G = new SMSPoint[(sms.n.bitLength() + 3)/4][16];
+        System.out.println("table length = " + pp16G.length);
+        SMSPoint[] pp16Gi = pp16G[0];
+        pp16Gi[0] = O;
+        pp16Gi[1] = G;
         for (int i = 1, j = 2; i <= 7; i++, j += 2) {
             pp16Gi[j  ] = pp16Gi[i].twice(1);
-            pp16Gi[j+1] = pp16Gi[j].add(Gt);
+            pp16Gi[j+1] = pp16Gi[j].add(G);
         }
-        for (int i = 1; i < pp16Gt.length; i++) {
-            SMSPoint2[] pp16Gh = pp16Gi;
-            pp16Gi = pp16Gt[i];
+        for (int i = 1; i < pp16G.length; i++) {
+            SMSPoint[] pp16Gh = pp16Gi;
+            pp16Gi = pp16G[i];
             pp16Gi[0] = pp16Gh[0];
             for (int j = 1; j < 16; j++) {
                 pp16Gi[j] = pp16Gh[j].twice(4);
@@ -109,12 +97,12 @@ public class SMSCurve2 {
      *
      * @return  a random nonzero point on this curve
      */
-    public SMSPoint2 pointFactory(SecureRandom rand) {
+    public SMSPoint pointFactory(SecureRandom rand) {
         BigInteger k;
         do {
             k = new BigInteger(sms.n.bitLength(), rand).mod(sms.n);
         } while (k.signum() == 0);
-        return Gt.multiply(k);
+        return G.multiply(k);
     }
 
     /**
@@ -125,18 +113,19 @@ public class SMSCurve2 {
      *
      * @return  true if this curve contains P, otherwise false
      */
-    public boolean contains(SMSPoint2 P) {
+    public boolean contains(SMSPoint P) {
         if (P.E != this) {
             return false;
         }
-        // check the projective equation y^2 = x^3 - 3*(1+i)^2*x*z^4 + b*(1+i)^3*z^6,
-        // i.e. x^3 + (z^2*v*b - 3*x)*(z^2*v)^2 - y^2 = 0
-        SMSField2
+        // check the projective equation y^2 = x^3 - 3*x*z^4 + b*z^6,
+        // i.e. x*x^2 + [b*z^2 - 3*x]*(z^2)^2 - y^2 = 0
+        BigInteger
             x  = P.x,
             y  = P.y,
             z  = P.z,
-            w  = z.square().multiplyV();
-        return y.square().equals(x.cube().add(w.multiply(sms.b).subtract(x.multiply(_3)).multiply(w.square())));
+            z2 = z.multiply(z).mod(sms.p),
+            br = sms.b.multiply(z2).subtract(_3.multiply(x)).mod(sms.p);
+        return x.multiply(x).multiply(x).add(br.multiply(z2).multiply(z2)).subtract(y.multiply(y)).mod(sms.p).signum() == 0;
     }
 
     /**
@@ -153,21 +142,21 @@ public class SMSCurve2 {
      *      section 14.6 (Exponentiation)
      */
     /*
-    public SMSPoint2 kG(BigInteger k) {
+    public SMSPoint kG(BigInteger k) {
         k = k.mod(sms.n);
-        SMSPoint2 A = Ot;
-        for (int i = 0, w = 0; i < pp16Gt.length; i++, w >>>= 4) {
+        SMSPoint A = O;
+        for (int i = 0, w = 0; i < pp16G.length; i++, w >>>= 4) {
             if ((i & 7) == 0) {
                 w = k.intValue();
                 k = k.shiftRight(32);
             }
-            A = A.add(pp16Gt[i][w & 0xf]);
+            A = A.add(pp16G[i][w & 0xf]);
         }
         return A;
     }
     //*/
 
     public String toString() {
-        return "MNT4': y'^2 = x'^3 - 3*(1+i)^2*x + " + sms.b + "*(1+i)^3";
+        return "MNT4(F_" + sms.p.toString() + "): y^2 = x^3 - 3x + " + sms.b.toString();
     }
 }

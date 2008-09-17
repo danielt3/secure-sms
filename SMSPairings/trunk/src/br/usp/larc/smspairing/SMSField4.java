@@ -1,3 +1,5 @@
+package br.usp.larc.smspairing;
+
 /**
  * SMSField4.java
  *
@@ -20,7 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-import java.math.BigInteger;
+import pseudojava.BigInteger;
 
 public class SMSField4 {
 
@@ -245,7 +247,7 @@ public class SMSField4 {
             f = this; // this can only happen when this instance is not invertible, i.e. zero
         }
         //*
-        assert (f.inverse().equals(f.frobenius(2)));
+        //assert (f.inverse().equals(f.frobenius(2)));
         //*/
         // (p^2+1)/n = p + t
         SMSField4 h = f;

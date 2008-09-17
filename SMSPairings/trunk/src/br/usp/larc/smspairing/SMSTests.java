@@ -1,3 +1,5 @@
+package br.usp.larc.smspairing;
+
 /**
  * SMSTests.java
  *
@@ -18,9 +20,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
-import java.util.Random;
+import pseudojava.BigInteger;
+import pseudojava.SecureRandom;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
@@ -365,7 +366,7 @@ public class SMSTests {
 
     public static void benchmarks(int BM, int fieldBits) {
         byte[] randSeed = new byte[20];
-        (new Random()).nextBytes(randSeed);
+        (new SecureRandom()).nextBytes(randSeed);
         /*
         for (int i = 0; i < randSeed.length; i++) {
             randSeed[i] = (byte)i;
@@ -734,7 +735,7 @@ public class SMSTests {
 
 	public static void BDCPS(int i, int BM) {
         byte[] randSeed = new byte[20];
-        (new Random()).nextBytes(randSeed);
+        (new SecureRandom()).nextBytes(randSeed);
         SecureRandom rnd = new SecureRandom(randSeed);
         long elapsed;
         System.out.println("\n======== bits: " + i);
@@ -888,7 +889,7 @@ public class SMSTests {
 
 	public static void BDCPSTest(int bits) {
         byte[] randSeed = new byte[20];
-        (new Random()).nextBytes(randSeed);
+        (new SecureRandom()).nextBytes(randSeed);
         SecureRandom rnd = new SecureRandom(randSeed);
         long elapsed;
         System.out.println("\n======== bits: " + bits);
@@ -905,7 +906,7 @@ public class SMSTests {
         System.out.println("BDCPS Setup:");
         BigInteger s = new BigInteger(bits, rnd).mod(sms.n); // master key
         SMSPoint Ppub = P.multiply(s);
-        System.out.println("s = " + s);
+        System.out.println("s = " + s.toString());
         System.out.println("P_pub = " + Ppub);
 
         BigInteger h1ID_A = new BigInteger(bits, rnd).mod(sms.n); // simulated h_1(ID_A)
@@ -915,8 +916,8 @@ public class SMSTests {
         System.out.println("BDCPS Set-Secret-Value:");
         BigInteger x_A = new BigInteger(bits, rnd).mod(sms.n);
         BigInteger x_B = new BigInteger(bits, rnd).mod(sms.n);
-        System.out.println("x_A = " + x_A);
-        System.out.println("x_B = " + x_B);
+        System.out.println("x_A = " + x_A.toString());
+        System.out.println("x_B = " + x_B.toString());
 
 		////////////////////////////////////////////////////////////////////
         System.out.println("BDCPS Set-Public-Value:");
@@ -1054,8 +1055,8 @@ public class SMSTests {
         }
         System.out.println("r  = " + r);
         System.out.println("r' = " + rr);
-        System.out.println("h  = " + h);
-        System.out.println("v  = " + v);
+        System.out.println("h  = " + h.toString());
+        System.out.println("v  = " + v.toString());
 
 	}
 

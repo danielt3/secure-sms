@@ -1,3 +1,5 @@
+package br.usp.larc.smspairing;
+
 /**
  * SMSParams.java
  *
@@ -20,7 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-import java.math.BigInteger;
+import pseudojava.BigInteger;
 
 public class SMSParams {
 
@@ -447,16 +449,16 @@ public class SMSParams {
             throw new IllegalArgumentException(invalidParams + ":" + fieldBits);
         }
         p = t.pow(2).subtract(t).add(_1);
-        assert(p.mod(_4).intValue() == 3);
-        assert(p.isProbablePrime(PRIMALITY_CERTAINTY));
+        //assert(p.mod(_4).intValue() == 3);
+        //assert(p.isProbablePrime(PRIMALITY_CERTAINTY));
         n = p.add(_1).subtract(t);
-        assert(n.isProbablePrime(PRIMALITY_CERTAINTY));
+        //assert(n.isProbablePrime(PRIMALITY_CERTAINTY));
         h = p.add(_1).add(t);
         sqrtExponent = p.add(_1).shiftRight(2); // (p + 1)/4
         sqrtExponent2 = p.multiply(p).add(_7).shiftRight(4); // (p^2 + 7)/16
         if (t.signum() >= 0 && sigma.testBit(0)) {
             sigma = p.subtract(sigma);
-            System.out.println("sigma@" + fieldBits + " = " + sigma);
+            System.out.println("sigma@" + fieldBits + " = " + sigma.toString());
         }
         sqrtI = new SMSField2(this, sigma, p.subtract(sigma), false); // sqrt(i) = (1-i)*sigma
     }

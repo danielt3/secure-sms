@@ -1,11 +1,13 @@
+package br.usp.larc.smspairing;
+
 /**
- * SMSPoint.java
+ * SMSPoint2.java
  *
- * Arithmetic in the group of points on an MNT4 elliptic curve over GF(p).
+ * Arithmetic in the group of points on the quadratic twist an MNT4 elliptic curve over GF(p^2).
  *
  * A point of an elliptic curve is only meaningful when suitably attached
  * to some curve.  Hence, there must be no public means to create a point
- * by itself (i.e. concrete subclasses of SMSPoint shall have no public
+ * by itself (i.e. concrete subclasses of SMSPoint2 shall have no public
  * constructor); the proper way to do this is to invoke the factory method
  * pointFactory() of the desired SMSCurve subclass.
  *
@@ -26,10 +28,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
+import pseudojava.BigInteger;
+import pseudojava.SecureRandom;
 
-public class SMSPoint {
+public class SMSPoint2 {
 
     /**
      * Convenient BigInteger constants
@@ -49,27 +51,27 @@ public class SMSPoint {
     /**
      * The underlying elliptic curve, given by its parameters
      */
-    SMSCurve E;
+    SMSCurve2 E;
 
     /**
      * The projective x-coordinate
      */
-    BigInteger x;
+    SMSField2 x;
 
     /**
      * The projective y-coordinate
      */
-    BigInteger y;
+    SMSField2 y;
 
     /**
      * The projective z-coordinate
      */
-    BigInteger z;
+    SMSField2 z;
 
     /**
      * Numerator of the line slope if this point was the result of a group operation
      */
-    BigInteger m;
+    SMSField2 m;
 
     /**
      * Flag/mask for compressed, expanded, or hybrid point representation
@@ -84,111 +86,117 @@ public class SMSPoint {
      *
      * @param   E   the elliptic curve where the created point is located.
      */
-    SMSPoint(SMSCurve E) {
+    SMSPoint2(SMSCurve2 E) {
         this.E = E;
         /*
          * the point at infinity is represented as (1, 1, 0) after IEEE Std 1363:2000
          * (notice that this triple satisfies the projective curve equation y^2 = x^3 - 3xz^4 + bz^6)
          */
-        x = _1;
-        y = _1;
-        z = _0;
-        m = _0;
+        SMSParams sms = E.E.sms;
+        x = sms.Fp2_1;
+        y = sms.Fp2_1;
+        z = sms.Fp2_0;
+        m = sms.Fp2_0;
     }
 
     /**
-     * Create a normalized SMSCurve point from given affine coordinates and a curve
+     * Create a normalized twist point from given affine coordinates and a curve
      *
      * @param   E   the underlying elliptic curve.
-     * @param   x   the affine x-coordinate (mod p).
-     * @param   y   the affine y-coordinate (mod p).
+     * @param   x   the affine x-coordinate.
+     * @param   y   the affine y-coordinate.
      */
-    SMSPoint(SMSCurve E, BigInteger x, BigInteger y) {
+    SMSPoint2(SMSCurve2 E, SMSField2 x, SMSField2 y) {
         this.E = E;
-        BigInteger p = E.sms.p; // shorthand
-        this.x = x.mod(p);
-        this.y = y.mod(p);
-        this.z = _1; // normalized
-        this.m = _0;
+        SMSParams sms = E.E.sms;
+        this.x = x;
+        this.y = y;
+        this.z = sms.Fp2_1; // normalized
+        this.m = sms.Fp2_0;
         if (!E.contains(this)) {
             throw new IllegalArgumentException(pointNotOnCurve);
         }
     }
 
     /**
-     * Create an SMSCurve point from a given affine x-coordinate, a y-bit, and a curve
+     * Create an SMSCurve point from a given affine x-coordinate, a y-bit and a curve
      *
      * @param   E       the underlying elliptic curve.
-     * @param   x       the affine x-coordinate (mod p).
+     * @param   x       the affine x-coordinate.
      * @param   yBit    the least significant bit of the y-coordinate.
      */
-    SMSPoint(SMSCurve E, BigInteger x, boolean yBit) {
-        SMSParams sms = E.sms; // shorthand
-        if (x.signum() == 0) {
-            throw new IllegalArgumentException(pointNotOnCurve); // otherwise the curve order would not be prime
+    SMSPoint2(SMSCurve2 E, SMSField2 x, boolean yBit) {
+        if (x.isZero()) {
+            throw new IllegalArgumentException(pointNotOnCurve); // otherwise the cryptographic subgroup order would not be prime, or the point would be in a small (weak) subgroup
         }
-        // alpha = x^3 - 3x + b = (x^2 - 3)x + b
-        BigInteger beta = sms.sqrt(x.multiply(x).subtract(_3).multiply(x).add(sms.b).mod(sms.p));
+        SMSParams sms = E.sms;
+        /*
+    	// alpha = x^3 - 3x - b = (x^2 - 3)x - b
+        SMSField2 alpha = x.square().subtract(_3).multiply(x).subtract(sms.b);
+        SMSField2 beta = alpha.sqrt();
+        //*/
+        //*
+        SMSField2 bt = new SMSField2(E.sms, E.sms.b);
+        SMSField2 beta = x.cube().subtract(x.multiplyV().multiplyV().multiply(_3)).add(bt.multiplyV().multiplyV().multiplyV()).sqrt();
+        //*/
         if (beta == null) {
             throw new IllegalArgumentException(pointNotOnCurve);
         }
         this.E = E;
-        this.x = x.mod(sms.p);
-        this.y = (beta.testBit(0) == yBit) ? beta : sms.p.subtract(beta);
-        this.z = _1; // normalized
-        this.m = _0;
+        this.x = x;
+        this.y = (beta.re.testBit(0) == yBit) ? beta : beta.negate();
+        this.z = sms.Fp2_1; // normalized
+        this.m = sms.Fp2_0;
     }
 
-    SMSPoint(SMSCurve E, byte[] os) {
+    SMSPoint2(SMSCurve2 E, byte[] os) {
         this.E = E;
         SMSParams sms = E.sms;
         int pc = os[0] & 0xff;
         if (pc == 0) { // infinity
-	        this.x = _1;
-	        this.y = _1;
-	        this.z = _0;
+	        this.x = sms.Fp2_1;
+	        this.y = sms.Fp2_1;
+	        this.z = sms.Fp2_0;
         } else {
-			int len = (sms.p.bitLength() + 7)/8;
-        	byte[] buf = new byte[1 + len];
-        	buf[0] = 0;
-        	System.arraycopy(os, 1, buf, 1, len);
-	        this.x = new BigInteger(buf);
-	        if (x.signum() == 0) {
+	        this.x = new SMSField2(sms, os, 1);
+	        if (x.isZero()) {
 	            throw new IllegalArgumentException(pointNotOnCurve); // otherwise the cryptographic subgroup order would not be prime, or the point would be in a small (weak) subgroup
 	        }
 	        if ((pc & EXPANDED) != 0) {
-        		System.arraycopy(os, 1 + len, buf, 1, len);
-	        	this.y = new BigInteger(buf);
+				int len = (sms.p.bitLength() + 7)/8;
+	        	this.y = new SMSField2(sms, os, 1 + 2*len);
 	        } else {
 		        boolean yBit = (pc & 1) != 0;
-			    BigInteger beta = sms.sqrt(x.multiply(x).subtract(_3).multiply(x).add(sms.b).mod(sms.p));
+		        SMSField2 bt = new SMSField2(E.sms, E.sms.b);
+		        SMSField2 beta = x.cube().subtract(x.multiplyV().multiplyV().multiply(_3)).add(bt.multiplyV().multiplyV().multiplyV()).sqrt();
 		        if (beta == null) {
 		            throw new IllegalArgumentException(pointNotOnCurve);
 		        }
-		        this.y = (beta.testBit(0) == yBit) ? beta :  sms.p.subtract(beta);
+		        this.y = (beta.re.testBit(0) == yBit) ? beta : beta.negate();
 	        }
-	        this.z = _1; // normalized
+	        this.z = sms.Fp2_1; // normalized
         }
-        this.m = _0;
+        this.m = sms.Fp2_0;
     }
 
     /**
      * Create an SMSCurve point from given projective coordinates and a curve.
      *
      * @param   E   the underlying elliptic curve.
-     * @param   x   the affine x-coordinate (mod p).
-     * @param   y   the affine y-coordinate (mod p).
-     * @param   z   the affine z-coordinate (mod p).
+     * @param   x   the affine x-coordinate.
+     * @param   y   the affine y-coordinate.
+     * @param   z   the affine z-coordinate.
      */
-    private SMSPoint(SMSCurve E, BigInteger x, BigInteger y, BigInteger z) {
+    private SMSPoint2(SMSCurve2 E, SMSField2 x, SMSField2 y, SMSField2 z) {
         this.E = E;
+        SMSParams sms = E.E.sms;
         this.x = x;
         this.y = y;
         this.z = z;
-        this.m = _0;
+        this.m = sms.Fp2_0;
     }
 
-    private SMSPoint(SMSCurve E, BigInteger x, BigInteger y, BigInteger z, BigInteger m) {
+    private SMSPoint2(SMSCurve2 E, SMSField2 x, SMSField2 y, SMSField2 z, SMSField2 m) {
         this.E = E;
         this.x = x;
         this.y = y;
@@ -201,7 +209,7 @@ public class SMSPoint {
      *
      * @param   Q   the point to be cloned.
      */
-    private SMSPoint(SMSPoint Q) {
+    private SMSPoint2(SMSPoint2 Q) {
         this.E = Q.E;
         this.x = Q.x;
         this.y = Q.y;
@@ -209,20 +217,13 @@ public class SMSPoint {
         this.m = Q.m;
     }
 
-    /*
-     * performing arithmetic operations on elliptic curve points
-     * generally implies knowing the nature of these points (more precisely,
-     * the nature of the finite field to which their coordinates belong),
-     * hence they are done by the underlying elliptic curve.
-     */
-
     /**
      * Check whether this is the point at infinity (i.e. the SMSCurve group zero element).
      *
      * @return  true if this is the point at infinity, otherwise false.
      */
     public boolean isZero() {
-        return z.signum() == 0;
+        return z.isZero();
     }
 
     /**
@@ -233,26 +234,25 @@ public class SMSPoint {
      * @return  true if this point and Q are equal, otherwise false.
      */
     public boolean equals(Object Q) {
-        if (!(Q instanceof SMSPoint && this.isOnSameCurve((SMSPoint)Q))) {
+        if (!(Q instanceof SMSPoint2 && this.isOnSameCurve((SMSPoint2)Q))) {
             return false;
         }
-        SMSPoint P = (SMSPoint)Q;
-        if (z.signum() == 0 || P.z.signum() == 0) {
+        SMSPoint2 P = (SMSPoint2)Q;
+        if (z.isZero() || P.isZero()) {
             return z.equals(P.z);
         }
     	/*
     	 * x/z^2 = x'/z'^2 <=> x*z'^2 = x'*z^2.
     	 * y/z^3 = y'/z'^3 <=> y*z'^3 = y'*z^3,
     	 */
-        BigInteger p = E.sms.p; // shorthand
-        BigInteger
-            z2 = z.multiply(z).mod(p),
-            z3 = z.multiply(z2).mod(p),
-            pz2 = P.z.multiply(P.z).mod(p),
-            pz3 = P.z.multiply(pz2).mod(p);
+        SMSField2
+            z2 = z.square(),
+            z3 = z.multiply(z2),
+            pz2 = P.z.square(),
+            pz3 = P.z.multiply(pz2);
         return
-            x.multiply(pz2).subtract(P.x.multiply(z2)).mod(p).signum() == 0 &&
-            y.multiply(pz3).subtract(P.y.multiply(z3)).mod(p).signum() == 0;
+            x.multiply(pz2).subtract(P.x.multiply(z2)).isZero() &&
+            y.multiply(pz3).subtract(P.y.multiply(z3)).isZero();
     }
 
     /**
@@ -262,8 +262,8 @@ public class SMSPoint {
      *
      * @return  true if Q lays on the same curve as this point, otherwise false.
      */
-    public boolean isOnSameCurve(SMSPoint Q) {
-        return E.sms == Q.E.sms; // singleton comparison
+    public boolean isOnSameCurve(SMSPoint2 Q) {
+        return E.E.sms == Q.E.E.sms; // singleton comparison
     }
 
     /**
@@ -273,7 +273,7 @@ public class SMSPoint {
      *
      * @return  a random point on the same curve as this.
      */
-    public SMSPoint randomize(SecureRandom rand) {
+    public SMSPoint2 randomize(SecureRandom rand) {
         return E.pointFactory(rand);
     }
 
@@ -282,18 +282,18 @@ public class SMSPoint {
      *
      * @return  a normalized point equivalent to this.
      */
-    public SMSPoint normalize() {
-        if (z.signum() == 0 || z.compareTo(_1) == 0) {
+    public SMSPoint2 normalize() {
+        if (z.isZero() || z.isOne()) {
             return this; // already normalized
         }
-        BigInteger p = E.sms.p; // shorthand
-        BigInteger zinv = null;
+        SMSField2 zinv = null;
         try {
-        	zinv = z.modInverse(p);
+        	zinv = z.inverse();
         } catch (ArithmeticException a) {
         }
-        BigInteger zinv2 = zinv.multiply(zinv); // mod p
-        return new SMSPoint(E, x.multiply(zinv2).mod(p), y.multiply(zinv).multiply(zinv2).mod(p), _1);
+        SMSParams sms = E.E.sms;
+        SMSField2 zinv2 = zinv.square(), zinv3 = zinv.multiply(zinv2);
+        return new SMSPoint2(E, x.multiply(zinv2), y.multiply(zinv3), sms.Fp2_1);
     }
 
     /**
@@ -301,29 +301,15 @@ public class SMSPoint {
      *
      * @return  -this.
      */
-    public SMSPoint negate() {
-        return new SMSPoint(E, x, E.sms.p.subtract(y), z);
+    public SMSPoint2 negate() {
+        return new SMSPoint2(E, x, y.negate(), z);
     }
 
     /**
      * Check if a point equals -this.
      */
-    public boolean opposite(SMSPoint P) {
-        if (!isOnSameCurve(P)) {
-            return false;
-        }
-        if (z.signum() == 0 || P.isZero()) {
-            return z.compareTo(P.z) == 0;
-        }
-        BigInteger p = E.sms.p; // shorthand
-        BigInteger
-            z2 = z.multiply(z).mod(p),
-            z3 = z.multiply(z2).mod(p),
-            pz2 = P.z.multiply(P.z).mod(p),
-            pz3 = P.z.multiply(pz2).mod(p);
-        return
-            x.multiply(pz2).subtract(P.x.multiply(z2)).mod(p).signum() == 0 &&
-            y.multiply(pz3).add(P.y.multiply(z3)).mod(p).signum() == 0;
+    public boolean opposite(SMSPoint2 P) {
+        return this.equals(P.negate());
     }
 
     /**
@@ -333,7 +319,7 @@ public class SMSPoint {
      *
      * @param   Q   an elliptic curve point.
      */
-    public SMSPoint add(SMSPoint Q) {
+    public SMSPoint2 add(SMSPoint2 Q) {
         /*
         if (!this.isOnSameCurve(Q)) {
             throw new IllegalArgumentException(differentCurves);
@@ -345,52 +331,51 @@ public class SMSPoint {
         if (Q.isZero()) {
             return this;
         }
-        BigInteger p = E.sms.p; // shorthand
-        BigInteger t1, t2, t3, t4, t5, t6, t7, t8;
+        // P1363 section A.10.5
+        SMSField2 t1, t2, t3, t4, t5, t6, t7, t8;
         t1 = x;
         t2 = y;
         t3 = z;
         t4 = Q.x;
         t5 = Q.y;
         t6 = Q.z;
-        if (t6.compareTo(_1) != 0) {
-            t7 = t6.multiply(t6); // t7 = z1^2
+        if (!t6.isOne()) {
+            t7 = t6.square(); // t7 = z1^2
             // u0 = x0.z1^2
             t1 = t1.multiply(t7);
             // s0 = y0.z1^3 = y0.z1^2.z1
             t2 = t2.multiply(t7).multiply(t6);
         }
-        if (t3.compareTo(_1) != 0) {
-            t7 = t3.multiply(t3); // t7 = z0^2
+        if (!t3.isOne()) {
+            t7 = t3.square(); // t7 = z0^2
             // u1 = x1.z0^2
-            t4 = t4.multiply(t7).mod(p);
+            t4 = t4.multiply(t7);
             // s1 = y1.z0^3 = y1.z0^2.z0
-            t5 = t5.multiply(t7).multiply(t3).mod(p);
+            t5 = t5.multiply(t7).multiply(t3);
         }
         // W = u0 - u1
-        t7 = t1.subtract(t4).mod(p);
+        t7 = t1.subtract(t4);
         // R = s0 - s1
-        t8 = t2.subtract(t5).mod(p);
-        if (t7.signum() == 0) {
-            return (t8.signum() == 0) ? Q.twice(1) : E.O;
+        t8 = t2.subtract(t5);
+        if (t7.isZero()) {
+            return t8.isZero() ? Q.twice(1) : E.Ot;
         }
         // T = u0 + u1
         t1 = t1.add(t4);
         // M = s0 + s1
         t2 = t2.add(t5);
         // z2 = z0.z1.W
-        if (!t6.equals(_1)) {
+        if (!t6.isOne()) {
             t3 = t3.multiply(t6);
         }
-        t3 = t3.multiply(t7).mod(p);
+        t3 = t3.multiply(t7);
         // x2 = R^2 - T.W^2
-        t5 = t7.multiply(t7).mod(p); // t5 = W^2
+        t5 = t7.square(); // t5 = W^2
         t6 = t1.multiply(t5); // t6 = T.W^2
-        t1 = t8.multiply(t8).subtract(t6).mod(p);
+        t1 = t8.square().subtract(t6);
         // 2.y2 = (T.W^2 - 2.x2).R - M.W^2.W
-        t2 = t6.subtract(t1.shiftLeft(1)).multiply(t8).subtract(t2.multiply(t5).multiply(t7));
-        t2 = (t2.testBit(0) ? t2.add(p) : t2).shiftRight(1).mod(p);
-    	return new SMSPoint(E, t1, t2, t3);
+        t2 = t6.subtract(t1.twice(1)).multiply(t8).subtract(t2.multiply(t5).multiply(t7)).halve();
+        return new SMSPoint2(E, t1, t2, t3);
     }
 
     /**
@@ -400,33 +385,33 @@ public class SMSPoint {
      *
      * @return (2^^n)*this.
      */
-    public SMSPoint twice(int n) {
+    public SMSPoint2 twice(int n) {
         // P1363 section A.10.4
-        BigInteger t1, t2, t3, t4, t5, M = _0;
+        SMSParams sms = E.E.sms;
+        SMSField2 t1, t2, t3, t4, t5, M = sms.Fp2_0;
         t1 = x;
         t2 = y;
         t3 = z;
-        BigInteger p = E.sms.p; // shorthand
         while (n-- > 0) {
-            if (t2.signum() == 0 || t3.signum() == 0) {
-                return E.O;
+            if (t2.isZero() || t3.isZero()) {
+                return E.Ot;
             }
-            t4 = t3.multiply(t3); // t4 = z^2
-            // M = 3(x^2 - z^4) = 3(x - z^2)(x + z^2)
-            M = t4 = _3.multiply(t1.subtract(t4).multiply(t1.add(t4))).mod(p);
+            t4 = t3.square().multiplyV(); // t4 = z^2.(1+i)
+            // M = 3.x^2 - 3.(1+i)^2.(z^2)^2 = 3.[x^2 - (1+i)^2.(z^2)^2] = [x - (z^2).(1+i)].[x + (z^2).(1+i)].3
+            M = t4 = t1.subtract(t4).multiply(t1.add(t4)).multiply(_3);
             // z2 = 2.y.z
-            t3 = t3.multiply(t2).shiftLeft(1).mod(p);
+            t3 = t3.multiply(t2).twice(1);
             // S = 4.x.y^2
-            t2 = t2.multiply(t2).mod(p); // t2 = y^2
-            t5 = t1.multiply(t2).shiftLeft(2);
+            t2 = t2.square(); // t2 = y^2
+            t5 = t1.multiply(t2).twice(2);
             // x2 = M^2 - 2.S
-            t1 = t4.multiply(t4).subtract(t5.shiftLeft(1)).mod(p);
+            t1 = t4.square().subtract(t5.twice(1));
             // T = 8.(y^2)^2
-            t2 = t2.multiply(t2).shiftLeft(3);
+            t2 = t2.square().twice(3);
             // y2 = M(S - x2) - T
-            t2 = t4.multiply(t5.subtract(t1)).subtract(t2).mod(p);
+            t2 = t4.multiply(t5.subtract(t1)).subtract(t2);
         }
-        return new SMSPoint(E, t1, t2, t3, M);
+        return new SMSPoint2(E, t1, t2, t3, M);
     }
 
     /**
@@ -436,36 +421,56 @@ public class SMSPoint {
      *
      * @return  k*this
      */
-    public SMSPoint multiply(BigInteger k) {
-        /*
-         * This method implements the the quaternary window multiplication algorithm.
-         *
-         * Reference:
-         *
-         * Alfred J. Menezes, Paul C. van Oorschot, Scott A. Vanstone,
-         *      "Handbook of Applied Cryptography", CRC Press (1997),
-         *      section 14.6 (Exponentiation), algorithm 14.82
-         */
-        SMSPoint P = this.normalize();
+	public SMSPoint2 multiply(BigInteger k) {
+		// t > 0:
+		// k = k_0 + k_1*(t - 1) => k*Q = k_0*Q + k_1*(t - 1)*Q = k_0*Q + k_1*Q'
+		// t < 0:
+		// k = k_0 + k_1*(1 - t) => k*Q = k_0*Q - k_1*(t - 1)*Q = k_0*Q - k_1*Q'
+		BigInteger m = E.sms.t.subtract(_1).abs();
+		SMSPoint2 P = this.normalize();
+		if (k.signum() < 0) {
+			P = P.negate();
+			k = k.negate();
+		}
+		k = k.mod(E.sms.n);
+		SMSPoint2 Y = P.frobex();
+		/*
+        if (!Y.equals(P.multiply0(E.sms.p))) {
+	        System.out.println("Y    = " + Y);
+	        System.out.println("p*P  = " + P.multiply0(E.sms.p));
+	        System.exit(0);
+            throw new RuntimeException("frobex error!");
+        }
+        //*/
+		if (E.sms.t.signum() < 0) {
+			Y = Y.negate();
+		}
+		return P.simultaneous(k.mod(m), k.divide(m), Y);
+	}
+	//*
+    public SMSPoint2 multiply0(BigInteger k) {
+        SMSPoint2 P = this.normalize();
         if (k.signum() < 0) {
             k = k.negate();
             P = P.negate();
         }
+		k = k.mod(E.sms.n);
         byte[] e = k.toByteArray();
-        SMSPoint[] mP = new SMSPoint[16];
-        mP[0] = E.O;
+        SMSPoint2[] mP = new SMSPoint2[16];
+        mP[0] = E.Ot;
         mP[1] = P;
         for (int i = 1; i <= 7; i++) {
             mP[2*i    ] = mP[  i].twice(1);
             mP[2*i + 1] = mP[2*i].add(P);
         }
-        SMSPoint A = E.O;
+        SMSPoint2 A = E.Ot;
         for (int i = 0; i < e.length; i++) {
             int u = e[i] & 0xff;
             A = A.twice(4).add(mP[u >>> 4]).twice(4).add(mP[u & 0xf]);
         }
-        return A;
+        return A.normalize();
     }
+	//*/
 
     /**
      * Compute ks*this + kr*Y.  This is useful in the verification part of several signature algorithms,
@@ -477,10 +482,10 @@ public class SMSPoint {
      *
      * @return  ks*this + kr*Y
      */
-    public SMSPoint simultaneous(BigInteger ks, BigInteger kr, SMSPoint Y) {
-        assert (isOnSameCurve(Y));
-        SMSPoint[] hV = new SMSPoint[16];
-        SMSPoint P = this.normalize();
+    public SMSPoint2 simultaneous(BigInteger ks, BigInteger kr, SMSPoint2 Y) {
+        //assert (isOnSameCurve(Y));
+        SMSPoint2[] hV = new SMSPoint2[16];
+        SMSPoint2 P = this.normalize();
         Y = Y.normalize();
         if (ks.signum() < 0) {
         	ks = ks.negate();
@@ -490,7 +495,7 @@ public class SMSPoint {
         	kr = kr.negate();
         	Y = Y.negate();
         }
-        hV[0] = E.O;
+        hV[0] = E.Ot;
         hV[1] = P;
         hV[2] = Y;
         hV[3] = P.add(Y);
@@ -501,7 +506,7 @@ public class SMSPoint {
             hV[i + 3] = hV[i].add(hV[3]);
         }
         int t = Math.max(kr.bitLength(), ks.bitLength());
-        SMSPoint R = E.O;
+        SMSPoint2 R = E.Ot;
         for (int i = (((t + 1) >> 1) << 1) - 1; i >= 0; i -= 2) {
             int j = (kr.testBit(i  ) ? 8 : 0) |
                     (ks.testBit(i  ) ? 4 : 0) |
@@ -509,18 +514,23 @@ public class SMSPoint {
                     (ks.testBit(i-1) ? 1 : 0);
             R = R.twice(2).add(hV[j]);
         }
-        return R;
+        return R.normalize();
     }
+
+	public SMSPoint2 frobex() {
+		SMSPoint2 P = normalize();
+		// (P.x/z^2, P.y/z^3) = (P.x/(1+i), P.y*z/(1+i)^2)
+		// psi(P.x/z^2, P.y/z^3) = (conj(P.x)/(1-i), conj(P.y)*(1+i)*sigma*z/(1-i)^2) = (conj(P.x)*i/z^2, -conj(P.y)*(1+i)*sigma/z^3)
+		SMSField2 fx = P.x.conjugate().multiplyI();
+		SMSField2 fy = P.y.conjugate().negate().multiplyV().multiply(E.sms.sigma);
+		return new SMSPoint2(E, fx, fy);
+		// therefore g^u = e(P, Q)^u = e(P, uQ) = e(P, u_0*Q + u_1*psi(Q)) = e(P, Q)^{u_0}*e(P, psi(Q))^{u_1} = g^{u_0}*(g^p)^{u_1}
+	}
 
     /**
      * Convert this curve point to a byte array.
-     * This is the ANSI X9.62 Point-to-Octet-String Conversion primitive
      *
-     * @param   formFlags   the desired form of the octet string representation
-     *                      (SMSPoint.COMPRESSED, SMSPoint.EXPANDED, SMSPoint.HYBRID)
-     *
-     * @return  this point converted to a byte array using
-     *          the algorithm defined in section 4.3.6 of ANSI X9.62
+     * @return  this point converted to a byte array
      */
     public byte[] toByteArray(int formFlags) {
         byte[] result;
@@ -529,12 +539,13 @@ public class SMSPoint {
             result[0] = (byte)0;
             return result;
         }
-        SMSPoint P = this.normalize();
+        SMSPoint2 P = this.normalize();
         byte[] osX = null, osY = null;
         osX = P.x.toByteArray();
-        int pc = 0, resLen = 1 + osX.length;
+        int pc = P.y.re.testBit(0) ? 1 : 0;
+        int resLen = 1 + osX.length;
         if ((formFlags & COMPRESSED) != 0) {
-            pc |= COMPRESSED | (P.y.testBit(0) ? 1 : 0);
+            pc |= COMPRESSED;
         }
         if ((formFlags & EXPANDED) != 0) {
             pc |= EXPANDED;

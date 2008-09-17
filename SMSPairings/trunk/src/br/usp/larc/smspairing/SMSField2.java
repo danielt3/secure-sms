@@ -1,3 +1,5 @@
+package br.usp.larc.smspairing;
+
 /**
  * SMSField2.java
  *
@@ -20,7 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-import java.math.BigInteger;
+import pseudojava.BigInteger;
 
 public class SMSField2 {
 

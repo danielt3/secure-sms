@@ -1,3 +1,5 @@
+package br.usp.larc.smspairing;
+
 /**
  * SMSPairing.java
  *
@@ -20,7 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-import java.math.BigInteger;
+import pseudojava.BigInteger;
 
 public class SMSPairing {
 
@@ -67,7 +69,7 @@ public class SMSPairing {
             // lambda = (P.y - V.y)/(P.x - V.x) // P.Z = 1
             // = (P.Y - V.Y/V.Z^3) / (P.X - V.X/V.Z^2)
             // = (P.Y*V.Z^3 - V.Y) / (P.X*V.Z^3 - V.X*V.Z)
-            assert (P.z.compareTo(_1) == 0);
+            //assert (P.z.compareTo(_1) == 0);
             n = P.y.multiply(Vz3).subtract(V.y);//.mod(p);
             d = P.x.multiply(Vz3).subtract(V.x.multiply(V.z));//.mod(p);
         }
@@ -125,7 +127,7 @@ public class SMSPairing {
             // lambda' = (Q.y - T.y)/(Q.x - T.x) // Q.Z = 1
             // = (Q.Y - T.Y/T.Z^3) / (Q.X - T.X/T.Z^2)
             // = (Q.Y*T.Z^3 - T.Y) / (Q.X*T.Z^3 - T.X*T.Z)
-            assert (Q.z.isOne());
+            //assert (Q.z.isOne());
             n = Q.y.multiply(Tz3).subtract(T.y);
             d = Q.x.multiply(Tz3).subtract(T.x.multiply(T.z));
         }
