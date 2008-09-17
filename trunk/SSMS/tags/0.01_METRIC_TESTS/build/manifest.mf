@@ -1,0 +1,6 @@
+MIDlet-1: ssms_main, , SSMS_Design.ssms_main
+MicroEdition-Configuration: CLDC-1.1
+MIDlet-Vendor: Vendor
+MicroEdition-Profile: MIDP-2.0
+MIDlet-Version: 1.0
+MIDlet-Name: SSMS_Design

@@ -1,0 +1,8 @@
+MIDlet-1: ssms_main, , SSMS_Design.ssms_main
+MIDlet-Jar-Size: 130098
+MIDlet-Jar-URL: SSMS_Design.jar
+MIDlet-Name: SSMS_Design
+MIDlet-Vendor: Vendor
+MIDlet-Version: 1.0
+MicroEdition-Configuration: CLDC-1.1
+MicroEdition-Profile: MIDP-2.0
