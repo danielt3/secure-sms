@@ -111,7 +111,7 @@ class MutableBigInteger {
      * specified BigInteger.
      */
     MutableBigInteger(BigInteger b) {
-        value = (int[])b.mag.clone();
+        value = JavaUtil.clone((int[])b.mag);
         intLen = value.length;
     }
 

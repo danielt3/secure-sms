@@ -1672,7 +1672,7 @@ public class BigInteger /*extends Number implements Comparable<BigInteger> */{
         if (signum==0)
             return ZERO;
 
-        int[] base = (int[])mag.clone();
+        int[] base = JavaUtil.clone((int[])mag);
         int[] exp = y.mag;
         int[] mod = z.mag;
         int modLen = mod.length;
@@ -1797,7 +1797,7 @@ public class BigInteger /*extends Number implements Comparable<BigInteger> */{
             // Perform multiply
             if (ebits == multpos) {
                 if (isone) {
-                    b = (int[])mult.clone();
+                    b = JavaUtil.clone((int[])mult);
                     isone = false;
                 } else {
                     t = b;
