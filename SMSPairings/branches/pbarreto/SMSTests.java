@@ -888,7 +888,10 @@ public class SMSTests {
 
 	public static void BDCPSTest(int bits) {
         byte[] randSeed = new byte[20];
-        (new Random()).nextBytes(randSeed);
+        //(new Random()).nextBytes(randSeed);
+        for (int i = 0; i < 20; i++) {
+        	randSeed[i] = (byte)i;
+        }
         SecureRandom rnd = new SecureRandom(randSeed);
         long elapsed;
         System.out.println("\n======== bits: " + bits);
@@ -899,7 +902,7 @@ public class SMSTests {
         SMSPoint2 Q = E2.Gt;
         SMSPairing pair = new SMSPairing(E2);
         SMSField4 g = pair.ate(Q, P);
-        String hex = "0123456789abcdef";
+        String hex = "0123456789ABCDEF";
 
 		////////////////////////////////////////////////////////////////////
         System.out.println("BDCPS Setup:");
@@ -907,6 +910,13 @@ public class SMSTests {
         SMSPoint Ppub = P.multiply(s);
         System.out.println("s = " + s);
         System.out.println("P_pub = " + Ppub);
+
+		byte[] Ppub_seq = Ppub.toByteArray(SMSPoint.COMPRESSED);
+        System.out.print("Ppub_seq [" +  Ppub_seq.length + " bytes] = "); for (int i = 0; i < Ppub_seq.length; i++) { System.out.print(hex.charAt((Ppub_seq[i] & 0xff) >>> 4)); System.out.print(hex.charAt(Ppub_seq[i] & 15)); } System.out.println();
+		SMSPoint Ppub_rec = new SMSPoint(E, Ppub_seq);
+        System.out.println("*** Ppub     = " + Ppub.normalize());
+        System.out.println("*** Ppub_rec = " + Ppub_rec);
+        System.out.println("*** equal? " + Ppub.equals(Ppub_rec));
 
         BigInteger h1ID_A = new BigInteger(bits, rnd).mod(sms.n); // simulated h_1(ID_A)
         BigInteger h1ID_B = new BigInteger(bits, rnd).mod(sms.n); // simulated h_1(ID_B)
@@ -1004,7 +1014,10 @@ public class SMSTests {
         if (!T_A_exp.equals(T_A)) {
         	throw new RuntimeException("Failure @Public-Key-Validate");
         }
-        r_A = pair.ate(T_A_exp, P.multiply(h1ID_A).add(Ppub)).multiply(y_A_exp.exp(h_A));
+        SMSField4 r_A_rec = pair.ate(T_A_exp, P.multiply(h1ID_A).add(Ppub)).multiply(y_A_exp.exp(h_A));
+        if (!r_A_rec.equals(r_A)) {
+        	throw new RuntimeException("Failure @Public-Key-Validate");
+        }
         BigInteger v_A = h_A; // simulated h_0(r_A, y_A, ID_A)
         if (v_A.compareTo(h_A) != 0) {
         	throw new RuntimeException("Failure @Public-Key-Validate");
@@ -1060,15 +1073,16 @@ public class SMSTests {
 	}
 
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
-    	benchmarks(100, 176);
+    	//benchmarks(100, 176);
     	/*
     	int iterations = 1;// 100;
     	BDCPS(127, iterations);
     	BDCPS(160, iterations);
     	//*/
-    	/*
-    	BDCPSTest(127);
-    	BDCPSTest(160);
+    	//*
+    	//BDCPSTest(127);
+    	//BDCPSTest(160);
+    	BDCPSTest(176);
     	//*/
     }
 

@@ -348,7 +348,7 @@ public class SMSField2 {
         	buf[i] = (byte)0;
         }
         byte[] vre = re.toByteArray();
-        //String hex = "0123456789abcdef";
+        //String hex = "0123456789ABCDEF";
         //System.out.print("vre:" + vre.length + " =   "); for (int i = 0; i < vre.length; i++) { System.out.print(hex.charAt((vre[i] & 0xff) >>> 4)); System.out.print(hex.charAt(vre[i] & 15)); } System.out.println();
         byte[] vim = im.toByteArray();
         //System.out.print("vim:" + vim.length + " =                                   "); for (int i = 0; i < vim.length; i++) { System.out.print(hex.charAt((vim[i] & 0xff) >>> 4)); System.out.print(hex.charAt(vim[i] & 15)); } System.out.println();
@@ -356,9 +356,9 @@ public class SMSField2 {
 
         //System.arraycopy(vre, (vre.length <= len) ? 0 : 1, buf, (vre.length <= len ? len - vre.length : 0),       len);
         if (vre.length <= len) {
-	        System.arraycopy(vre, 0, buf, (len - vre.length), vre.length);
+	        System.arraycopy(vre, 0, buf, 0   + (len - vre.length), vre.length);
         } else {
-	        System.arraycopy(vre, 1, buf, 0,                  len);
+	        System.arraycopy(vre, 1, buf, 0,                        len);
         }
         //System.arraycopy(vim, (vim.length <= len) ? 0 : 1, buf, (vim.length <= len ? len - vim.length : 0) + len, len);
         if (vim.length <= len) {
