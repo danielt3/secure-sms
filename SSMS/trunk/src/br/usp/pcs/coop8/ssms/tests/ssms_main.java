@@ -8,6 +8,7 @@ package br.usp.pcs.coop8.ssms.tests;
 import br.usp.larc.smspairing.*;
 import javax.microedition.midlet.*;
 import javax.microedition.lcdui.*;
+import org.netbeans.microedition.lcdui.wma.SMSComposer;
 import org.netbeans.microedition.util.SimpleCancellableTask;
 
 /**
@@ -18,10 +19,28 @@ public class ssms_main extends MIDlet implements CommandListener {
     private boolean midletPaused = false;
 
     //<editor-fold defaultstate="collapsed" desc=" Generated Fields ">//GEN-BEGIN:|fields|0|
-    private Command cancelCommand;
-    private SimpleCancellableTask task;
     private Form SSMS_Results;
     private TextField txtResults;
+    private List ListaInicial;
+    private Form form;
+    private TextField textField;
+    private Form FormAutenticarContato;
+    private TextField txtContatPhone;
+    private Alert alert;
+    private Alert alert1;
+    private Alert alert2;
+    private Alert alert3;
+    private Command cancelCommand;
+    private Command cancelCommand1;
+    private Command okCommand;
+    private Command cancelCommand2;
+    private Command okCommand1;
+    private Command okCommand2;
+    private Command backCommand;
+    private Command okCommand3;
+    private Command cancelCommand3;
+    private SimpleCancellableTask task;
+    private Image image;
     //</editor-fold>//GEN-END:|fields|0|
    
     //</editor-fold>
@@ -54,7 +73,7 @@ public class ssms_main extends MIDlet implements CommandListener {
     public void startMIDlet() {//GEN-END:|3-startMIDlet|0|3-preAction
         // write pre-action user code here
         
-        switchDisplayable(null, getSSMS_Results());//GEN-LINE:|3-startMIDlet|1|3-postAction
+        switchDisplayable(null, getListaInicial());//GEN-LINE:|3-startMIDlet|1|3-postAction
         // write post-action user code here
     }//GEN-BEGIN:|3-startMIDlet|2|
     //</editor-fold>//GEN-END:|3-startMIDlet|2|
@@ -131,16 +150,66 @@ public class ssms_main extends MIDlet implements CommandListener {
      */
     public void commandAction(Command command, Displayable displayable) {//GEN-END:|7-commandAction|0|7-preCommandAction
         // write pre-action user code here
-        if (displayable == SSMS_Results) {//GEN-BEGIN:|7-commandAction|1|23-preAction
-            if (command == cancelCommand) {//GEN-END:|7-commandAction|1|23-preAction
+        if (displayable == FormAutenticarContato) {//GEN-BEGIN:|7-commandAction|1|68-preAction
+            if (command == cancelCommand2) {//GEN-END:|7-commandAction|1|68-preAction
                 // write pre-action user code here
-                exitMIDlet();//GEN-LINE:|7-commandAction|2|23-postAction
+                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|2|68-postAction
                 // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|3|7-postCommandAction
-        }//GEN-END:|7-commandAction|3|7-postCommandAction
+            } else if (command == okCommand) {//GEN-LINE:|7-commandAction|3|66-preAction
+                // write pre-action user code here
+                method();//GEN-LINE:|7-commandAction|4|66-postAction
+                // write post-action user code here
+            }//GEN-BEGIN:|7-commandAction|5|28-preAction
+        } else if (displayable == ListaInicial) {
+            if (command == List.SELECT_COMMAND) {//GEN-END:|7-commandAction|5|28-preAction
+                // write pre-action user code here
+                ListaInicialAction();//GEN-LINE:|7-commandAction|6|28-postAction
+                // write post-action user code here
+            }//GEN-BEGIN:|7-commandAction|7|23-preAction
+        } else if (displayable == SSMS_Results) {
+            if (command == cancelCommand) {//GEN-END:|7-commandAction|7|23-preAction
+                // write pre-action user code here
+                exitMIDlet();//GEN-LINE:|7-commandAction|8|23-postAction
+                // write post-action user code here
+            }//GEN-BEGIN:|7-commandAction|9|77-preAction
+        } else if (displayable == alert) {
+            if (command == okCommand1) {//GEN-END:|7-commandAction|9|77-preAction
+                // write pre-action user code here
+                switchDisplayable(null, getFormAutenticarContato());//GEN-LINE:|7-commandAction|10|77-postAction
+                // write post-action user code here
+            }//GEN-BEGIN:|7-commandAction|11|88-preAction
+        } else if (displayable == alert1) {
+            if (command == backCommand) {//GEN-END:|7-commandAction|11|88-preAction
+                // write pre-action user code here
+                switchDisplayable(null, getFormAutenticarContato());//GEN-LINE:|7-commandAction|12|88-postAction
+                // write post-action user code here
+            } else if (command == okCommand2) {//GEN-LINE:|7-commandAction|13|86-preAction
+                // write pre-action user code here
+                method1();//GEN-LINE:|7-commandAction|14|86-postAction
+                // write post-action user code here
+            }//GEN-BEGIN:|7-commandAction|15|98-preAction
+        } else if (displayable == alert2) {
+            if (command == okCommand3) {//GEN-END:|7-commandAction|15|98-preAction
+                // write pre-action user code here
+                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|16|98-postAction
+                // write post-action user code here
+            }//GEN-BEGIN:|7-commandAction|17|103-preAction
+        } else if (displayable == alert3) {
+            if (command == cancelCommand3) {//GEN-END:|7-commandAction|17|103-preAction
+                // write pre-action user code here
+                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|18|103-postAction
+                // write post-action user code here
+            }//GEN-BEGIN:|7-commandAction|19|55-preAction
+        } else if (displayable == form) {
+            if (command == cancelCommand1) {//GEN-END:|7-commandAction|19|55-preAction
+                // write pre-action user code here
+                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|20|55-postAction
+                // write post-action user code here
+            }//GEN-BEGIN:|7-commandAction|21|7-postCommandAction
+        }//GEN-END:|7-commandAction|21|7-postCommandAction
         // write post-action user code here
-    }//GEN-BEGIN:|7-commandAction|4|
-    //</editor-fold>//GEN-END:|7-commandAction|4|
+    }//GEN-BEGIN:|7-commandAction|22|
+    //</editor-fold>//GEN-END:|7-commandAction|22|
 
     //<editor-fold defaultstate="collapsed" desc=" Generated Getter: SSMS_Results ">//GEN-BEGIN:|20-getter|0|20-preInit
     /**
@@ -180,6 +249,391 @@ public class ssms_main extends MIDlet implements CommandListener {
         return txtResults;
     }
     //</editor-fold>//GEN-END:|25-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: ListaInicial ">//GEN-BEGIN:|26-getter|0|26-preInit
+    /**
+     * Returns an initiliazed instance of ListaInicial component.
+     * @return the initialized component instance
+     */
+    public List getListaInicial() {
+        if (ListaInicial == null) {//GEN-END:|26-getter|0|26-preInit
+            // write pre-init user code here
+            ListaInicial = new List("list", Choice.IMPLICIT);//GEN-BEGIN:|26-getter|1|26-postInit
+            ListaInicial.append("Autenticar Contato", null);
+            ListaInicial.append("Come\u00E7ar Escuta", null);
+            ListaInicial.append("Parar escuta", null);
+            ListaInicial.append("Enviar torpedo", null);
+            ListaInicial.append("Ver OutPut", null);
+            ListaInicial.setCommandListener(this);
+            ListaInicial.setSelectedFlags(new boolean[] { false, false, false, false, false });//GEN-END:|26-getter|1|26-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|26-getter|2|
+        return ListaInicial;
+    }
+    //</editor-fold>//GEN-END:|26-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Method: ListaInicialAction ">//GEN-BEGIN:|26-action|0|26-preAction
+    /**
+     * Performs an action assigned to the selected list element in the ListaInicial component.
+     */
+    public void ListaInicialAction() {//GEN-END:|26-action|0|26-preAction
+        // enter pre-action user code here
+        String __selectedString = getListaInicial().getString(getListaInicial().getSelectedIndex());//GEN-BEGIN:|26-action|1|57-preAction
+        if (__selectedString != null) {
+            if (__selectedString.equals("Autenticar Contato")) {//GEN-END:|26-action|1|57-preAction
+                // write pre-action user code here
+                switchDisplayable(null, getFormAutenticarContato());//GEN-LINE:|26-action|2|57-postAction
+                // write post-action user code here
+            } else if (__selectedString.equals("Come\u00E7ar Escuta")) {//GEN-LINE:|26-action|3|30-preAction
+                // write pre-action user code here
+                Controlador.receberSms();//GEN-LINE:|26-action|4|30-postAction
+                // write post-action user code here
+            } else if (__selectedString.equals("Parar escuta")) {//GEN-LINE:|26-action|5|31-preAction
+                // write pre-action user code here
+//GEN-LINE:|26-action|6|31-postAction
+                // write post-action user code here
+            } else if (__selectedString.equals("Enviar torpedo")) {//GEN-LINE:|26-action|7|32-preAction
+                // write pre-action user code here
+                Controlador.enviarSms("1174749679", "GEO GEO GEOVEMDETERRA", 2102);//GEN-LINE:|26-action|8|32-postAction
+                // write post-action user code here
+            } else if (__selectedString.equals("Ver OutPut")) {//GEN-LINE:|26-action|9|35-preAction
+                // write pre-action user code here
+                switchDisplayable(null, getForm());//GEN-LINE:|26-action|10|35-postAction
+                // write post-action user code here
+            }//GEN-BEGIN:|26-action|11|26-postAction
+        }//GEN-END:|26-action|11|26-postAction
+        // enter post-action user code here
+    }//GEN-BEGIN:|26-action|12|
+    //</editor-fold>//GEN-END:|26-action|12|
+
+
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: form ">//GEN-BEGIN:|51-getter|0|51-preInit
+    /**
+     * Returns an initiliazed instance of form component.
+     * @return the initialized component instance
+     */
+    public Form getForm() {
+        if (form == null) {//GEN-END:|51-getter|0|51-preInit
+            // write pre-init user code here
+            form = new Form("form", new Item[] { getTextField() });//GEN-BEGIN:|51-getter|1|51-postInit
+            form.addCommand(getCancelCommand1());
+            form.setCommandListener(this);//GEN-END:|51-getter|1|51-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|51-getter|2|
+        return form;
+    }
+    //</editor-fold>//GEN-END:|51-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: textField ">//GEN-BEGIN:|52-getter|0|52-preInit
+    /**
+     * Returns an initiliazed instance of textField component.
+     * @return the initialized component instance
+     */
+    public TextField getTextField() {
+        if (textField == null) {//GEN-END:|52-getter|0|52-preInit
+            // write pre-init user code here
+            textField = new TextField("textField", Output.getOutput(), Output.getOutput().length(), TextField.ANY);//GEN-LINE:|52-getter|1|52-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|52-getter|2|
+        return textField;
+    }
+    //</editor-fold>//GEN-END:|52-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: cancelCommand1 ">//GEN-BEGIN:|54-getter|0|54-preInit
+    /**
+     * Returns an initiliazed instance of cancelCommand1 component.
+     * @return the initialized component instance
+     */
+    public Command getCancelCommand1() {
+        if (cancelCommand1 == null) {//GEN-END:|54-getter|0|54-preInit
+            // write pre-init user code here
+            cancelCommand1 = new Command("Cancelar", Command.CANCEL, 0);//GEN-LINE:|54-getter|1|54-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|54-getter|2|
+        return cancelCommand1;
+    }
+    //</editor-fold>//GEN-END:|54-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Method: method ">//GEN-BEGIN:|69-if|0|69-preIf
+    /**
+     * Performs an action assigned to the method if-point.
+     */
+    public void method() {//GEN-END:|69-if|0|69-preIf
+        // enter pre-if user code here
+        if (//GEN-BEGIN:|69-if|1|70-preAction
+                (txtContatPhone.getString() != null)
+                &&
+                (txtContatPhone.getString().length() == 10)
+                &&
+                (
+                Util.isLong(txtContatPhone.getString())
+                )
+                ) {//GEN-END:|69-if|1|70-preAction
+            // write pre-action user code here
+            switchDisplayable(null, getAlert1());//GEN-LINE:|69-if|2|70-postAction
+            // write post-action user code here
+        } else {//GEN-LINE:|69-if|3|71-preAction
+            // write pre-action user code here
+            switchDisplayable(null, getAlert());//GEN-LINE:|69-if|4|71-postAction
+            // write post-action user code here
+        }//GEN-LINE:|69-if|5|69-postIf
+        // enter post-if user code here
+    }//GEN-BEGIN:|69-if|6|
+    //</editor-fold>//GEN-END:|69-if|6|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: FormAutenticarContato ">//GEN-BEGIN:|61-getter|0|61-preInit
+    /**
+     * Returns an initiliazed instance of FormAutenticarContato component.
+     * @return the initialized component instance
+     */
+    public Form getFormAutenticarContato() {
+        if (FormAutenticarContato == null) {//GEN-END:|61-getter|0|61-preInit
+            // write pre-init user code here
+            FormAutenticarContato = new Form("FormAuthenticateContact", new Item[] { getTxtContatPhone() });//GEN-BEGIN:|61-getter|1|61-postInit
+            FormAutenticarContato.addCommand(getOkCommand());
+            FormAutenticarContato.addCommand(getCancelCommand2());
+            FormAutenticarContato.setCommandListener(this);//GEN-END:|61-getter|1|61-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|61-getter|2|
+        return FormAutenticarContato;
+    }
+    //</editor-fold>//GEN-END:|61-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: txtContatPhone ">//GEN-BEGIN:|63-getter|0|63-preInit
+    /**
+     * Returns an initiliazed instance of txtContatPhone component.
+     * @return the initialized component instance
+     */
+    public TextField getTxtContatPhone() {
+        if (txtContatPhone == null) {//GEN-END:|63-getter|0|63-preInit
+            // write pre-init user code here
+            txtContatPhone = new TextField("Telefone do contato", null, 10, TextField.ANY);//GEN-LINE:|63-getter|1|63-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|63-getter|2|
+        return txtContatPhone;
+    }
+    //</editor-fold>//GEN-END:|63-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: okCommand ">//GEN-BEGIN:|65-getter|0|65-preInit
+    /**
+     * Returns an initiliazed instance of okCommand component.
+     * @return the initialized component instance
+     */
+    public Command getOkCommand() {
+        if (okCommand == null) {//GEN-END:|65-getter|0|65-preInit
+            // write pre-init user code here
+            okCommand = new Command("Ok", Command.OK, 0);//GEN-LINE:|65-getter|1|65-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|65-getter|2|
+        return okCommand;
+    }
+    //</editor-fold>//GEN-END:|65-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: cancelCommand2 ">//GEN-BEGIN:|67-getter|0|67-preInit
+    /**
+     * Returns an initiliazed instance of cancelCommand2 component.
+     * @return the initialized component instance
+     */
+    public Command getCancelCommand2() {
+        if (cancelCommand2 == null) {//GEN-END:|67-getter|0|67-preInit
+            // write pre-init user code here
+            cancelCommand2 = new Command("Cancelar", Command.CANCEL, 0);//GEN-LINE:|67-getter|1|67-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|67-getter|2|
+        return cancelCommand2;
+    }
+    //</editor-fold>//GEN-END:|67-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: image ">//GEN-BEGIN:|58-getter|0|58-preInit
+    /**
+     * Returns an initiliazed instance of image component.
+     * @return the initialized component instance
+     */
+    public Image getImage() {
+        if (image == null) {//GEN-END:|58-getter|0|58-preInit
+            // write pre-init user code here
+            image = Image.createImage(1, 1);//GEN-LINE:|58-getter|1|58-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|58-getter|2|
+        return image;
+    }
+    //</editor-fold>//GEN-END:|58-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: alert ">//GEN-BEGIN:|75-getter|0|75-preInit
+    /**
+     * Returns an initiliazed instance of alert component.
+     * @return the initialized component instance
+     */
+    public Alert getAlert() {
+        if (alert == null) {//GEN-END:|75-getter|0|75-preInit
+            // write pre-init user code here
+            alert = new Alert("Bad use", "Please type a number in the contact\'s phone field", null, null);//GEN-BEGIN:|75-getter|1|75-postInit
+            alert.addCommand(getOkCommand1());
+            alert.setCommandListener(this);
+            alert.setTimeout(Alert.FOREVER);//GEN-END:|75-getter|1|75-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|75-getter|2|
+        return alert;
+    }
+    //</editor-fold>//GEN-END:|75-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: okCommand1 ">//GEN-BEGIN:|76-getter|0|76-preInit
+    /**
+     * Returns an initiliazed instance of okCommand1 component.
+     * @return the initialized component instance
+     */
+    public Command getOkCommand1() {
+        if (okCommand1 == null) {//GEN-END:|76-getter|0|76-preInit
+            // write pre-init user code here
+            okCommand1 = new Command("Ok", Command.OK, 0);//GEN-LINE:|76-getter|1|76-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|76-getter|2|
+        return okCommand1;
+    }
+    //</editor-fold>//GEN-END:|76-getter|2|
+
+
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Method: method1 ">//GEN-BEGIN:|92-if|0|92-preIf
+    /**
+     * Performs an action assigned to the method1 if-point.
+     */
+    public void method1() {//GEN-END:|92-if|0|92-preIf
+        // enter pre-if user code here
+        if (true) {//GEN-LINE:|92-if|1|93-preAction
+            // write pre-action user code here
+            switchDisplayable(null, getAlert2());//GEN-LINE:|92-if|2|93-postAction
+            // write post-action user code here
+        } else {//GEN-LINE:|92-if|3|94-preAction
+            // write pre-action user code here
+            switchDisplayable(null, getAlert3());//GEN-LINE:|92-if|4|94-postAction
+            // write post-action user code here
+        }//GEN-LINE:|92-if|5|92-postIf
+        // enter post-if user code here
+    }//GEN-BEGIN:|92-if|6|
+    //</editor-fold>//GEN-END:|92-if|6|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: alert1 ">//GEN-BEGIN:|83-getter|0|83-preInit
+    /**
+     * Returns an initiliazed instance of alert1 component.
+     * @return the initialized component instance
+     */
+    public Alert getAlert1() {
+        if (alert1 == null) {//GEN-END:|83-getter|0|83-preInit
+            // write pre-init user code here
+            alert1 = new Alert("alert1", "Voc\u00EA est\u00E1 pronto. Cerifique-se de que seu contato est\u00E1 pronto e pressione OK.", null, null);//GEN-BEGIN:|83-getter|1|83-postInit
+            alert1.addCommand(getOkCommand2());
+            alert1.addCommand(getBackCommand());
+            alert1.setCommandListener(this);
+            alert1.setTimeout(Alert.FOREVER);//GEN-END:|83-getter|1|83-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|83-getter|2|
+        return alert1;
+    }
+    //</editor-fold>//GEN-END:|83-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: alert2 ">//GEN-BEGIN:|90-getter|0|90-preInit
+    /**
+     * Returns an initiliazed instance of alert2 component.
+     * @return the initialized component instance
+     */
+    public Alert getAlert2() {
+        if (alert2 == null) {//GEN-END:|90-getter|0|90-preInit
+            // write pre-init user code here
+            alert2 = new Alert("alert2", "Authentication successful", null, null);//GEN-BEGIN:|90-getter|1|90-postInit
+            alert2.addCommand(getOkCommand3());
+            alert2.setCommandListener(this);
+            alert2.setTimeout(Alert.FOREVER);//GEN-END:|90-getter|1|90-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|90-getter|2|
+        return alert2;
+    }
+    //</editor-fold>//GEN-END:|90-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: alert3 ">//GEN-BEGIN:|100-getter|0|100-preInit
+    /**
+     * Returns an initiliazed instance of alert3 component.
+     * @return the initialized component instance
+     */
+    public Alert getAlert3() {
+        if (alert3 == null) {//GEN-END:|100-getter|0|100-preInit
+            // write pre-init user code here
+            alert3 = new Alert("alert3", "Aguardando chegar o SMS com a chave do contato", null, null);//GEN-BEGIN:|100-getter|1|100-postInit
+            alert3.addCommand(getCancelCommand3());
+            alert3.setCommandListener(this);
+            alert3.setTimeout(Alert.FOREVER);//GEN-END:|100-getter|1|100-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|100-getter|2|
+        return alert3;
+    }
+    //</editor-fold>//GEN-END:|100-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: okCommand2 ">//GEN-BEGIN:|85-getter|0|85-preInit
+    /**
+     * Returns an initiliazed instance of okCommand2 component.
+     * @return the initialized component instance
+     */
+    public Command getOkCommand2() {
+        if (okCommand2 == null) {//GEN-END:|85-getter|0|85-preInit
+            // write pre-init user code here
+            okCommand2 = new Command("Ok", Command.OK, 0);//GEN-LINE:|85-getter|1|85-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|85-getter|2|
+        return okCommand2;
+    }
+    //</editor-fold>//GEN-END:|85-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: backCommand ">//GEN-BEGIN:|87-getter|0|87-preInit
+    /**
+     * Returns an initiliazed instance of backCommand component.
+     * @return the initialized component instance
+     */
+    public Command getBackCommand() {
+        if (backCommand == null) {//GEN-END:|87-getter|0|87-preInit
+            // write pre-init user code here
+            backCommand = new Command("Voltar", Command.BACK, 0);//GEN-LINE:|87-getter|1|87-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|87-getter|2|
+        return backCommand;
+    }
+    //</editor-fold>//GEN-END:|87-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: okCommand3 ">//GEN-BEGIN:|97-getter|0|97-preInit
+    /**
+     * Returns an initiliazed instance of okCommand3 component.
+     * @return the initialized component instance
+     */
+    public Command getOkCommand3() {
+        if (okCommand3 == null) {//GEN-END:|97-getter|0|97-preInit
+            // write pre-init user code here
+            okCommand3 = new Command("Ok", Command.OK, 0);//GEN-LINE:|97-getter|1|97-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|97-getter|2|
+        return okCommand3;
+    }
+    //</editor-fold>//GEN-END:|97-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: cancelCommand3 ">//GEN-BEGIN:|102-getter|0|102-preInit
+    /**
+     * Returns an initiliazed instance of cancelCommand3 component.
+     * @return the initialized component instance
+     */
+    public Command getCancelCommand3() {
+        if (cancelCommand3 == null) {//GEN-END:|102-getter|0|102-preInit
+            // write pre-init user code here
+            cancelCommand3 = new Command("Cancelar", Command.CANCEL, 0);//GEN-LINE:|102-getter|1|102-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|102-getter|2|
+        return cancelCommand3;
+    }
+    //</editor-fold>//GEN-END:|102-getter|2|
+
+
+
+
+
+
 
     /**
      * Returns a display instance.

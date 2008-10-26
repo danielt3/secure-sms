@@ -10,7 +10,7 @@ public class Output {
 
 	
 	public static void println(String print) {
-		System.out.println(print);
+		System.out.println(print);                        
 		output = output + print + "\r\n";
 	}	
 	public static void print(String print) {
@@ -20,4 +20,6 @@ public class Output {
 	public static String getOutput() {
 		return output;
 	}
+        
+        
 }
