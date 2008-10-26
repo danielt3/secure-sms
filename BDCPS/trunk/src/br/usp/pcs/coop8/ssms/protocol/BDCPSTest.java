@@ -78,6 +78,7 @@ public class BDCPSTest {
 		if (isAliceValid) System.out.println("Alice is valid!");
 		else System.out.println("Alice is false!");
 		
+		
 		System.out.println("\nBegin sign- and unsigncryption:");
 		
 		byte[] m = "Hello, world!".getBytes();

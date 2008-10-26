@@ -114,18 +114,18 @@ public abstract class BDCPSImpl implements BDCPS{
 	 * @author rodrigo
 	 */
 	public void setPublicKey() {
-		//TODO must get a random number??
 		BigInteger u_A = randomBigInteger();
 		SMSField4 r = g.exp(u_A);
-		logger.debug("r from random u_A: " + r);
 		BigInteger h_A = BDCPSUtil.h0(r, y_A, id, sms.getN());
-		SMSPoint2 T_A = Q_A.multiply((u_A.subtract(x_A.multiply(h_A))).mod(sms.getN()));
+		SMSPoint2 T_A = Q_A.multiply((u_A.subtract(x_A.multiply(h_A)))/*.mod(sms.getN())*/);
+		
 		logger.debug("setPublicKey:");
+		logger.debug("r from random u_A: " + r);
 		logger.debug("y_A before: "+ y_A.toString());
 		logger.debug("h_A before: "+ h_A.toString());
+		logger.debug("T_A before: "+ T_A.toString());
 		logger.debug("id: " + new String(id));
 		logger.debug("Ppub: " + Ppub);
-		logger.debug("T_A before: "+ T_A.toString());
 	
 
 		publicKey[0] = y_A.toByteArray();
@@ -151,22 +151,19 @@ public abstract class BDCPSImpl implements BDCPS{
 	}
 
 	protected boolean publicKeyValidate(SMSField4 y_A, BigInteger h_A, SMSPoint2 T_A, byte[] id) {
-		//logger.debug("pk-validate: chegou");
-		//first check that y_A has order n
-		if (!(!y_A.isOne()) && (y_A.exp(BigInteger.valueOf((long)k)).isOne())) return false;
-		//logger.debug("pk-validate: passei do isOne()");
-		
-		logger.debug("before pairing:");
-		logger.debug("y_A: " + y_A);
-		logger.debug("id: " + new String(id));
-		logger.debug("Ppub: " + Ppub);
-		logger.debug("T_A: " + T_A);
-		//SMSField4 r_A = pair.ate(T_A, P.multiply(BDCPSUtil.h1(y_A, id, sms.getN())).add(Ppub)).multiply(y_A.exp(h_A));
-		
+		if (!(!y_A.isOne()) && (y_A.exp(BigInteger.valueOf((long)k)).isOne())) return false;		
+		//SMSField4 r_A = pair.ate(T_A, P.multiply(BDCPSUtil.h1(y_A, id, sms.getN())).add(Ppub)).multiply(y_A.exp(h_A));		
 		SMSField4 r_A = pair.ate(T_A, P.multiply(BDCPSUtil.h1(y_A, id, sms.getN())).add(Ppub)).multiply(y_A.exp(h_A));
 		
-		logger.debug("r_A from pairing: " + r_A);
+		
 		BigInteger v_A = BDCPSUtil.h0(r_A, y_A, id, sms.getN());
+		logger.debug("Public-Key-Validate:");
+		logger.debug("r_A from pairing: " + r_A);
+		logger.debug("y_A: " + y_A);
+		logger.debug("h_A: " + h_A);
+		logger.debug("T_A: " + T_A);
+		logger.debug("id: " + new String(id));
+		logger.debug("Ppub: " + Ppub);
 		logger.debug("v_A: " + v_A + " h_A: " + h_A);
 		return v_A.equals(h_A);
 
@@ -184,6 +181,7 @@ public abstract class BDCPSImpl implements BDCPS{
 	throws CipherException {
 		BigInteger u = randomBigInteger();
 		SMSField4  r = y_B.exp(u);
+		logger.debug("r before signcrypt: " + r);
 		//byte[] c = new byte[m.length]; // simulated symmetric encryption under key r (TODO: map r to an AES-128 key and encrypt m in pure CTR mode)
 		logger.debug("Message before signcrypt: " + new String(message));
 		logger.debug("Message before signcrypt: " + BDCPSUtil.printByteArray(message));
@@ -209,15 +207,17 @@ public abstract class BDCPSImpl implements BDCPS{
 		BigInteger h = new BigInteger(cryptogram[1]);
 		BigInteger z = new BigInteger(cryptogram[2]);
 		SMSField4 y_B = new SMSField4(sms, senderPublicValue, 0);
-		return unsigncrypt(c, z, h, id, senderId, y_A, y_B, x_A );
+		return unsigncrypt(c, z, h, senderId, id, y_B, y_A, x_A );
 
 	}
 
 	protected byte[] unsigncrypt(byte[] c, BigInteger z, BigInteger h, byte[] ID_A, byte[] ID_B, SMSField4 y_A, SMSField4 y_B, BigInteger x_A ) 
 	throws InvalidMessageException, CipherException {
 		SMSField4 r = y_A.fastSimultaneous(h.multiply(x_A).mod(sms.getN()), z, y_B);
-		BigInteger v = BDCPSUtil.h3(r, c, y_A, ID_A, y_B, ID_B, sms.getN());
+		logger.debug("r before unsigncrypt: " + r);
 		byte[] m = BDCPSUtil.h2(r, c, "DEC");
+		BigInteger v = BDCPSUtil.h3(r, m, y_A, ID_A, y_B, ID_B, sms.getN());
+		
 		if (v.compareTo(h) != 0) {
 			logger.debug("The failed message is: " + new String(m));
 			logger.debug("The failed message is: " + BDCPSUtil.printByteArray(m));
@@ -268,6 +268,10 @@ public abstract class BDCPSImpl implements BDCPS{
 	
 	public byte[] getPublicPoint() {
 		return Ppub.toByteArray(SMSPoint.COMPRESSED);
+	}
+	
+	public SMSPoint getPpub() {
+		return this.Ppub;
 	}
 	
 	public byte[][] getPublicKey() {

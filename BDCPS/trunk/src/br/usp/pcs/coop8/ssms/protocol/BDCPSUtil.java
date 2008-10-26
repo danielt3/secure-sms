@@ -56,10 +56,13 @@ public class BDCPSUtil {
 
 	@SuppressWarnings("unused")
 	protected static final BigInteger h1(SMSField4 y, byte[] id, BigInteger n) {
+		
 		sha.reset();
 		sha.update(y.toByteArray());
 		sha.update(id);
-		return (new BigInteger (sha.digest())).mod(n);
+		//return (new BigInteger (sha.digest())).mod(n);
+		
+		return BigInteger.valueOf((long)171);
 	}
 
 	@SuppressWarnings("unused")
@@ -84,17 +87,16 @@ public class BDCPSUtil {
 		rnd.nextBytes(iv);
 		byte[] ret;
 		int _mode;
-		Cipher cipher = null;
 		
 		//
 		key = new byte[16];
 		for (int i=0; i<key.length; i++)
 			key[i] = (byte)i;
-
 		//
 
+		Cipher cipher = null;
 		try {
-			cipher = Cipher.getInstance("AES/CTR/NoPadding");
+			cipher = Cipher.getInstance("AES/CTR/PKCS5Padding");
 		} catch (NoSuchAlgorithmException e) {
 			System.out.println("BDCPS: Invalid algorithm.");
 			e.printStackTrace();

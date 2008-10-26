@@ -51,16 +51,21 @@ public class BDCPSAuthority extends BDCPSImpl {
 		initParams();
 		s = masterKey.mod(sms.getN());
 		Ppub = P.multiply(s);		
+		byte[] Ppub_array = Ppub.toByteArray(SMSPoint.COMPRESSED);
+		SMSPoint Ppub2 = new SMSPoint(E, Ppub_array);
+		logger.debug("Ppubs are " + (Ppub.equals(Ppub2)? "equal" : "different"));
+		logger.debug("Auth's Ppub: " + Ppub.normalize());
+		logger.debug("Auth's generated Ppub: " + Ppub2.normalize());
 	}
 	
 	public byte[] privateKeyExtract(byte[] id, byte[] publicValue) {
 		if (id == null) throw new IllegalArgumentException ("BDCPS: id cannot be null!");
-		this.id = id;
+		if (sms == null) throw new RuntimeException ("BDCPS: SMSParams not set!");
 		SMSField4 y_A = new SMSField4(sms, publicValue, 0); 
 
 		if (s == null) throw new RuntimeException ("BDCPS: Trust Authority not set!");
 		if (y_A == null) throw new RuntimeException ("BDCPS: Public value not set!");
-		if (sms == null) throw new RuntimeException ("BDCPS: SMSParams not set!");
+		
 		//TODO: check k
 		SMSPoint2 Q_A = Q.multiply( (BDCPSUtil.h1(y_A, id, sms.getN()).add(s)).modInverse(sms.getN())).normalize();
 		if (!checkPrivateKey(Q_A, y_A, id)) throw new RuntimeException ("BDCPS: Failure at Check-Private-Key");

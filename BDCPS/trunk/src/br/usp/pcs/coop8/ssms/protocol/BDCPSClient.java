@@ -17,6 +17,10 @@ public class BDCPSClient extends BDCPSImpl {
 		setup(bits, publicPoint, id);
 	}
 	
+	public BDCPSClient(int bits, SMSPoint publicPoint, byte[] id) {
+		setup(bits, publicPoint, id);
+	}
+	
 	@SuppressWarnings("unused")
 	private BDCPSClient(){}
 	
@@ -31,9 +35,18 @@ public class BDCPSClient extends BDCPSImpl {
 	public void setup(int bits, byte[] param, byte[] id) {		
 		k = bits;
 		this.id = id;
-		initParams();		
-		this.Ppub = new SMSPoint(E, param);	
+		initParams();
+		this.Ppub = new SMSPoint(E, param).normalize();
+		logger.debug("Client's Ppub: " + Ppub.normalize());
 	}
+	
+	public void setup(int bits, SMSPoint Ppub, byte[] id) {
+				
+		k = bits;
+		this.id = id;
+		initParams();
+		this.Ppub = Ppub.normalize();
+	}	
 
 	@Override
 	public byte[] privateKeyExtract(byte[] id, byte[] publicValue) {
