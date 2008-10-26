@@ -3,6 +3,9 @@
  */
 package br.usp.pcs.coop8.ssms.protocol;
 
+import br.usp.pcs.coop8.ssms.protocol.exception.CipherException;
+import br.usp.pcs.coop8.ssms.protocol.exception.InvalidMessageException;
+
 /**
  * @author rodrigo
  *
@@ -67,7 +70,7 @@ public interface BDCPS {
 
 	public abstract byte[] getPublicValue();
 	
-	abstract byte[] getPublicPoint();
+	public abstract byte[] getPublicPoint();
 	
 	public abstract byte[][] getPublicKey();
 }

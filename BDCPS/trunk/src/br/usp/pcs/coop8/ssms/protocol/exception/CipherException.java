@@ -1,4 +1,4 @@
-package br.usp.pcs.coop8.ssms.protocol;
+package br.usp.pcs.coop8.ssms.protocol.exception;
 /**
  * 
  * @author rodrigo

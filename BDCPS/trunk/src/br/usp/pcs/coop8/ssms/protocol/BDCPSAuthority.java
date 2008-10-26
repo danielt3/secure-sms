@@ -53,9 +53,10 @@ public class BDCPSAuthority extends BDCPSImpl {
 		Ppub = P.multiply(s);		
 		byte[] Ppub_array = Ppub.toByteArray(SMSPoint.COMPRESSED);
 		SMSPoint Ppub2 = new SMSPoint(E, Ppub_array);
-		logger.debug("Ppubs are " + (Ppub.equals(Ppub2)? "equal" : "different"));
-		logger.debug("Auth's Ppub: " + Ppub.normalize());
-		logger.debug("Auth's generated Ppub: " + Ppub2.normalize());
+		
+		//logger.debug("Ppubs are " + (Ppub.equals(Ppub2)? "equal" : "different"));
+		//logger.debug("Auth's Ppub: " + Ppub.normalize());
+		//logger.debug("Auth's generated Ppub: " + Ppub2.normalize());
 	}
 	
 	public byte[] privateKeyExtract(byte[] id, byte[] publicValue) {

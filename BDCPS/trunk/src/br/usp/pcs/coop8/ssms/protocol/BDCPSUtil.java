@@ -20,6 +20,8 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import br.usp.larc.smspairing.SMSField4;
+import br.usp.larc.pbarreto.jaes.*; 
+import br.usp.pcs.coop8.ssms.protocol.exception.CipherException;
 
 /**
  * @author rodrigo
@@ -79,24 +81,52 @@ public class BDCPSUtil {
 
 	@SuppressWarnings("unused")
 	protected static final byte[] h2(SMSField4 y, byte[] message, String mode) throws CipherException {
+		//TODO: fix this. I am emulating a null cipher to check the signature.
+		//return message;
 		return CTR_AES(y.toByteArray(), message, mode, rnd);
 	}
-
-	private static final byte[] CTR_AES(byte[] key, byte[] data, String mode, SecureRandom rnd) throws CipherException {
-		byte[] iv = new byte[16];
-		rnd.nextBytes(iv);
-		byte[] ret;
-		int _mode;
+	
+	/**
+	 * This method calls the CMAC authentication code from pbarreto libs. Given a data chunk it returns a fixed size hash
+	 * 
+	 * @param data	the data to hash
+	 * @param bits	the block size in bits
+	 * @return		the fixed size hash
+	 * @author 		rodrigo
+	 */
+	private static final byte[] CMAC (byte[] data, int bits){
+		byte[] tag = new byte[16];
+		byte[] key = new byte[16];
+		for (int i=0;i<key.length;i++) key[i] = 0;
 		
-		//
-		key = new byte[16];
-		for (int i=0; i<key.length; i++)
-			key[i] = (byte)i;
-		//
+		BlockCipher cipher = new AES();
+		cipher.makeKey(key, bits, BlockCipher.DIR_ENCRYPT);
+		CMAC cmac = new CMAC(cipher);
+		cmac.init();
+		cmac.update(data);
+		cmac.finish(false);
+		cmac.getTag(tag, cipher.blockSize());
+		return tag;
+	}
+
+	@SuppressWarnings("unused")
+	private static final byte[] CTR_AES(byte[] r, byte[] data, String mode, SecureRandom rnd) throws CipherException {
+		
+		byte[] iv = new byte[16];
+		for (int i=0; i<iv.length; i++)	iv[i] = (byte)0;
+		
+		byte key[] = new byte[16];
+		byte[] ret = new byte[data.length];
+		int _mode;
+				
+		
+		
+		//Here we map r to a fixed size hash that will be used as a 128-bit key to AES
+		key = CMAC(r, 128);
 
 		Cipher cipher = null;
 		try {
-			cipher = Cipher.getInstance("AES/CTR/PKCS5Padding");
+			cipher = Cipher.getInstance("AES/CTR/NoPadding");
 		} catch (NoSuchAlgorithmException e) {
 			System.out.println("BDCPS: Invalid algorithm.");
 			e.printStackTrace();
@@ -145,9 +175,9 @@ public class BDCPSUtil {
 	}
 	
 	public static String printByteArray(byte[] array) {
-		String ret = new String();
+		String ret = new String() + "[ ";
 		for (int i = 0; i < array.length; i++)
-			ret += hex.charAt((array[i] & 0xff) >>> 4) + hex.charAt(array[i] & 15) + "\n";
-		return ret;
+			ret += hex.charAt((array[i] & 0xff) >>> 4) + hex.charAt(array[i] & 15) + " ";
+		return ret+" ]";
 	}
 }

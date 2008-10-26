@@ -8,6 +8,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import br.usp.larc.smspairing.SMSPoint;
+import br.usp.pcs.coop8.ssms.protocol.exception.CipherException;
+import br.usp.pcs.coop8.ssms.protocol.exception.InvalidMessageException;
 
 /**
  * @author rodrigo
@@ -80,8 +82,9 @@ public class BDCPSTest {
 		
 		
 		System.out.println("\nBegin sign- and unsigncryption:");
-		
-		byte[] m = "Hello, world!".getBytes();
+	
+		String plaintext = "Como possíveis aplicações de nossa solução, podemos citar a realização de transações bancárias usando mensagens SMS, sistemas de comunicação que requeiram confidencialidade e integridade (órgãos militares e governamentais, executivos de grandes empresas) ou apenas usuários comuns em busca de maiores níveis de privacidade.Este artigo compreende a descrição do cenário e desafios encontrados no levantamento dos requisitos de um sistema de troca de mensagens SMS seguro e na escolha e aplicação de um esquema de criptografia que garantisse esses requisitos. Desse modo, são discutidos os conceitos dos algoritmos BLMQ (baseado em identidades) e BDCPS (CL-PKC), criado devido ao insucesso do primeiro em atender aos requisitos do projeto.Os algoritmos citados anteriormente utilizam os conceitos de cifrassinatura e vericifração de mensagens. A cifrassinatura consiste em um método de criptografia de chave pública que garante infalsificabilidade e confidencialidade simultaneamente com um overhead menor do que o requerido pela assinatura digital seguida de encriptação de chave pública. Isto é alcançado assinando e encriptando uma mensagem em um único passo. A vericifração consiste da operação inversa, ou seja, a verificação da validade do autor da mensagem e sua decriptação de chave pública, simultaneamente.";
+  		byte[] m = plaintext.getBytes();
 		byte[][] c = null;
 		try {
 			c = alice.signcrypt(m, id_b.getBytes(), bob.getPublicValue());
