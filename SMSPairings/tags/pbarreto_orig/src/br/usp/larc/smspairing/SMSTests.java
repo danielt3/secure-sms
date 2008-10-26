@@ -1005,7 +1005,8 @@ public class SMSTests {
         if (!T_A_exp.equals(T_A)) {
         	throw new RuntimeException("Failure @Public-Key-Validate");
         }
-        r_A = pair.ate(T_A_exp, P.multiply(h1ID_A).add(Ppub)).multiply(y_A_exp.exp(h_A));
+        SMSField4 r_A2 = pair.ate(T_A_exp, P.multiply(h1ID_A).add(Ppub)).multiply(y_A_exp.exp(h_A));
+        if(r_A.equals(r_A2)) System.out.println("r_A é igual a r_A2!!!!!");
         BigInteger v_A = h_A; // simulated h_0(r_A, y_A, ID_A)
         if (v_A.compareTo(h_A) != 0) {
         	throw new RuntimeException("Failure @Public-Key-Validate");
