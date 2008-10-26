@@ -4,8 +4,13 @@
  */
 package br.usp.pcs.coop8.ssms.tests;
 
+import br.usp.pcs.coop8.ssms.message.AuthenticationMessage;
+import br.usp.pcs.coop8.ssms.message.HereIsYourQaMessage;
+import br.usp.pcs.coop8.ssms.message.MessageSsms;
+import br.usp.pcs.coop8.ssms.message.RequestMyQaMessage;
 import javax.microedition.io.Connector;
 import javax.microedition.media.control.MetaDataControl;
+import javax.wireless.messaging.BinaryMessage;
 import javax.wireless.messaging.MessageConnection;
 import javax.wireless.messaging.MessageListener;
 import javax.wireless.messaging.TextMessage;
@@ -59,7 +64,7 @@ public class SmsListener
     }
 
     public void notifyIncomingMessage(MessageConnection messageConnection) {
-        Output.println("Recieved SMS from " + messageConnection);
+        Output.println("Receieved SMS from " + messageConnection);
 
         this.threadListener =
                 new Thread() {
@@ -73,14 +78,21 @@ public class SmsListener
 
                     public void run() {
                         try {
-                            TextMessage msg = (TextMessage) conn.receive();
-                            Output.println("Recieved SMS: " + msg.getPayloadText());
-                            Output.println("Veio de: " + msg.getAddress());
+                            BinaryMessage binMsg = (BinaryMessage) conn.receive();
+                            Output.println("Recieved SMS: " +
+                                    Util.byteArrayToDebugableString(binMsg.getPayloadData()));
+                            Output.println("Veio de: " + binMsg.getAddress());
 
-                        //Adicionar código aqui!  Como mostrar na telinha??? =(
+                            MessageSsms msg = MessageSsms.getMessage(binMsg.getPayloadData());
                             
-
-
+                            if (msg instanceof AuthenticationMessage) {                                
+                                
+                            } else if (msg instanceof HereIsYourQaMessage)  {
+                                
+                            } else if (msg instanceof RequestMyQaMessage)  {
+                                
+                            }
+                        
                         } catch (Exception e) {
                             Output.println("SMS recieve Exception " + e);
                             e.printStackTrace();

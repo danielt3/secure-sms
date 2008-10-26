@@ -4,7 +4,11 @@
  */
 package br.usp.pcs.coop8.ssms.tests;
 
+import br.usp.pcs.coop8.ssms.message.MessageSsms;
+import br.usp.pcs.coop8.ssms.message.RequestMyQaMessage;
 import javax.microedition.io.Connector;
+import javax.wireless.messaging.BinaryMessage;
+import javax.wireless.messaging.Message;
 import javax.wireless.messaging.MessageConnection;
 import javax.wireless.messaging.TextMessage;
 
@@ -12,15 +16,27 @@ import javax.wireless.messaging.TextMessage;
  * Executa funcionalidades a partir do menu
  * @author Administrador
  */
-public abstract class Controlador {
+public abstract class Controller {
 
     private static SmsListener smsListener = null;
 
-    private Controlador() {
+    private Controller() {
     }
-    
+
     public static void enviarSmsAutenticacao(String telefone) {
-               
+
+    }
+
+    /**
+     * Pede o Qa para a operadora.
+     */
+    public static void requestMyQa(byte[] xA) {
+
+        BDCPS.getInstance().setPrivateKey(xA);
+        BDCPS.getInstance().setPublicValue();
+        byte[] ya = BDCPS.getInstance().getPublicValue();
+                
+        MessageSsms msg = new RequestMyQaMessage(ya);
     }
 
     public static void receberSms() {
@@ -37,7 +53,26 @@ public abstract class Controlador {
             MessageConnection conn = (MessageConnection) Connector.open(addr);
             TextMessage msg =
                     (TextMessage) conn.newMessage(MessageConnection.TEXT_MESSAGE);
-            msg.setPayloadText("GEO GEO GEO GEOVEMDETERRAAAA");
+
+
+            msg.setPayloadText(texto);
+
+            conn.send(msg);
+        } catch (IllegalArgumentException iae) {
+        //do something
+
+        } catch (Exception e) {
+        //do something
+        }
+    }
+
+    public static void enviarSmsBinario(String phone, byte[] data, int porta) {
+        try {
+            String addr = "sms://" + phone + ":" + porta;
+            MessageConnection conn = (MessageConnection) Connector.open(addr);
+            BinaryMessage msg = (BinaryMessage) conn.newMessage(MessageConnection.BINARY_MESSAGE);
+
+            msg.setPayloadData(data);
 
             conn.send(msg);
         } catch (IllegalArgumentException iae) {
