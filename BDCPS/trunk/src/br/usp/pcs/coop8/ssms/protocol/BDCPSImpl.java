@@ -4,19 +4,8 @@
 package br.usp.pcs.coop8.ssms.protocol;
 
 import java.math.BigInteger;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.security.spec.AlgorithmParameterSpec;
 import java.util.Random;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 
 import br.usp.larc.smspairing.*;
 import br.usp.pcs.coop8.ssms.protocol.BDCPSUtil;
@@ -26,89 +15,52 @@ import br.usp.pcs.coop8.ssms.protocol.BDCPSUtil;
  * @author rodrigo
  *
  */
-public class BDCPSImpl {
+public abstract class BDCPSImpl implements BDCPS{
 
 	/*   #### Constructors #### */
-
-	public BDCPSImpl() {}	
+	
 
 	/*   #### Private Class Members #### */
 
-	private int k;
+	
+	
+	protected int k;
 
-	private byte[] id;
+	protected byte[] id;
 
-	private BigInteger x_A, s;
+	protected BigInteger x_A;
 
-	private SMSPoint2 Q_A;
+	protected SMSPoint2 Q_A;
 
-	private byte[][] privateKey, publicKey;
+	protected byte[][] privateKey, publicKey;
 
-	private SMSParams sms;
+	protected SMSParams sms;
 
-	private SMSCurve E;
+	protected SMSCurve E;
 
-	private SMSCurve2 E2;
+	protected SMSCurve2 E2;
 
-	private SMSPoint P, Ppub;
+	protected SMSPoint P;
 
-	private SMSPoint2 Q;
+	protected SMSPoint Ppub;
 
-	private SMSPairing pair;
+	protected SMSPoint2 Q;
 
-	private SMSField4 y_A, g;
+	protected SMSPairing pair;
+
+	protected SMSField4 y_A, g;
 
 	private SecureRandom rnd;
-
-	private static final String HEX = "0123456789abcdef";
-
-
+	
+	protected Logger logger;
+	
+	private static final int LOG_MODE = 5;
 
 
 	/*   #### Protocol Methods #### */
-
-	/**
-	 * Trust authority setup
-	 * 
-	 * @param bits 		Security parameter (key size)
-	 * @param masterKey A byte array containing the trust authority master key
-	 * @author 			rodrigo
-	 * @since 			2008-10-25
-	 */
-	public void setupAuthority(int bits, byte[] masterKey) {
-
-		setupAuthority(bits, new BigInteger(masterKey));
-	}
-
-	/**
-	 * Trust authority setup
-	 * 
-	 * @param bits 		Security parameter (key size)
-	 * @param masterKey The trust authority master key (a BigInteger)
-	 * @author 			rodrigo
-	 * @since 			2008-10-25
-	 */
-	protected void setupAuthority(int bits, BigInteger masterKey) {
-		k = bits;
-		initParams();
-		s = masterKey.mod(sms.getN());
-		Ppub = P.multiply(s);		
-	}
-
-	/**
-	 * Client setup. Must be run before any method.
-	 * 
-	 * @param bits 		Security parameter (key size)
-	 * @param masterKey The trust authority's public point byte representation
-	 * @author 			rodrigo
-	 * @since 			2008-10-25
-	 */	
-	public void setup(int bits, byte[] publicPoint) {		
-		k = bits;
-		initParams();		
-		this.Ppub = new SMSPoint(E, publicPoint);	
-	}
-
+	
+	public abstract void setup(int bits, byte[] param, byte[] id);
+	
 	/**
 	 * This method sets secretValue as entity's secret value 
 	 * 
@@ -120,6 +72,7 @@ public class BDCPSImpl {
 
 	protected void setSecretValue(BigInteger secretValue) {
 		this.x_A = secretValue;
+		logger.debug("BDCPS: SetSecretValue "+x_A.toString());
 	}
 
 	/**
@@ -130,6 +83,8 @@ public class BDCPSImpl {
 	public void setPublicValue() {
 		if (x_A == null) throw new RuntimeException ("BDCPS: Secret value not set!");
 		this.y_A = g.exp(x_A);
+		logger.debug("BDCPS: SetPublicValue "+y_A.toString());
+		
 	}
 
 	/**
@@ -139,28 +94,18 @@ public class BDCPSImpl {
 	 * @return A byte representation (compressed) of the entity's private key
 	 * @author rodrigo
 	 */
-	public byte[] privateKeyExtract(byte[] id) {
-		if (id == null) throw new IllegalArgumentException ("BDCPS: id cannot be null!");
-		this.id = id;
-
-		if (s == null) throw new RuntimeException ("BDCPS: Trust Authority not set!");
-		if (y_A == null) throw new RuntimeException ("BDCPS: Public value not set!");
-		if (sms == null) throw new RuntimeException ("BDCPS: SMSParams not set!");
-		//TODO: check k
-		this.Q_A = Q.multiply(BDCPSUtil.h1(y_A, id).add(s).modInverse(sms.getN())).normalize();
-		if (!checkPrivateKey()) throw new RuntimeException ("BDCPS: Failure at Check-Private-Key");
-		return Q_A.toByteArray(SMSPoint2.COMPRESSED);
-	}
+	public abstract byte[] privateKeyExtract(byte[] id, byte[] publicValue);
 
 	/**
 	 * This method sets the privateKey pair to represent the entity's complete private key
 	 * 
 	 * @author rodrigo
 	 */
-	public void setPrivateKey() {
+	public void setPrivateKey(byte[] secretPoint) {
 		//TODO think about a way to serialize the objects!
+		this.Q_A = new SMSPoint2(E2, secretPoint);
 		this.privateKey[0] = this.x_A.toByteArray();
-		this.privateKey[1] = this.Q_A.toByteArray(SMSPoint2.COMPRESSED);    	
+		this.privateKey[1] = secretPoint;    	
 	}
 
 	/**
@@ -207,7 +152,7 @@ public class BDCPSImpl {
 
 	}
 
-	protected byte[][] signcrypt(byte[] message, byte[] receiverId, byte[] receiverPublicValue) 
+	public byte[][] signcrypt(byte[] message, byte[] receiverId, byte[] receiverPublicValue) 
 	throws CipherException {
 		if (y_A == null) throw new RuntimeException ("BDCPS: Public value not set!");
 		if (sms == null) throw new RuntimeException ("BDCPS: SMSParams not set!");
@@ -220,7 +165,7 @@ public class BDCPSImpl {
 		BigInteger u = randomBigInteger();
 		SMSField4  r = y_B.exp(u);
 		//byte[] c = new byte[m.length]; // simulated symmetric encryption under key r (TODO: map r to an AES-128 key and encrypt m in pure CTR mode)
-		byte[] c = BDCPSUtil.h2_enc(r, message, rnd);
+		byte[] c = BDCPSUtil.h2(r, message, "ENC");
 		BigInteger h = BDCPSUtil.h3(r, message, y_A, id, y_B, receiverId);
 		BigInteger z = u.subtract(x_A.multiply(h)).mod(sms.getN());
 
@@ -250,7 +195,7 @@ public class BDCPSImpl {
 		if (v.compareTo(h) != 0) {
 			throw new InvalidMessageException("BDCPS: Invalid message!");
 		}
-		byte[] m = BDCPSUtil.h2_dec(r, c, rnd);
+		byte[] m = BDCPSUtil.h2(r, c, "DEC");
 		return m;
 
 	}
@@ -258,7 +203,7 @@ public class BDCPSImpl {
 
 	/*   #### Auxliliary Methods #### */
 
-	private void initParams() {
+	protected void initParams() {
 		sms = new SMSParams(k);
 		E = new SMSCurve(sms);
 		E2 = new SMSCurve2(E);
@@ -266,11 +211,9 @@ public class BDCPSImpl {
 		Q = E2.getGt();
 		pair = new SMSPairing(E2);
 		g = pair.ate(Q, P);
-
-		//Pseudo Random Number Generator
-		byte[] randSeed = new byte[20];
-		(new Random()).nextBytes(randSeed);
-		rnd = new SecureRandom(randSeed);
+		logger = new Logger(LOG_MODE);
+		privateKey = new byte[3][];
+		publicKey = new byte[3][];
 	}
 
 	@SuppressWarnings("unused")
@@ -281,7 +224,8 @@ public class BDCPSImpl {
 	}
 
 	private BigInteger randomBigInteger() {
-		return new BigInteger(k, rnd).mod(sms.getN());
+		return BDCPSUtil.randomBigInteger(k).mod(sms.getN());
+		
 	}
 
 	/*   #### Accessor Methods #### */
@@ -290,8 +234,16 @@ public class BDCPSImpl {
 		return this.y_A.toByteArray();
 	}
 
-	public boolean checkPrivateKey() {
+	public boolean checkPrivateKey(SMSPoint2 Q_A, SMSField4 y_A, byte[] id) {
 		return pair.ate(Q_A, P.multiply(BDCPSUtil.h1(y_A, id)).add(Ppub)).equals(g);
+	}
+	
+	public byte[] getPublicPoint() {
+		return Ppub.toByteArray(SMSPoint.COMPRESSED);
+	}
+	
+	public byte[][] getPublicKey() {
+		return this.publicKey;
 	}
 
 

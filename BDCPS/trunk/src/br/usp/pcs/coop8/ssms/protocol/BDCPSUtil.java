@@ -6,9 +6,11 @@ package br.usp.pcs.coop8.ssms.protocol;
 import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
+import java.util.Random;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -24,39 +26,56 @@ import br.usp.larc.smspairing.SMSField4;
  *
  */
 public class BDCPSUtil {
+	
+	private static final String HASH_ALGORITHM = "SHA-1"; 
+	private static final MessageDigest sha;
+	private static final SecureRandom rnd;
+	
+	static{
+		try {
+			sha = MessageDigest.getInstance(HASH_ALGORITHM);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			throw new RuntimeException (e.getMessage());
+		}
+		//Pseudo Random Number Generator
+		byte[] randSeed = new byte[20];
+		(new Random()).nextBytes(randSeed);
+		rnd = new SecureRandom(randSeed);
+	}
+	
 	@SuppressWarnings("unused")
-	protected static final BigInteger h0(SMSField4 r, SMSField4 y, byte[] id) {
-		//TODO implement h0 function
-
-		return null;
+	protected static final BigInteger h0(SMSField4 r, SMSField4 y, byte[] id) {		
+		sha.reset();
+		sha.update(r.toByteArray());
+		sha.update(y.toByteArray());
+		sha.update(id);
+		return new BigInteger(sha.digest());
 	}
 
 	@SuppressWarnings("unused")
 	protected static final BigInteger h1(SMSField4 y, byte[] id) {
-		//TODO implement h1 function
-
-		return null;
+		sha.reset();
+		sha.update(y.toByteArray());
+		sha.update(id);
+		return new BigInteger (sha.digest());
 	}
-
-	@SuppressWarnings("unused")
-	protected static final byte[] h2_enc(SMSField4 y, byte[] message, SecureRandom rnd) throws CipherException {
-		//TODO implement h2 function
-		//that is, the CTR-AES
-		return CTR_AES(y.toByteArray(), message, "ENC", rnd);
-	}
-
-	@SuppressWarnings("unused")
-	protected static final byte[] h2_dec(SMSField4 y, byte[] message, SecureRandom rnd) throws CipherException {
-		//TODO implement h2 function
-		//that is, the CTR-AES
-		return CTR_AES(y.toByteArray(), message, "DEC", rnd);
-	}
-
 
 	@SuppressWarnings("unused")
 	protected static final BigInteger h3(SMSField4 r, byte[] m, SMSField4 y_A, byte[] id_A, SMSField4 y_B, byte[] id_B) {
-		//TODO implement h3 function
-		return null;
+		sha.reset();
+		sha.update(r.toByteArray());
+		sha.update(y_A.toByteArray());
+		sha.update(id_A);
+		sha.update(y_B.toByteArray());
+		sha.update(id_B);
+		sha.update(m);
+		return new BigInteger(sha.digest());
+	}
+
+	@SuppressWarnings("unused")
+	protected static final byte[] h2(SMSField4 y, byte[] message, String mode) throws CipherException {
+		return CTR_AES(y.toByteArray(), message, mode, rnd);
 	}
 
 	private static final byte[] CTR_AES(byte[] key, byte[] data, String mode, SecureRandom rnd) throws CipherException {
@@ -109,5 +128,9 @@ public class BDCPSUtil {
 			throw new CipherException("BDCPS: Bad padding.");
 		}
 		return ret;
+	}
+
+	public static BigInteger randomBigInteger(int k) {
+		return new BigInteger(k, rnd);
 	}
 }
