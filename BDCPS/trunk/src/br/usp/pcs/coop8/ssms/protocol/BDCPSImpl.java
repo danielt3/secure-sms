@@ -117,8 +117,16 @@ public abstract class BDCPSImpl implements BDCPS{
 		//TODO must get a random number??
 		BigInteger u_A = randomBigInteger();
 		SMSField4 r = g.exp(u_A);
-		BigInteger h_A = BDCPSUtil.h0(r, y_A, id);
-		SMSPoint2 T_A = Q_A.multiply(u_A.subtract(x_A.multiply(h_A)));
+		logger.debug("r from random u_A: " + r);
+		BigInteger h_A = BDCPSUtil.h0(r, y_A, id, sms.getN());
+		SMSPoint2 T_A = Q_A.multiply((u_A.subtract(x_A.multiply(h_A))).mod(sms.getN()));
+		logger.debug("setPublicKey:");
+		logger.debug("y_A before: "+ y_A.toString());
+		logger.debug("h_A before: "+ h_A.toString());
+		logger.debug("id: " + new String(id));
+		logger.debug("Ppub: " + Ppub);
+		logger.debug("T_A before: "+ T_A.toString());
+	
 
 		publicKey[0] = y_A.toByteArray();
 		publicKey[1] = h_A.toByteArray();
@@ -134,20 +142,32 @@ public abstract class BDCPSImpl implements BDCPS{
 	 */
 	public boolean publicKeyValidate(byte[][] publicKey, byte id[]) {
 		SMSField4 y_A = new SMSField4(sms, publicKey[0], 0);
-		//TODO verify if offset = 0 is right
 		BigInteger h_A = new BigInteger(publicKey[1]);
 		SMSPoint2 T_A = new SMSPoint2(E2, publicKey[2]);
-
+		//logger.debug("y_A after: "+y_A.toString());
+		//logger.debug("h_A after: "+h_A.toString());
+		//logger.debug("T_A after: "+T_A.toString());
 		return publicKeyValidate(y_A, h_A, T_A, id);
 	}
 
 	protected boolean publicKeyValidate(SMSField4 y_A, BigInteger h_A, SMSPoint2 T_A, byte[] id) {
-
+		//logger.debug("pk-validate: chegou");
 		//first check that y_A has order n
 		if (!(!y_A.isOne()) && (y_A.exp(BigInteger.valueOf((long)k)).isOne())) return false;
-
-		SMSField4 r_A = pair.ate(T_A, P.multiply(BDCPSUtil.h1(y_A, id)).add(Ppub)).multiply(y_A.exp(h_A));
-		BigInteger v_A = BDCPSUtil.h0(r_A, y_A, id);
+		//logger.debug("pk-validate: passei do isOne()");
+		
+		logger.debug("before pairing:");
+		logger.debug("y_A: " + y_A);
+		logger.debug("id: " + new String(id));
+		logger.debug("Ppub: " + Ppub);
+		logger.debug("T_A: " + T_A);
+		//SMSField4 r_A = pair.ate(T_A, P.multiply(BDCPSUtil.h1(y_A, id, sms.getN())).add(Ppub)).multiply(y_A.exp(h_A));
+		
+		SMSField4 r_A = pair.ate(T_A, P.multiply(BDCPSUtil.h1(y_A, id, sms.getN())).add(Ppub)).multiply(y_A.exp(h_A));
+		
+		logger.debug("r_A from pairing: " + r_A);
+		BigInteger v_A = BDCPSUtil.h0(r_A, y_A, id, sms.getN());
+		logger.debug("v_A: " + v_A + " h_A: " + h_A);
 		return v_A.equals(h_A);
 
 	}
@@ -165,8 +185,12 @@ public abstract class BDCPSImpl implements BDCPS{
 		BigInteger u = randomBigInteger();
 		SMSField4  r = y_B.exp(u);
 		//byte[] c = new byte[m.length]; // simulated symmetric encryption under key r (TODO: map r to an AES-128 key and encrypt m in pure CTR mode)
-		byte[] c = BDCPSUtil.h2(r, message, "ENC");
-		BigInteger h = BDCPSUtil.h3(r, message, y_A, id, y_B, receiverId);
+		logger.debug("Message before signcrypt: " + new String(message));
+		logger.debug("Message before signcrypt: " + BDCPSUtil.printByteArray(message));
+		byte[] c = new byte[message.length];
+		c = BDCPSUtil.h2(r, message, "ENC");
+		logger.debug("Message after signcrypt: " + BDCPSUtil.printByteArray(c));
+		BigInteger h = BDCPSUtil.h3(r, message, y_A, id, y_B, receiverId, sms.getN());
 		BigInteger z = u.subtract(x_A.multiply(h)).mod(sms.getN());
 
 		byte[][] cryptogram = new byte[3][];
@@ -181,6 +205,7 @@ public abstract class BDCPSImpl implements BDCPS{
 	public byte[] unsigncrypt(byte[][] cryptogram, byte[] senderId, byte[] senderPublicValue) 
 	throws InvalidMessageException, CipherException {
 		byte[] c = cryptogram[0];
+		logger.debug("Message before unsigncrypt: " + BDCPSUtil.printByteArray(c));
 		BigInteger h = new BigInteger(cryptogram[1]);
 		BigInteger z = new BigInteger(cryptogram[2]);
 		SMSField4 y_B = new SMSField4(sms, senderPublicValue, 0);
@@ -191,11 +216,13 @@ public abstract class BDCPSImpl implements BDCPS{
 	protected byte[] unsigncrypt(byte[] c, BigInteger z, BigInteger h, byte[] ID_A, byte[] ID_B, SMSField4 y_A, SMSField4 y_B, BigInteger x_A ) 
 	throws InvalidMessageException, CipherException {
 		SMSField4 r = y_A.fastSimultaneous(h.multiply(x_A).mod(sms.getN()), z, y_B);
-		BigInteger v = BDCPSUtil.h3(r, c, y_A, ID_A, y_B, ID_B);
+		BigInteger v = BDCPSUtil.h3(r, c, y_A, ID_A, y_B, ID_B, sms.getN());
+		byte[] m = BDCPSUtil.h2(r, c, "DEC");
 		if (v.compareTo(h) != 0) {
+			logger.debug("The failed message is: " + new String(m));
+			logger.debug("The failed message is: " + BDCPSUtil.printByteArray(m));
 			throw new InvalidMessageException("BDCPS: Invalid message!");
 		}
-		byte[] m = BDCPSUtil.h2(r, c, "DEC");
 		return m;
 
 	}
@@ -225,6 +252,7 @@ public abstract class BDCPSImpl implements BDCPS{
 
 	private BigInteger randomBigInteger() {
 		return BDCPSUtil.randomBigInteger(k).mod(sms.getN());
+		//return BigInteger.valueOf((long) 10).mod(sms.getN())
 		
 	}
 
@@ -235,7 +263,7 @@ public abstract class BDCPSImpl implements BDCPS{
 	}
 
 	public boolean checkPrivateKey(SMSPoint2 Q_A, SMSField4 y_A, byte[] id) {
-		return pair.ate(Q_A, P.multiply(BDCPSUtil.h1(y_A, id)).add(Ppub)).equals(g);
+		return pair.ate(Q_A, P.multiply(BDCPSUtil.h1(y_A, id, sms.getN())).add(Ppub)).equals(g);
 	}
 	
 	public byte[] getPublicPoint() {

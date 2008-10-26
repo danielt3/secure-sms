@@ -15,7 +15,7 @@ public class Logger {
 	
 	private void log(String message, int mode){
 		if (mode <= this.mode){
-			System.out.println("["+mode(mode)+"]" + " : " + message);
+			System.out.println("["+ mode(mode) +"]" + " " + message);
 		}
 	}
 	
@@ -31,18 +31,21 @@ public class Logger {
 		log (message, INFO);
 	}
 
-	private String mode(int mode2) {
-		String ret;
+	private String mode(int mode) {
+		String ret = "NULL";
 		switch (mode){
-		case NONE: ret = "NONE";
-		break;
-		case INFO: ret = "INFO";
-		break;
-		case WARN: ret = "WARN";
-		break;
-		case DEBUG: ret = "DEBUG";
-		default: ret = "?";
-		break;		
+		case NONE: 
+			ret = "NONE";
+			break;
+		case INFO:
+			ret = "INFO";
+			break;
+		case WARN: 
+			ret = "WARN";
+			break;
+		case DEBUG: 
+			ret = "DEBUG";
+			break;		
 		}		
 		return ret;
 	}

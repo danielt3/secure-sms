@@ -62,7 +62,7 @@ public class BDCPSAuthority extends BDCPSImpl {
 		if (y_A == null) throw new RuntimeException ("BDCPS: Public value not set!");
 		if (sms == null) throw new RuntimeException ("BDCPS: SMSParams not set!");
 		//TODO: check k
-		SMSPoint2 Q_A = Q.multiply(BDCPSUtil.h1(y_A, id).add(s).modInverse(sms.getN())).normalize();
+		SMSPoint2 Q_A = Q.multiply( (BDCPSUtil.h1(y_A, id, sms.getN()).add(s)).modInverse(sms.getN())).normalize();
 		if (!checkPrivateKey(Q_A, y_A, id)) throw new RuntimeException ("BDCPS: Failure at Check-Private-Key");
 		return Q_A.toByteArray(SMSPoint2.COMPRESSED);
 	}

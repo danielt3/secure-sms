@@ -30,6 +30,7 @@ public class BDCPSUtil {
 	private static final String HASH_ALGORITHM = "SHA-1"; 
 	private static final MessageDigest sha;
 	private static final SecureRandom rnd;
+	private static final String hex = "0123456789abcdef";
 	
 	static{
 		try {
@@ -45,24 +46,24 @@ public class BDCPSUtil {
 	}
 	
 	@SuppressWarnings("unused")
-	protected static final BigInteger h0(SMSField4 r, SMSField4 y, byte[] id) {		
+	protected static final BigInteger h0(SMSField4 r, SMSField4 y, byte[] id, BigInteger n) {		
 		sha.reset();
 		sha.update(r.toByteArray());
 		sha.update(y.toByteArray());
 		sha.update(id);
-		return new BigInteger(sha.digest());
+		return (new BigInteger(sha.digest())).mod(n);
 	}
 
 	@SuppressWarnings("unused")
-	protected static final BigInteger h1(SMSField4 y, byte[] id) {
+	protected static final BigInteger h1(SMSField4 y, byte[] id, BigInteger n) {
 		sha.reset();
 		sha.update(y.toByteArray());
 		sha.update(id);
-		return new BigInteger (sha.digest());
+		return (new BigInteger (sha.digest())).mod(n);
 	}
 
 	@SuppressWarnings("unused")
-	protected static final BigInteger h3(SMSField4 r, byte[] m, SMSField4 y_A, byte[] id_A, SMSField4 y_B, byte[] id_B) {
+	protected static final BigInteger h3(SMSField4 r, byte[] m, SMSField4 y_A, byte[] id_A, SMSField4 y_B, byte[] id_B, BigInteger n) {
 		sha.reset();
 		sha.update(r.toByteArray());
 		sha.update(y_A.toByteArray());
@@ -70,7 +71,7 @@ public class BDCPSUtil {
 		sha.update(y_B.toByteArray());
 		sha.update(id_B);
 		sha.update(m);
-		return new BigInteger(sha.digest());
+		return (new BigInteger(sha.digest())).mod(n);
 	}
 
 	@SuppressWarnings("unused")
@@ -79,11 +80,18 @@ public class BDCPSUtil {
 	}
 
 	private static final byte[] CTR_AES(byte[] key, byte[] data, String mode, SecureRandom rnd) throws CipherException {
-		byte[] iv = new byte[20];
+		byte[] iv = new byte[16];
 		rnd.nextBytes(iv);
 		byte[] ret;
 		int _mode;
 		Cipher cipher = null;
+		
+		//
+		key = new byte[16];
+		for (int i=0; i<key.length; i++)
+			key[i] = (byte)i;
+
+		//
 
 		try {
 			cipher = Cipher.getInstance("AES/CTR/NoPadding");
@@ -132,5 +140,12 @@ public class BDCPSUtil {
 
 	public static BigInteger randomBigInteger(int k) {
 		return new BigInteger(k, rnd);
+	}
+	
+	public static String printByteArray(byte[] array) {
+		String ret = new String();
+		for (int i = 0; i < array.length; i++)
+			ret += hex.charAt((array[i] & 0xff) >>> 4) + hex.charAt(array[i] & 15) + "\n";
+		return ret;
 	}
 }
