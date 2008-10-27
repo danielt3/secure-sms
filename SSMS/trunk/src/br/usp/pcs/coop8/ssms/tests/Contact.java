@@ -4,11 +4,13 @@
  */
 package br.usp.pcs.coop8.ssms.tests;
 
+import net.sourceforge.floggy.persistence.Persistable;
+
 /**
  *
  * @author Administrador
  */
-public class Contact {
+public class Contact implements Persistable {
 
     private String name;
     private String phone;

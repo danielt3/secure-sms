@@ -67,6 +67,7 @@ public abstract class BDCPS {
 	public abstract byte[][] signcrypt(byte[] message, byte[] receiverId, byte[] receiverPublicValue)
 	//throws CipherException
                 ;
+      
 
 	public abstract byte[] unsigncrypt(byte[][] cryptogram, byte[] senderId, byte[] senderPublicValue) 
 	//throws InvalidMessageException, CipherException
