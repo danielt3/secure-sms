@@ -21,33 +21,33 @@ public class ssms_main extends MIDlet implements CommandListener {
     private boolean midletPaused = false;
 
     //<editor-fold defaultstate="collapsed" desc=" Generated Fields ">//GEN-BEGIN:|fields|0|
-    private Image image;
-    private SimpleCancellableTask task;
-    private Command okCommand2;
-    private Command backCommand;
+    private Form SSMS_Results;
+    private TextField txtResults;
+    private List ListaInicial;
+    private Form form;
+    private TextField textField;
+    private Form FormAutenticarContato;
+    private TextField txtContatPhone;
+    private Alert alert;
+    private Alert alert1;
+    private Alert alert2;
+    private Alert alert3;
+    private Alert alert4;
+    private Form form1;
+    private TextField textField1;
+    private Command cancelCommand;
     private Command cancelCommand1;
     private Command okCommand;
     private Command cancelCommand2;
     private Command okCommand1;
-    private Command okCommand3;
+    private Command okCommand2;
+    private Command backCommand;
     private Command cancelCommand3;
-    private Command cancelCommand;
+    private Command okCommand3;
     private Command cancelCommand4;
     private Command okCommand4;
-    private Form FormAutenticarContato;
-    private TextField txtContatPhone;
-    private Alert alert3;
-    private List ListaInicial;
-    private Form form1;
-    private TextField textField1;
-    private Alert alert4;
-    private Alert alert1;
-    private Alert alert;
-    private Form form;
-    private TextField textField;
-    private Alert alert2;
-    private Form SSMS_Results;
-    private TextField txtResults;
+    private SimpleCancellableTask task;
+    private Image image;
     //</editor-fold>//GEN-END:|fields|0|
    
     //</editor-fold>
@@ -360,7 +360,8 @@ public class ssms_main extends MIDlet implements CommandListener {
     public TextField getTextField() {
         if (textField == null) {//GEN-END:|52-getter|0|52-preInit
             // write pre-init user code here
-            textField = new TextField("textField", Output.getOutput(), Output.getOutput().length(), TextField.ANY);//GEN-LINE:|52-getter|1|52-postInit
+            textField = new TextField("textField", Output.getOutput(), ((Output.getOutput().length() != 0)//GEN-BEGIN:|52-getter|1|52-postInit
+                    ? Output.getOutput().length() : 1), TextField.ANY);//GEN-END:|52-getter|1|52-postInit
             // write post-init user code here
         }//GEN-BEGIN:|52-getter|2|
         return textField;

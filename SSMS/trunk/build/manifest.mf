@@ -1,4 +1,4 @@
-MIDlet-1: ssms_main, , SSMS_Design.ssms_main
+MIDlet-1: ssms_main,,br.usp.pcs.coop8.ssms.application.ssms_main
 MicroEdition-Configuration: CLDC-1.1
 MIDlet-Vendor: Vendor
 MicroEdition-Profile: MIDP-2.0

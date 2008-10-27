@@ -4,18 +4,13 @@
  */
 package br.usp.pcs.coop8.ssms.messaging;
 
+import br.usp.pcs.coop8.ssms.application.KgbSsms;
 import br.usp.pcs.coop8.ssms.util.Output;
 import br.usp.pcs.coop8.ssms.util.Util;
-import br.usp.pcs.coop8.ssms.messaging.AuthenticationMessage;
-import br.usp.pcs.coop8.ssms.messaging.HereIsYourQaMessage;
-import br.usp.pcs.coop8.ssms.messaging.MessageSsms;
-import br.usp.pcs.coop8.ssms.messaging.RequestMyQaMessage;
 import javax.microedition.io.Connector;
-import javax.microedition.media.control.MetaDataControl;
 import javax.wireless.messaging.BinaryMessage;
 import javax.wireless.messaging.MessageConnection;
 import javax.wireless.messaging.MessageListener;
-import javax.wireless.messaging.TextMessage;
 
 /**
  *
@@ -47,12 +42,22 @@ public class SmsListener
     }
 
     public void startListening() {
-        try {
-            this.messageConnection = (MessageConnection) Connector.open("sms://:" + port);
-            this.messageConnection.setMessageListener(this);
-        } catch (Exception e) {
-            System.out.println("Exception: " + e);
-        }
+
+        final SmsListener _this = this;
+
+        new Thread() {
+
+            public void run() {
+                try {
+                    messageConnection = (MessageConnection) Connector.open("sms://:" + port);
+                    messageConnection.setMessageListener(_this);
+                } catch (Exception e) {
+                    System.out.println("Exception: " + e);
+                }
+            }
+        }.start();
+
+
     }
 
     public void stopListening() {
@@ -62,6 +67,7 @@ public class SmsListener
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+
         }
     }
 
@@ -73,7 +79,8 @@ public class SmsListener
 
                     MessageConnection conn;
 
-                    Thread set(MessageConnection conn) {
+                    Thread set(
+                            MessageConnection conn) {
                         this.conn = conn;
                         return (this);
                     }
@@ -85,20 +92,29 @@ public class SmsListener
                                     Util.byteArrayToDebugableString(binMsg.getPayloadData()));
                             Output.println("Came from: " + binMsg.getAddress());
 
+                            // A string é assim: sms://01185841768
+
+                            //Desse jeito vem 10 dígitos
+                            String telRemetente = binMsg.getAddress().substring(7, 17);
+
                             MessageSsms msg = MessageSsms.getMessage(binMsg.getPayloadData());
-                            
-                            if (msg instanceof AuthenticationMessage) {                                
-                                
-                            } else if (msg instanceof HereIsYourQaMessage)  {
-                                
-                            } else if (msg instanceof RequestMyQaMessage)  {
-                                
+
+                            if (msg instanceof AuthenticationMessage) {
+
+                            } else if (msg instanceof HereIsYourQaMessage) {
+                                byte myQa[] = ((HereIsYourQaMessage) msg).getQA();
+                            //TODO: persistir meu QA !
+
+                            } else if (msg instanceof RequestMyQaMessage) {
+                                //Aqui vou me passar por KGB
+                                KgbSsms.returnQaMessage((RequestMyQaMessage) msg, telRemetente.getBytes());
                             }
-                        
+
                         } catch (Exception e) {
                             Output.println("SMS recieve Exception " + e);
                             e.printStackTrace();
                         }
+
                     }
                 }.set(messageConnection);
 

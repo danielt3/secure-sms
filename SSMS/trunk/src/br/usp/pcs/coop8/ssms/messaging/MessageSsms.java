@@ -15,7 +15,6 @@ public abstract class MessageSsms {
     public static final byte HERE_IS_YOUR_QA = 0x01;
     public static final byte AUTHENTICATE_ME = 0x02;
     public static final byte SIGNCRYPTED_MESSAGE = 0x03;
-    
     protected byte[] messageBytes;
 
     /**
@@ -23,16 +22,40 @@ public abstract class MessageSsms {
      * e retorna a instância adequada da mensagem
      */
     public static MessageSsms getMessage(byte[] msgBytes) {
-        //TODO: implementar
-        return null;
+
+        MessageSsms ret;
+        switch (msgBytes[1]) {
+            case GIMME_QA:
+                ret = new RequestMyQaMessage();
+                ret.deserialize(msgBytes);
+                break;
+            case HERE_IS_YOUR_QA:
+                ret = new HereIsYourQaMessage();
+                ret.deserialize(msgBytes);
+                break;
+            case AUTHENTICATE_ME:
+                ret = new AuthenticationMessage();
+                ret.deserialize(msgBytes);
+                break;
+            case SIGNCRYPTED_MESSAGE:
+                ret = new SigncryptedMessage();
+                ret.deserialize(msgBytes);
+                break;
+            default:
+                ret = null;               
+
+        }
+        return ret;
     }
 
     /**
      * Retorna os bytes binários da mensagem (8 bits)
      */
-    public byte[] getBytes() {
+    public byte[] getMessageBytes() {
         return this.messageBytes;
     }
     
-    //protected abstract void deserialize(byte[] rawMessage);
+    protected void deserialize(byte[] rawMessage) {
+        this.messageBytes = rawMessage;
+    }
 }

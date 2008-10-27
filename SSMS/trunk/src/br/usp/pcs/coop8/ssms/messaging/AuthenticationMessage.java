@@ -4,7 +4,6 @@
  */
 package br.usp.pcs.coop8.ssms.messaging;
 
-import br.usp.pcs.coop8.ssms.protocol.BDCPS;
 import br.usp.pcs.coop8.ssms.util.Util;
 
 /**
@@ -13,19 +12,30 @@ import br.usp.pcs.coop8.ssms.util.Util;
  */
 public class AuthenticationMessage extends MessageSsms {
 
-
     private byte[] yA;
     private byte[] hA;
     private byte[] tA;
 
-    private AuthenticationMessage() {
+    protected AuthenticationMessage() {
     }
-    
+
     public AuthenticationMessage(byte[] yA, byte[] hA, byte[] tA) {
         this.yA = yA;
         this.hA = hA;
         this.tA = tA;
         this.messageBytes = serialize(yA, hA, tA);
+    }
+
+    public byte[] getYA() {
+        return yA;
+    }
+
+    public byte[] getHA() {
+        return hA;
+    }
+
+    public byte[] getTA() {
+        return tA;
     }
 
     private byte[] serialize(byte[] yA, byte[] hA, byte[] tA) {
@@ -42,11 +52,12 @@ public class AuthenticationMessage extends MessageSsms {
         return msgBytes;
 
     }
-    
-    public AuthenticationMessage(byte[] rawMessage) {
-        
-        this.messageBytes = rawMessage;
-        
+
+    public void deserialize(byte[] rawMessage) {
+        super.deserialize(messageBytes);
+        yA = new byte[22];
+        hA = new byte[22];
+        tA = new byte[22];
         System.arraycopy(messageBytes, 2, yA, 0, 22);
         System.arraycopy(messageBytes, 24, hA, 0, 22);
         System.arraycopy(messageBytes, 46, tA, 0, 22);

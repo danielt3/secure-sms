@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package br.usp.pcs.coop8.ssms.data;
 
 import java.util.Date;
@@ -12,16 +11,21 @@ import net.sourceforge.floggy.persistence.Persistable;
  *
  * @author rodrigo
  */
-public class PersistentMessage implements Persistable{
-    
+public class PersistentMessage implements Persistable {
+
     private Contact from;
     private Contact to;
     private Date date;
-    private String content;
+    private byte[] content;
+
+    public PersistentMessage() {
+        
+        
+        
+    }
     
-    public PersistentMessage(){}
-    
-    public PersistentMessage(Contact from, Contact to, String content) {
+
+    public PersistentMessage(Contact from, Contact to, byte[] content) {
         this.from = from;
         this.to = to;
         this.content = content;
@@ -51,12 +55,11 @@ public class PersistentMessage implements Persistable{
         this.date = date;
     }
 
-    public String getContent() {
+    public byte[] getContent() {
         return content;
     }
 
-    public void setContent(String content) {
+    public void setContent(byte[] content) {
         this.content = content;
     }
-
 }

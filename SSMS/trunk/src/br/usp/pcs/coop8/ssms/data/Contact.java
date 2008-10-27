@@ -14,24 +14,28 @@ public class Contact implements Persistable {
 
     private String name;
     private String phone;
-    private byte[] publicValue;
+    private byte[] yA;
+    private byte[] tA;
+    private byte[] hA;
     private boolean validated;
-    
-    public Contact(){}
 
-    public Contact(String name, String phone, byte[] publicValue) {
+    public Contact() {
+    }
+
+    public Contact(String name, String phone, byte[] yA, byte[] tA, byte[] hA) {
 
         this.name = name;
         this.phone = phone;
-        this.publicValue = publicValue;
+        this.yA = yA;
+        this.tA = tA;
+        this.hA = hA;
         this.validated = false;
     }
-    
+
     public Contact(String name, String phone) {
 
         this.name = name;
         this.phone = phone;
-        this.publicValue = null;
         this.validated = false;
     }
 
@@ -47,14 +51,22 @@ public class Contact implements Persistable {
         return phone;
     }
 
-    public byte[] getPublicValue() {
-        return publicValue;
+    public byte[] getYA() {
+        return yA;
     }
-    
+
+    public byte[] getHA() {
+        return hA;
+    }
+
+    public byte[] getTA() {
+        return tA;
+    }
+
     public boolean isKeyValid() {
         return validated;
     }
-    
+
     public void setKeyValid(boolean value) {
         this.validated = value;
     }
