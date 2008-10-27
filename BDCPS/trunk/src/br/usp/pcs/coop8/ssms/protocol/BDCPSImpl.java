@@ -5,10 +5,8 @@ package br.usp.pcs.coop8.ssms.protocol;
 
 
 import br.usp.larc.smspairing.*;
-import br.usp.pcs.coop8.ssms.protocol.BDCPSUtil;
 import br.usp.pcs.coop8.ssms.protocol.exception.CipherException;
 import br.usp.pcs.coop8.ssms.protocol.exception.InvalidMessageException;
-//import pseudojava.BigInteger;
 import br.usp.pcs.coop8.ssms.util.Logger;
 import pseudojava.BigInteger;
 import pseudojava.SecureRandom;

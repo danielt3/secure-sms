@@ -22,7 +22,7 @@ package br.usp.larc.pbarreto.jaes;
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import java.util.Arrays;
+//import java.util.Arrays;
 
 /*********************************************************************
  * Algorithm CMAC_K^t(M)
@@ -50,16 +50,16 @@ public final class CMAC extends MAC {
         L = new int[block_ints];
         V = new int[block_ints];
         T = new byte[block_size];
-        Arrays.fill(L, 0);
-        Arrays.fill(V, 0);
-        Arrays.fill(T, (byte)0);
+        //Arrays.fill(L, 0);
+        //Arrays.fill(V, 0);
+        //Arrays.fill(T, (byte)0);
         rem = block_size;
         state = -1;
     }
 
     public void init() {
         // compute padding mask:
-        Arrays.fill(L, 0);
+        //Arrays.fill(L, 0);
         _E.encrypt(L, L); // L = E_K(0^n)
         int c = (L[0] & 0x80000000) != 0 ? mask : 0;
         for (int b = 0; b < block_ints - 1; b++) {
@@ -67,7 +67,7 @@ public final class CMAC extends MAC {
         }
         L[block_ints - 1] = (L[block_ints - 1] << 1) ^ c; // B = 2L
         // initialize tag accumulator
-        Arrays.fill(T, (byte)0);
+        //Arrays.fill(T, (byte)0);
         rem = block_size;
         state = 0; // initialized
     }
@@ -153,9 +153,9 @@ public final class CMAC extends MAC {
     }
 
     public void finalize() {
-        Arrays.fill(L, 0);
-        Arrays.fill(V, 0);
-        Arrays.fill(T, (byte)0);
+        //Arrays.fill(L, 0);
+        //Arrays.fill(V, 0);
+        //Arrays.fill(T, (byte)0);
         rem = 0;
         state = -1;
     }

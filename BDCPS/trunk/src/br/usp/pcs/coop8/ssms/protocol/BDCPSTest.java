@@ -8,6 +8,7 @@ import java.security.NoSuchAlgorithmException;
 
 import br.usp.pcs.coop8.ssms.protocol.exception.CipherException;
 import br.usp.pcs.coop8.ssms.protocol.exception.InvalidMessageException;
+import java.security.DigestException;
 
 /**
  * @author rodrigo
@@ -40,12 +41,32 @@ public class BDCPSTest {
 		String id_b = "551188884321";
 		String id_auth = "thegodfather";
 		
-		byte[] s = sha.digest(masterKey.getBytes());
-		sha.reset();
-		byte[] xa_alice = sha.digest(aliceKey.getBytes());
-		sha.reset();
-		byte[] xb_bob = sha.digest(bobKey.getBytes());
+                byte[] s = new byte[20];
+                byte[] xa_alice = new byte[20];
+                byte[] xb_bob = new byte[20];
+                
+                try
+                {
+                    sha.update(masterKey.getBytes(), 0, masterKey.getBytes().length);
+                    sha.digest(s,0,20);
+                
+                    sha.reset();
 		
+                    sha.update(aliceKey.getBytes(),0,aliceKey.getBytes().length);
+                    sha.digest(xa_alice, 0, 20);
+                
+                    sha.reset();
+		
+                    sha.update(bobKey.getBytes(),0,bobKey.getBytes().length);
+                    sha.digest(xb_bob, 0, 20);
+                }
+                catch(DigestException ex)
+                {
+                    System.out.println("BDCPS: Digest exception.");
+                    ex.printStackTrace();
+                    //TODO: arrumar
+                    throw new RuntimeException("BDCPS: Digest exception.");
+                }
 		BDCPS auth = new BDCPSAuthority(bits, s, id_auth.getBytes());
 		BDCPS alice = new BDCPSClient(bits, auth.getPublicPoint(), id_a.getBytes());
 		BDCPS bob = new BDCPSClient(bits, auth.getPublicPoint(), id_b.getBytes());
