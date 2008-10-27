@@ -2,10 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.usp.pcs.coop8.ssms.tests;
+package br.usp.pcs.coop8.ssms.application;
 
-import br.usp.pcs.coop8.ssms.message.MessageSsms;
-import br.usp.pcs.coop8.ssms.message.RequestMyQaMessage;
+import br.usp.pcs.coop8.ssms.protocol.BDCPS;
+import br.usp.pcs.coop8.ssms.messaging.SmsListener;
+import br.usp.pcs.coop8.ssms.messaging.MessageSsms;
+import br.usp.pcs.coop8.ssms.messaging.RequestMyQaMessage;
 import javax.microedition.io.Connector;
 import javax.wireless.messaging.BinaryMessage;
 import javax.wireless.messaging.Message;
@@ -31,12 +33,13 @@ public abstract class Controller {
      * Pede o Qa para a operadora.
      */
     public static void requestMyQa(byte[] xA) {
-
+/**
         BDCPS.getInstance().setPrivateKey(xA);
         BDCPS.getInstance().setPublicValue();
         byte[] ya = BDCPS.getInstance().getPublicValue();
                 
         MessageSsms msg = new RequestMyQaMessage(ya);
+ */
     }
 
     public static void receberSms() {

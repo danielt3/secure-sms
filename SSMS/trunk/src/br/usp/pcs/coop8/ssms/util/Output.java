@@ -1,4 +1,4 @@
-package br.usp.pcs.coop8.ssms.tests;
+package br.usp.pcs.coop8.ssms.util;
 
 /**
  * Classe para simular um console no celular.

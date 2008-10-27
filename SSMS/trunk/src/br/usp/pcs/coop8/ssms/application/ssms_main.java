@@ -3,8 +3,10 @@
  * and open the template in the editor.
  */
 
-package br.usp.pcs.coop8.ssms.tests;
+package br.usp.pcs.coop8.ssms.application;
 
+import br.usp.pcs.coop8.ssms.util.Output;
+import br.usp.pcs.coop8.ssms.util.Util;
 import br.usp.larc.smspairing.*;
 import javax.microedition.midlet.*;
 import javax.microedition.lcdui.*;
@@ -19,33 +21,33 @@ public class ssms_main extends MIDlet implements CommandListener {
     private boolean midletPaused = false;
 
     //<editor-fold defaultstate="collapsed" desc=" Generated Fields ">//GEN-BEGIN:|fields|0|
-    private Form SSMS_Results;
-    private TextField txtResults;
-    private List ListaInicial;
-    private Form form;
-    private TextField textField;
-    private Form FormAutenticarContato;
-    private TextField txtContatPhone;
-    private Alert alert;
-    private Alert alert1;
-    private Alert alert2;
-    private Alert alert3;
-    private Alert alert4;
-    private Form form1;
-    private TextField textField1;
-    private Command cancelCommand;
+    private Image image;
+    private SimpleCancellableTask task;
+    private Command okCommand2;
+    private Command backCommand;
     private Command cancelCommand1;
     private Command okCommand;
     private Command cancelCommand2;
     private Command okCommand1;
-    private Command okCommand2;
-    private Command backCommand;
-    private Command cancelCommand3;
     private Command okCommand3;
+    private Command cancelCommand3;
+    private Command cancelCommand;
     private Command cancelCommand4;
     private Command okCommand4;
-    private SimpleCancellableTask task;
-    private Image image;
+    private Form FormAutenticarContato;
+    private TextField txtContatPhone;
+    private Alert alert3;
+    private List ListaInicial;
+    private Form form1;
+    private TextField textField1;
+    private Alert alert4;
+    private Alert alert1;
+    private Alert alert;
+    private Form form;
+    private TextField textField;
+    private Alert alert2;
+    private Form SSMS_Results;
+    private TextField txtResults;
     //</editor-fold>//GEN-END:|fields|0|
    
     //</editor-fold>
@@ -280,8 +282,9 @@ public class ssms_main extends MIDlet implements CommandListener {
             ListaInicial.append("Parar escuta", null);
             ListaInicial.append("Enviar torpedo", null);
             ListaInicial.append("Ver OutPut", null);
+            ListaInicial.append("Teste BDCPS", null);
             ListaInicial.setCommandListener(this);
-            ListaInicial.setSelectedFlags(new boolean[] { false, false, false, false, false, false });//GEN-END:|26-getter|1|26-postInit
+            ListaInicial.setSelectedFlags(new boolean[] { false, false, false, false, false, false, false });//GEN-END:|26-getter|1|26-postInit
             // write post-init user code here
         }//GEN-BEGIN:|26-getter|2|
         return ListaInicial;
@@ -320,11 +323,15 @@ public class ssms_main extends MIDlet implements CommandListener {
                 // write pre-action user code here
                 switchDisplayable(null, getForm());//GEN-LINE:|26-action|12|35-postAction
                 // write post-action user code here
-            }//GEN-BEGIN:|26-action|13|26-postAction
-        }//GEN-END:|26-action|13|26-postAction
+            } else if (__selectedString.equals("Teste BDCPS")) {//GEN-LINE:|26-action|13|123-preAction
+                // write pre-action user code here
+                br.usp.pcs.coop8.ssms.tests.BDCPSTestCel.test();//GEN-LINE:|26-action|14|123-postAction
+                // write post-action user code here
+            }//GEN-BEGIN:|26-action|15|26-postAction
+        }//GEN-END:|26-action|15|26-postAction
         // enter post-action user code here
-    }//GEN-BEGIN:|26-action|14|
-    //</editor-fold>//GEN-END:|26-action|14|
+    }//GEN-BEGIN:|26-action|16|
+    //</editor-fold>//GEN-END:|26-action|16|
 
 
 

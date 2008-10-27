@@ -80,4 +80,23 @@
             </target>
 
             -->
+            
+            
+    <property name="floggy.path" value="/home/rodrigo/Desktop/PF/Resources/floggy-persistence-1.1.1"/>
+    
+    <path id="floggy.classpath">
+        <fileset dir="${floggy.path}\lib" includes="*.jar"/>
+    </path>
+    
+    <target name="post-compile">
+        <taskdef 
+            name="floggy-persistence-weaver" 
+            classname="net.sourceforge.floggy.persistence.WeaverTask"
+            classpathref="floggy.classpath"/>
+        <floggy-persistence-weaver
+            bootclasspath="${platform.bootclasspath}"
+            classpath="${libs.classpath}"
+            input="${build.classes.dir}"
+            output="${build.classes.dir}"/>
+    </target>
 </project>

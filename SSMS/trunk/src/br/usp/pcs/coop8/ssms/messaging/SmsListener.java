@@ -2,12 +2,14 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.usp.pcs.coop8.ssms.tests;
+package br.usp.pcs.coop8.ssms.messaging;
 
-import br.usp.pcs.coop8.ssms.message.AuthenticationMessage;
-import br.usp.pcs.coop8.ssms.message.HereIsYourQaMessage;
-import br.usp.pcs.coop8.ssms.message.MessageSsms;
-import br.usp.pcs.coop8.ssms.message.RequestMyQaMessage;
+import br.usp.pcs.coop8.ssms.util.Output;
+import br.usp.pcs.coop8.ssms.util.Util;
+import br.usp.pcs.coop8.ssms.messaging.AuthenticationMessage;
+import br.usp.pcs.coop8.ssms.messaging.HereIsYourQaMessage;
+import br.usp.pcs.coop8.ssms.messaging.MessageSsms;
+import br.usp.pcs.coop8.ssms.messaging.RequestMyQaMessage;
 import javax.microedition.io.Connector;
 import javax.microedition.media.control.MetaDataControl;
 import javax.wireless.messaging.BinaryMessage;
@@ -81,7 +83,7 @@ public class SmsListener
                             BinaryMessage binMsg = (BinaryMessage) conn.receive();
                             Output.println("Recieved SMS: " +
                                     Util.byteArrayToDebugableString(binMsg.getPayloadData()));
-                            Output.println("Veio de: " + binMsg.getAddress());
+                            Output.println("Came from: " + binMsg.getAddress());
 
                             MessageSsms msg = MessageSsms.getMessage(binMsg.getPayloadData());
                             

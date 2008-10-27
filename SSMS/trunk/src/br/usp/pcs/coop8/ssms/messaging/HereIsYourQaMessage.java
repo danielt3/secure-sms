@@ -3,10 +3,10 @@
  * and open the template in the editor.
  */
 
-package br.usp.pcs.coop8.ssms.message;
+package br.usp.pcs.coop8.ssms.messaging;
 
-import br.usp.pcs.coop8.ssms.tests.BDCPS;
-import br.usp.pcs.coop8.ssms.tests.Util;
+import br.usp.pcs.coop8.ssms.protocol.BDCPS;
+import br.usp.pcs.coop8.ssms.util.Util;
 
 /**
  *
@@ -30,7 +30,7 @@ public class HereIsYourQaMessage extends MessageSsms {
         byte[] msgBytes = new byte[140];
         //22 bytes cada..         
         msgBytes[0] = (byte) ((int) Util.BYTE_BASE_VERSAO ^ (int) MessageSsms.AUTHENTICATE_ME);
-        msgBytes[1] = (byte) BDCPS.getInstance().getK();
+        //msgBytes[1] = (byte) BDCPS.getInstance().getK();
         
         System.arraycopy(qA, 0, msgBytes, 2, 22);
         

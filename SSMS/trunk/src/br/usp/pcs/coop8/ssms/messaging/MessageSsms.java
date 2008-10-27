@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.usp.pcs.coop8.ssms.message;
+package br.usp.pcs.coop8.ssms.messaging;
 
 /**
  *
@@ -34,5 +34,5 @@ public abstract class MessageSsms {
         return this.messageBytes;
     }
     
-    protected abstract void deserialize(byte[] rawMessage);
+    //protected abstract void deserialize(byte[] rawMessage);
 }

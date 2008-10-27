@@ -2,9 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.usp.pcs.coop8.ssms.message;
+package br.usp.pcs.coop8.ssms.messaging;
 
-import br.usp.pcs.coop8.ssms.tests.*;
+import br.usp.pcs.coop8.ssms.protocol.BDCPS;
+import br.usp.pcs.coop8.ssms.util.Util;
 
 /**
  *
@@ -27,12 +28,12 @@ public class AuthenticationMessage extends MessageSsms {
         this.messageBytes = serialize(yA, hA, tA);
     }
 
-    private static byte[] serialize(byte[] yA, byte[] hA, byte[] tA) {
+    private byte[] serialize(byte[] yA, byte[] hA, byte[] tA) {
 
         byte[] msgBytes = new byte[140];
         //22 bytes cada..         
         msgBytes[0] = (byte) ((int) Util.BYTE_BASE_VERSAO ^ (int) MessageSsms.AUTHENTICATE_ME);
-        msgBytes[1] = (byte) BDCPS.getInstance().getK();
+        //msgBytes[1] = (byte) BDCPS.getInstance().getK();
 
         System.arraycopy(yA, 0, msgBytes, 2, 22);
         System.arraycopy(hA, 0, msgBytes, 24, 22);
@@ -42,7 +43,8 @@ public class AuthenticationMessage extends MessageSsms {
 
     }
     
-    protected void deserialize(byte[] rawMessage) {
+    public AuthenticationMessage(byte[] rawMessage) {
+        
         this.messageBytes = rawMessage;
         
         System.arraycopy(messageBytes, 2, yA, 0, 22);
