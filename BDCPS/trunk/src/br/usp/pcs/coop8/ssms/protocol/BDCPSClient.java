@@ -3,8 +3,6 @@
  */
 package br.usp.pcs.coop8.ssms.protocol;
 
-import java.math.BigInteger;
-
 import br.usp.larc.smspairing.SMSPoint;
 
 /**
@@ -21,7 +19,6 @@ public class BDCPSClient extends BDCPSImpl {
 		setup(bits, publicPoint, id);
 	}
 	
-	@SuppressWarnings("unused")
 	private BDCPSClient(){}
 	
 	/**
@@ -49,7 +46,6 @@ public class BDCPSClient extends BDCPSImpl {
 		this.Ppub = Ppub.normalize();
 	}	
 
-	@Override
 	public byte[] privateKeyExtract(byte[] id, byte[] publicValue) {
 		throw new RuntimeException("BDCPS: A client cannot run privateKeyExtract!");
 	}

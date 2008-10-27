@@ -3,12 +3,12 @@
  */
 package br.usp.pcs.coop8.ssms.protocol;
 
-import java.math.BigInteger;
+
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
+
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Random;
 
@@ -22,6 +22,7 @@ import javax.crypto.spec.SecretKeySpec;
 import br.usp.larc.smspairing.SMSField4;
 import br.usp.larc.pbarreto.jaes.*; 
 import br.usp.pcs.coop8.ssms.protocol.exception.CipherException;
+import pseudojava.BigInteger;
 
 /**
  * @author rodrigo
@@ -47,7 +48,6 @@ public class BDCPSUtil {
 		rnd = new SecureRandom(randSeed);
 	}
 	
-	@SuppressWarnings("unused")
 	protected static final BigInteger h0(SMSField4 r, SMSField4 y, byte[] id, BigInteger n) {		
 		sha.reset();
 		sha.update(r.toByteArray());
@@ -56,7 +56,6 @@ public class BDCPSUtil {
 		return (new BigInteger(sha.digest())).mod(n);
 	}
 
-	@SuppressWarnings("unused")
 	protected static final BigInteger h1(SMSField4 y, byte[] id, BigInteger n) {
 		
 		sha.reset();
@@ -67,7 +66,6 @@ public class BDCPSUtil {
 		return BigInteger.valueOf((long)171);
 	}
 
-	@SuppressWarnings("unused")
 	protected static final BigInteger h3(SMSField4 r, byte[] m, SMSField4 y_A, byte[] id_A, SMSField4 y_B, byte[] id_B, BigInteger n) {
 		sha.reset();
 		sha.update(r.toByteArray());
@@ -78,8 +76,7 @@ public class BDCPSUtil {
 		sha.update(m);
 		return (new BigInteger(sha.digest())).mod(n);
 	}
-
-	@SuppressWarnings("unused")
+        
 	protected static final byte[] h2(SMSField4 y, byte[] message, String mode) throws CipherException {
 		//TODO: fix this. I am emulating a null cipher to check the signature.
 		//return message;
@@ -109,8 +106,7 @@ public class BDCPSUtil {
 		return tag;
 	}
 
-	@SuppressWarnings("unused")
-	private static final byte[] CTR_AES(byte[] r, byte[] data, String mode, SecureRandom rnd) throws CipherException {
+        private static final byte[] CTR_AES(byte[] r, byte[] data, String mode, SecureRandom rnd) throws CipherException {
 		
 		byte[] iv = new byte[16];
 		for (int i=0; i<iv.length; i++)	iv[i] = (byte)0;

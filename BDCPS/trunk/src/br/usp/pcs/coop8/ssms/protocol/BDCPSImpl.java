@@ -3,8 +3,6 @@
  */
 package br.usp.pcs.coop8.ssms.protocol;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
 
 import br.usp.larc.smspairing.*;
 import br.usp.pcs.coop8.ssms.protocol.BDCPSUtil;
@@ -12,6 +10,8 @@ import br.usp.pcs.coop8.ssms.protocol.exception.CipherException;
 import br.usp.pcs.coop8.ssms.protocol.exception.InvalidMessageException;
 //import pseudojava.BigInteger;
 import br.usp.pcs.coop8.ssms.util.Logger;
+import pseudojava.BigInteger;
+import pseudojava.SecureRandom;
 
 /**
  * @author rodrigo
@@ -320,7 +320,6 @@ public abstract class BDCPSImpl implements BDCPS{
 		publicKey = new byte[3][];
 	}
 
-	@SuppressWarnings("unused")
 	private byte[] getRandomBytes() {
 		byte[] buf = new byte[(int)Math.ceil(1.0*k/8.0)];
 		rnd.nextBytes(buf);

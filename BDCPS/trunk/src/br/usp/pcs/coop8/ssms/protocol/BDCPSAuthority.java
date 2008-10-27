@@ -3,11 +3,11 @@
  */
 package br.usp.pcs.coop8.ssms.protocol;
 
-import java.math.BigInteger;
 
 import br.usp.larc.smspairing.SMSField4;
 import br.usp.larc.smspairing.SMSPoint;
 import br.usp.larc.smspairing.SMSPoint2;
+import pseudojava.BigInteger;
 
 /**
  * @author rodrigo
@@ -18,9 +18,8 @@ public class BDCPSAuthority extends BDCPSImpl {
 	public BDCPSAuthority(int bits, byte[] masterKey, byte[] id) {
 		setup(bits, masterKey, id);
 	}
-	
-	@SuppressWarnings("unused")
-	private BDCPSAuthority(){}
+        
+        private BDCPSAuthority(){}
 	
 	private BigInteger s;
 	

@@ -3,11 +3,9 @@
  */
 package br.usp.pcs.coop8.ssms.protocol;
 
-import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import br.usp.larc.smspairing.SMSPoint;
 import br.usp.pcs.coop8.ssms.protocol.exception.CipherException;
 import br.usp.pcs.coop8.ssms.protocol.exception.InvalidMessageException;
 
