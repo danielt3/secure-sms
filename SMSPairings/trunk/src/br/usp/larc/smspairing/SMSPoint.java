@@ -1,5 +1,4 @@
 package br.usp.larc.smspairing;
-
 /**
  * SMSPoint.java
  *
@@ -86,7 +85,7 @@ public class SMSPoint {
      *
      * @param   E   the elliptic curve where the created point is located.
      */
-    SMSPoint(SMSCurve E) {
+    protected SMSPoint(SMSCurve E) {
         this.E = E;
         /*
          * the point at infinity is represented as (1, 1, 0) after IEEE Std 1363:2000
@@ -105,7 +104,7 @@ public class SMSPoint {
      * @param   x   the affine x-coordinate (mod p).
      * @param   y   the affine y-coordinate (mod p).
      */
-    SMSPoint(SMSCurve E, BigInteger x, BigInteger y) {
+    public SMSPoint(SMSCurve E, BigInteger x, BigInteger y) {
         this.E = E;
         BigInteger p = E.sms.p; // shorthand
         this.x = x.mod(p);
@@ -141,7 +140,7 @@ public class SMSPoint {
         this.m = _0;
     }
 
-    SMSPoint(SMSCurve E, byte[] os) {
+    public SMSPoint(SMSCurve E, byte[] os) {
         this.E = E;
         SMSParams sms = E.sms;
         int pc = os[0] & 0xff;
@@ -521,35 +520,46 @@ public class SMSPoint {
      * @param   formFlags   the desired form of the octet string representation
      *                      (SMSPoint.COMPRESSED, SMSPoint.EXPANDED, SMSPoint.HYBRID)
      *
-     * @return  this point converted to a byte array using
-     *          the algorithm defined in section 4.3.6 of ANSI X9.62
+     * @return  this point converted to a byte array using the algorithm defined in section 4.3.6 of ANSI X9.62
      */
     public byte[] toByteArray(int formFlags) {
-        byte[] result;
-        if (this.isZero()) {
-            result = new byte[1];
-            result[0] = (byte)0;
-            return result;
-        }
+		int len = (E.sms.p.bitLength() + 7)/8;
+        byte[] buf;
+        int resLen = 1, pc = 0;
         SMSPoint P = this.normalize();
         byte[] osX = null, osY = null;
-        osX = P.x.toByteArray();
-        int pc = 0, resLen = 1 + osX.length;
-        if ((formFlags & COMPRESSED) != 0) {
-            pc |= COMPRESSED | (P.y.testBit(0) ? 1 : 0);
+        if (!P.isZero()) {
+	        osX = P.x.toByteArray();
+	        resLen += len;
+	        if ((formFlags & COMPRESSED) != 0) {
+	            pc |= COMPRESSED | (P.y.testBit(0) ? 1 : 0);
+	        }
+	        if ((formFlags & EXPANDED) != 0) {
+	            pc |= EXPANDED;
+	            osY = P.y.toByteArray();
+	            resLen += len;
+	        }
         }
-        if ((formFlags & EXPANDED) != 0) {
-            pc |= EXPANDED;
-            osY = P.y.toByteArray();
-            resLen += osY.length;
+        buf = new byte[resLen];
+        for (int i = 0; i < buf.length; i++) {
+        	buf[i] = (byte)0;
         }
-        result = new byte[resLen];
-        result[0] = (byte)pc;
-        System.arraycopy(osX, 0, result, 1, osX.length);
+        buf[0] = (byte)pc;
+        if (osX != null) {
+	        if (osX.length <= len) {
+		        System.arraycopy(osX, 0, buf, 1 +   len - osX.length, osX.length);
+	        } else {
+		        System.arraycopy(osX, 1, buf, 1,                      len);
+	        }
+        }
         if (osY != null) {
-            System.arraycopy(osY, 0, result, 1 + osX.length, osY.length);
+	        if (osY.length <= len) {
+		        System.arraycopy(osY, 0, buf, 1 + 2*len - osY.length, osY.length);
+	        } else {
+		        System.arraycopy(osY, 1, buf, 1 +   len,              len);
+	        }
         }
-        return result;
+        return buf;
     }
 
     public String toString() {

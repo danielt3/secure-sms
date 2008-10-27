@@ -1,5 +1,4 @@
 package br.usp.larc.smspairing;
-
 /**
  * SMSParams.java
  *
@@ -63,7 +62,7 @@ public class SMSParams {
     /**
      * Prime curve order
      */
-    BigInteger n;
+    private BigInteger n;
 
     /**
      * Curve equation coefficient
@@ -451,14 +450,14 @@ public class SMSParams {
         p = t.pow(2).subtract(t).add(_1);
         //assert(p.mod(_4).intValue() == 3);
         //assert(p.isProbablePrime(PRIMALITY_CERTAINTY));
-        n = p.add(_1).subtract(t);
-        //assert(n.isProbablePrime(PRIMALITY_CERTAINTY));
+        setN(p.add(_1).subtract(t));
+        //assert(getN().isProbablePrime(PRIMALITY_CERTAINTY));
         h = p.add(_1).add(t);
         sqrtExponent = p.add(_1).shiftRight(2); // (p + 1)/4
         sqrtExponent2 = p.multiply(p).add(_7).shiftRight(4); // (p^2 + 7)/16
         if (t.signum() >= 0 && sigma.testBit(0)) {
             sigma = p.subtract(sigma);
-            System.out.println("sigma@" + fieldBits + " = " + sigma.toString());
+            System.out.println("sigma@" + fieldBits + " = " + sigma);
         }
         sqrtI = new SMSField2(this, sigma, p.subtract(sigma), false); // sqrt(i) = (1-i)*sigma
     }
@@ -483,5 +482,13 @@ public class SMSParams {
         // test solution:
         return r.multiply(r).subtract(v).mod(p).signum() == 0 ? r : null;
     }
+
+	private void setN(BigInteger n) {
+		this.n = n;
+	}
+
+	public BigInteger getN() {
+		return n;
+	}
 
 }

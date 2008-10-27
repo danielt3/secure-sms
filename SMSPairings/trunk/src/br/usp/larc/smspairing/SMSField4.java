@@ -1,5 +1,4 @@
 package br.usp.larc.smspairing;
-
 /**
  * SMSField4.java
  *
@@ -318,7 +317,7 @@ public class SMSField4 {
 			g = g.frobenius(2);
 			k = k.negate();
 		}
-		k = k.mod(sms.n);
+		k = k.mod(sms.getN());
 		SMSField4 y = g.frobenius((sms.t.signum() > 0) ? 1 : 3);
 		return simultaneous(k.mod(m), k.divide(m), y);
 	}
@@ -346,19 +345,19 @@ public class SMSField4 {
         if (kP.signum() < 0) {
         	kP = kP.negate(); P = P.frobenius(2);
         }
-		kP = kP.mod(sms.n);
+		kP = kP.mod(sms.getN());
         if (kQ.signum() < 0) {
         	kQ = kQ.negate(); Q = Q.frobenius(2); 
         }
-		kQ = kQ.mod(sms.n);
+		kQ = kQ.mod(sms.getN());
         if (kR.signum() < 0) {
         	kR = kR.negate(); R = R.frobenius(2);
         }
-		kR = kR.mod(sms.n);
+		kR = kR.mod(sms.getN());
         if (kS.signum() < 0) {
         	kS = kS.negate(); S = S.frobenius(2);
         }
-		kS = kS.mod(sms.n);
+		kS = kS.mod(sms.getN());
         hV[0] = sms.Fp4_1;
         hV[1] = P; hV[2] = Q; hV[4] = R; hV[8] = S;
 		for (int i = 2; i < 16; i <<= 1) {

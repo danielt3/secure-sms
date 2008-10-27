@@ -1,5 +1,4 @@
 package br.usp.larc.smspairing;
-
 /**
  * SMSField2.java
  *

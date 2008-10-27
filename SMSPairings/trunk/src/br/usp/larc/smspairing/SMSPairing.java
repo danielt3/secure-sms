@@ -1,5 +1,4 @@
 package br.usp.larc.smspairing;
-
 /**
  * SMSPairing.java
  *
@@ -93,7 +92,7 @@ public class SMSPairing {
         if (!P.isZero() && !Q.isZero()) {
             SMSParams sms = E.sms;
             SMSPoint V = P;
-            BigInteger ord = sms.n;
+            BigInteger ord = sms.getN();
             for (int i = ord.bitLength() - 2; i >= 0; i--) {
             	SMSPoint A = V.twice(1);
                 f = f.square().multiply(gl(V, V, A, Q));

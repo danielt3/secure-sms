@@ -1,5 +1,4 @@
 package br.usp.larc.smspairing;
-
 /**
  * SMSTests.java
  *
@@ -22,6 +21,7 @@ package br.usp.larc.smspairing;
 
 import pseudojava.BigInteger;
 import pseudojava.SecureRandom;
+import java.util.Random;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
@@ -422,11 +422,11 @@ public class SMSTests {
             System.out.println("\nTesting Eta Pairing:");
             g = pair.eta(E.G, E2.Gt);
             System.out.println("P   = " + E.G);
-            System.out.println("n*P = " + E.G.multiply(sms.n));
+            System.out.println("n*P = " + E.G.multiply(sms.getN()));
             System.out.println("Q   = " + E2.Gt);
-            System.out.println("n*Q = " + E2.Gt.multiply(sms.n));
+            System.out.println("n*Q = " + E2.Gt.multiply(sms.getN()));
             System.out.println("g   = " + g);
-            System.out.println("g^n = " + g.exp(sms.n));
+            System.out.println("g^n = " + g.exp(sms.getN()));
             a = pair.eta(E.G.twice(1), E2.Gt);
             b = pair.eta(E.G, E2.Gt.twice(1));
             c = g.square();
@@ -447,11 +447,11 @@ public class SMSTests {
             System.out.println("\nTesting Ate Pairing:");
             g = pair.ate(E2.Gt, E.G);
             System.out.println("P   = " + E.G);
-            System.out.println("n*P = " + E.G.multiply(sms.n));
+            System.out.println("n*P = " + E.G.multiply(sms.getN()));
             System.out.println("Q   = " + E2.Gt);
-            System.out.println("n*Q = " + E2.Gt.multiply(sms.n));
+            System.out.println("n*Q = " + E2.Gt.multiply(sms.getN()));
             System.out.println("g   = " + g);
-            System.out.println("g^n = " + g.exp(sms.n));
+            System.out.println("g^n = " + g.exp(sms.getN()));
             a = pair.ate(E2.Gt.twice(1), E.G);
             b = pair.ate(E2.Gt, E.G.twice(1));
             c = g.square();
@@ -744,24 +744,24 @@ public class SMSTests {
         SMSCurve2 E2 = new SMSCurve2(E); //System.out.println(E2);
         SMSPoint P = E.G;
         SMSPoint2 Q = E2.Gt;
-        BigInteger s = new BigInteger(i, rnd).mod(sms.n); // master key
+        BigInteger s = new BigInteger(i, rnd).mod(sms.getN()); // master key
         SMSPoint Ppub = P.multiply(s);
-        BigInteger h1ID_A = new BigInteger(i, rnd).mod(sms.n); // h_1(ID_A)
-        BigInteger h1ID_B = new BigInteger(i, rnd).mod(sms.n); // h_1(ID_B)
-        SMSPoint2 Q_A = Q.multiply(h1ID_A.add(s).modInverse(sms.n));
-        SMSPoint2 Q_B = Q.multiply(h1ID_B.add(s).modInverse(sms.n));
-        BigInteger x_A = new BigInteger(i, rnd).mod(sms.n);
-        BigInteger x_B = new BigInteger(i, rnd).mod(sms.n);
+        BigInteger h1ID_A = new BigInteger(i, rnd).mod(sms.getN()); // h_1(ID_A)
+        BigInteger h1ID_B = new BigInteger(i, rnd).mod(sms.getN()); // h_1(ID_B)
+        SMSPoint2 Q_A = Q.multiply(h1ID_A.add(s).modInverse(sms.getN()));
+        SMSPoint2 Q_B = Q.multiply(h1ID_B.add(s).modInverse(sms.getN()));
+        BigInteger x_A = new BigInteger(i, rnd).mod(sms.getN());
+        BigInteger x_B = new BigInteger(i, rnd).mod(sms.getN());
         SMSPairing pair = new SMSPairing(E2);
         SMSField4 g = pair.ate(Q, P);
         SMSField4 y_A = g.exp(x_A);
         SMSField4 y_B = g.exp(x_B);
-        BigInteger h_A = new BigInteger(i, rnd).mod(sms.n); // h_0(r_A, ID_A, y_A)
-        BigInteger h_B = new BigInteger(i, rnd).mod(sms.n); // h_0(r_B, ID_B, y_B)
+        BigInteger h_A = new BigInteger(i, rnd).mod(sms.getN()); // h_0(r_A, ID_A, y_A)
+        BigInteger h_B = new BigInteger(i, rnd).mod(sms.getN()); // h_0(r_B, ID_B, y_B)
         SMSPoint2 T_A = Q_A;//.multiply(u_A.subtract(x_A.multiply(h_A)).mod(sms.n));
         SMSPoint2 T_B = Q_A;//.multiply(u_B.subtract(x_B.multiply(h_B)).mod(sms.n));
-    	BigInteger h = new BigInteger(i, rnd).mod(sms.n);
-    	BigInteger z = new BigInteger(i, rnd).mod(sms.n);
+    	BigInteger h = new BigInteger(i, rnd).mod(sms.getN());
+    	BigInteger z = new BigInteger(i, rnd).mod(sms.getN());
 
 		////////////////////////////////////////////////////////////////////
         System.out.println("Benchmarking Eta Pairing:");
@@ -785,7 +785,7 @@ public class SMSTests {
         System.out.println("Benchmarking BDCPS Private-Key-Extract:");
         elapsed = -System.currentTimeMillis();
         for (int t = 0; t < BM; t++) {
-            Q_A = Q.multiply(h1ID_A.add(s).modInverse(sms.n));
+            Q_A = Q.multiply(h1ID_A.add(s).modInverse(sms.getN()));
         }
         elapsed += System.currentTimeMillis();
         System.out.println("Elapsed time: " + (float)elapsed/BM + " ms.");
@@ -814,9 +814,9 @@ public class SMSTests {
         System.out.println("Benchmarking BDCPS Set-Public-Key:");
         elapsed = -System.currentTimeMillis();
         for (int t = 0; t < BM; t++) {
-        	BigInteger u_A = new BigInteger(i, rnd).mod(sms.n);
+        	BigInteger u_A = new BigInteger(i, rnd).mod(sms.getN());
             SMSField4 r_A = g.exp(u_A);
-            T_A = Q_A.multiply(u_A.subtract(x_A.multiply(h_A)).mod(sms.n));
+            T_A = Q_A.multiply(u_A.subtract(x_A.multiply(h_A)).mod(sms.getN()));
         }
         elapsed += System.currentTimeMillis();
         System.out.println("Elapsed time: " + (float)elapsed/BM + " ms.");
@@ -838,10 +838,10 @@ public class SMSTests {
         System.out.println("Benchmarking BDCPS Signcrypt:");
         elapsed = -System.currentTimeMillis();
         for (int t = 0; t < BM; t++) {
-        	BigInteger u = new BigInteger(i, rnd).mod(sms.n);
+        	BigInteger u = new BigInteger(i, rnd).mod(sms.getN());
             //SMSField4 o = g.exp(u);
             SMSField4 r = y_B.exp(u);
-            z = u.subtract(x_A.multiply(h)).mod(sms.n);
+            z = u.subtract(x_A.multiply(h)).mod(sms.getN());
         }
         elapsed += System.currentTimeMillis();
         System.out.println("Elapsed time: " + (float)elapsed/BM + " ms.");
@@ -850,7 +850,7 @@ public class SMSTests {
         System.out.println("Benchmarking BDCPS Unsigncrypt:");
         elapsed = -System.currentTimeMillis();
         for (int t = 0; t < BM; t++) {
-	        SMSField4 r = y_A.fastSimultaneous(h.multiply(x_B).mod(sms.n), z, y_B);
+	        SMSField4 r = y_A.fastSimultaneous(h.multiply(x_B).mod(sms.getN()), z, y_B);
         }
         elapsed += System.currentTimeMillis();
         System.out.println("Elapsed time: " + (float)elapsed/BM + " ms.");
@@ -904,20 +904,20 @@ public class SMSTests {
 
 		////////////////////////////////////////////////////////////////////
         System.out.println("BDCPS Setup:");
-        BigInteger s = new BigInteger(bits, rnd).mod(sms.n); // master key
+        BigInteger s = new BigInteger(bits, rnd).mod(sms.getN()); // master key
         SMSPoint Ppub = P.multiply(s);
-        System.out.println("s = " + s.toString());
+        System.out.println("s = " + s);
         System.out.println("P_pub = " + Ppub);
 
-        BigInteger h1ID_A = new BigInteger(bits, rnd).mod(sms.n); // simulated h_1(ID_A)
-        BigInteger h1ID_B = new BigInteger(bits, rnd).mod(sms.n); // simulated h_1(ID_B)
+        BigInteger h1ID_A = new BigInteger(bits, rnd).mod(sms.getN()); // simulated h_1(ID_A)
+        BigInteger h1ID_B = new BigInteger(bits, rnd).mod(sms.getN()); // simulated h_1(ID_B)
 
 		////////////////////////////////////////////////////////////////////
         System.out.println("BDCPS Set-Secret-Value:");
-        BigInteger x_A = new BigInteger(bits, rnd).mod(sms.n);
-        BigInteger x_B = new BigInteger(bits, rnd).mod(sms.n);
-        System.out.println("x_A = " + x_A.toString());
-        System.out.println("x_B = " + x_B.toString());
+        BigInteger x_A = new BigInteger(bits, rnd).mod(sms.getN());
+        BigInteger x_B = new BigInteger(bits, rnd).mod(sms.getN());
+        System.out.println("x_A = " + x_A);
+        System.out.println("x_B = " + x_B);
 
 		////////////////////////////////////////////////////////////////////
         System.out.println("BDCPS Set-Public-Value:");
@@ -933,7 +933,7 @@ public class SMSTests {
 		////////////////////////////////////////////////////////////////////
         System.out.println("BDCPS Private-Key-Extract:");
 
-        SMSPoint2 Q_A = Q.multiply(h1ID_A.add(s).modInverse(sms.n)).normalize();
+        SMSPoint2 Q_A = Q.multiply(h1ID_A.add(s).modInverse(sms.getN())).normalize();
         System.out.println("Q_A = " + Q_A);
         byte[] Q_A_comp = Q_A.toByteArray(SMSPoint2.COMPRESSED); // key compression
         System.out.print("comp(Q_A) [" +  Q_A_comp.length + " bytes] = "); for (int i = 0; i < Q_A_comp.length; i++) { System.out.print(hex.charAt((Q_A_comp[i] & 0xff) >>> 4)); System.out.print(hex.charAt(Q_A_comp[i] & 15)); } System.out.println();
@@ -944,7 +944,7 @@ public class SMSTests {
         }
         // TODO: send Q_A_comp to A signcrypted under y_A and ID_A (use the scheme itself -- the KGB has an implicit key y_pub = e(P_pub, Q) for signature verification)
 
-        SMSPoint2 Q_B = Q.multiply(h1ID_B.add(s).modInverse(sms.n)).normalize();
+        SMSPoint2 Q_B = Q.multiply(h1ID_B.add(s).modInverse(sms.getN())).normalize();
         System.out.println("Q_B = " + Q_B);
         byte[] Q_B_comp = Q_B.toByteArray(SMSPoint2.COMPRESSED); // key compression
         System.out.print("comp(Q_B) [" +  Q_B_comp.length + " bytes] = "); for (int i = 0; i < Q_B_comp.length; i++) { System.out.print(hex.charAt((Q_B_comp[i] & 0xff) >>> 4)); System.out.print(hex.charAt(Q_B_comp[i] & 15)); } System.out.println();
@@ -959,10 +959,10 @@ public class SMSTests {
         System.out.println("BDCPS Set-Public-Key:");
 
         // TODO: unsigncrypt received Q_A with x_A!
-    	BigInteger u_A = new BigInteger(bits, rnd).mod(sms.n);
+    	BigInteger u_A = new BigInteger(bits, rnd).mod(sms.getN());
         SMSField4  r_A = g.exp(u_A);
-        BigInteger h_A = new BigInteger(bits, rnd).mod(sms.n); // simulated h_0(r_A, y_A, ID_A)
-        SMSPoint2  T_A = Q_A.multiply(u_A.subtract(x_A.multiply(h_A)).mod(sms.n));
+        BigInteger h_A = new BigInteger(bits, rnd).mod(sms.getN()); // simulated h_0(r_A, y_A, ID_A)
+        SMSPoint2  T_A = Q_A.multiply(u_A.subtract(x_A.multiply(h_A)).mod(sms.getN()));
         byte[] T_A_comp = T_A.toByteArray(SMSPoint2.COMPRESSED); // key compression
         System.out.print("comp(T_A) [" +  T_A_comp.length + " bytes] = "); for (int i = 0; i < T_A_comp.length; i++) { System.out.print(hex.charAt((T_A_comp[i] & 0xff) >>> 4)); System.out.print(hex.charAt(T_A_comp[i] & 15)); } System.out.println();
         byte[] h_A_comp = h_A.toByteArray(); // <<<<<<<< CAVEAT: ambiguous (variable length)!
@@ -974,10 +974,10 @@ public class SMSTests {
         // TODO: map the sequence [y_A_comp, h_A, T_A_comp] to a byte array unambiguously!
 
         // TODO: unsigncrypt received Q_B with x_B!
-    	BigInteger u_B = new BigInteger(bits, rnd).mod(sms.n);
+    	BigInteger u_B = new BigInteger(bits, rnd).mod(sms.getN());
         SMSField4  r_B = g.exp(u_B);
-        BigInteger h_B = new BigInteger(bits, rnd).mod(sms.n); // simulated h_0(r_B, y_B, ID_B)
-        SMSPoint2  T_B = Q_B.multiply(u_B.subtract(x_B.multiply(h_B)).mod(sms.n));
+        BigInteger h_B = new BigInteger(bits, rnd).mod(sms.getN()); // simulated h_0(r_B, y_B, ID_B)
+        SMSPoint2  T_B = Q_B.multiply(u_B.subtract(x_B.multiply(h_B)).mod(sms.getN()));
         byte[] T_B_comp = T_B.toByteArray(SMSPoint2.COMPRESSED); // key compression
         System.out.print("comp(T_B) [" +  T_B_comp.length + " bytes] = "); for (int i = 0; i < T_B_comp.length; i++) { System.out.print(hex.charAt((T_B_comp[i] & 0xff) >>> 4)); System.out.print(hex.charAt(T_B_comp[i] & 15)); } System.out.println();
         byte[] h_B_comp = h_B.toByteArray(); // <<<<<<<< CAVEAT: ambiguous (variable length)!
@@ -998,14 +998,15 @@ public class SMSTests {
         if (!y_A.equals(y_A_exp)) {
         	throw new RuntimeException("Failure @Public-Key-Validate");
         }
-        if (y_A_exp.isOne() || !y_A.exp(sms.n).isOne()) {
+        if (y_A_exp.isOne() || !y_A.exp(sms.getN()).isOne()) {
         	throw new RuntimeException("Failure @Public-Key-Validate");
         }
     	SMSPoint2 T_A_exp = new SMSPoint2(Q.E, T_A_comp); // point expansion
         if (!T_A_exp.equals(T_A)) {
         	throw new RuntimeException("Failure @Public-Key-Validate");
         }
-        r_A = pair.ate(T_A_exp, P.multiply(h1ID_A).add(Ppub)).multiply(y_A_exp.exp(h_A));
+        SMSField4 r_A2 = pair.ate(T_A_exp, P.multiply(h1ID_A).add(Ppub)).multiply(y_A_exp.exp(h_A));
+        if(r_A.equals(r_A2)) System.out.println("r_A é igual a r_A2!!!!!");
         BigInteger v_A = h_A; // simulated h_0(r_A, y_A, ID_A)
         if (v_A.compareTo(h_A) != 0) {
         	throw new RuntimeException("Failure @Public-Key-Validate");
@@ -1018,7 +1019,7 @@ public class SMSTests {
         if (!y_B.equals(y_B_exp)) {
         	throw new RuntimeException("Failure @Public-Key-Validate");
         }
-        if (y_B_exp.isOne() || !y_B_exp.exp(sms.n).isOne()) {
+        if (y_B_exp.isOne() || !y_B_exp.exp(sms.getN()).isOne()) {
         	throw new RuntimeException("Failure @Public-Key-Validate");
         }
     	SMSPoint2 T_B_exp = new SMSPoint2(Q.E, T_B_comp); // point expansion
@@ -1033,11 +1034,11 @@ public class SMSTests {
 
 		////////////////////////////////////////////////////////////////////
         System.out.println("BDCPS Signcrypt:");
-    	BigInteger u = new BigInteger(bits, rnd).mod(sms.n);
+    	BigInteger u = new BigInteger(bits, rnd).mod(sms.getN());
         SMSField4  r = y_B.exp(u);
         //byte[] c = new byte[m.length]; // simulated symmetric encryption under key r (TODO: map r to an AES-128 key and encrypt m in pure CTR mode)
-    	BigInteger h = new BigInteger(bits, rnd).mod(sms.n); // simulated h_3(r, m, y_A, ID_A, y_B, ID_B)
-    	BigInteger z = u.subtract(x_A.multiply(h)).mod(sms.n);
+    	BigInteger h = new BigInteger(bits, rnd).mod(sms.getN()); // simulated h_3(r, m, y_A, ID_A, y_B, ID_B)
+    	BigInteger z = u.subtract(x_A.multiply(h)).mod(sms.getN());
         //System.out.println("(h,z) = " + h + ":" + z);
         byte[] h_array = h.toByteArray();
         System.out.print("h [" + h_array.length + " bytes] = "); for (int i = 0; i < h_array.length; i++) { System.out.print(hex.charAt((h_array[i] & 0xff) >>> 4)); System.out.print(hex.charAt(h_array[i] & 15)); } System.out.println();
@@ -1048,28 +1049,28 @@ public class SMSTests {
 		////////////////////////////////////////////////////////////////////
         System.out.println("BDCPS Unsigncrypt:");
         // TODO: parse the received [c,h,z]
-        SMSField4 rr = y_A.fastSimultaneous(h.multiply(x_B).mod(sms.n), z, y_B);
+        SMSField4 rr = y_A.fastSimultaneous(h.multiply(x_B).mod(sms.getN()), z, y_B);
         BigInteger v = h; // simulated h_3(r, m, y_A, ID_A, y_B, ID_B)
         if (v.compareTo(h) != 0 || !rr.equals(r)) {
         	throw new RuntimeException("Failure @Unsigncrypt");
         }
         System.out.println("r  = " + r);
         System.out.println("r' = " + rr);
-        System.out.println("h  = " + h.toString());
-        System.out.println("v  = " + v.toString());
+        System.out.println("h  = " + h);
+        System.out.println("v  = " + v);
 
 	}
-
+	
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
-    	benchmarks(100, 176);
+    	//benchmarks(100, 176);
     	/*
     	int iterations = 1;// 100;
     	BDCPS(127, iterations);
     	BDCPS(160, iterations);
     	//*/
-    	/*
-    	BDCPSTest(127);
-    	BDCPSTest(160);
+    	
+    	//BDCPSTest(127);
+    	BDCPSTest(176);
     	//*/
     }
 

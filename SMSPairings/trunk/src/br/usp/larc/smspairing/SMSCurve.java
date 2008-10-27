@@ -1,5 +1,4 @@
 package br.usp.larc.smspairing;
-
 /**
  * SMSCurve.java
  *
@@ -43,7 +42,9 @@ public class SMSCurve {
      */
     SMSPoint G;
 
-    /**
+    public SMSPoint getG() {return G;}
+
+	/**
      * The point at infinity
      */
     SMSPoint O;
@@ -68,7 +69,7 @@ public class SMSCurve {
         System.out.println("G = " + G);
         System.out.println("n*G = " + G.multiply(sms.n));
         //*/
-        //assert (G.multiply(sms.n).isZero());
+        //assert (G.multiply(sms.getN()).isZero());
         /*
         pp16G = new SMSPoint[(sms.n.bitLength() + 3)/4][16];
         System.out.println("table length = " + pp16G.length);
@@ -100,7 +101,7 @@ public class SMSCurve {
     public SMSPoint pointFactory(SecureRandom rand) {
         BigInteger k;
         do {
-            k = new BigInteger(sms.n.bitLength(), rand).mod(sms.n);
+            k = new BigInteger(sms.getN().bitLength(), rand).mod(sms.getN());
         } while (k.signum() == 0);
         return G.multiply(k);
     }
@@ -157,6 +158,6 @@ public class SMSCurve {
     //*/
 
     public String toString() {
-        return "MNT4(F_" + sms.p.toString() + "): y^2 = x^3 - 3x + " + sms.b.toString();
+        return "MNT4(F_" + sms.p + "): y^2 = x^3 - 3x + " + sms.b;
     }
 }

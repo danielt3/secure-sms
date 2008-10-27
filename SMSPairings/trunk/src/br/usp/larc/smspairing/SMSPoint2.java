@@ -1,5 +1,4 @@
 package br.usp.larc.smspairing;
-
 /**
  * SMSPoint2.java
  *
@@ -30,6 +29,7 @@ package br.usp.larc.smspairing;
 
 import pseudojava.BigInteger;
 import pseudojava.SecureRandom;
+import java.util.Random;
 
 public class SMSPoint2 {
 
@@ -149,7 +149,7 @@ public class SMSPoint2 {
         this.m = sms.Fp2_0;
     }
 
-    SMSPoint2(SMSCurve2 E, byte[] os) {
+    public SMSPoint2(SMSCurve2 E, byte[] os) {
         this.E = E;
         SMSParams sms = E.sms;
         int pc = os[0] & 0xff;
@@ -432,7 +432,7 @@ public class SMSPoint2 {
 			P = P.negate();
 			k = k.negate();
 		}
-		k = k.mod(E.sms.n);
+		k = k.mod(E.sms.getN());
 		SMSPoint2 Y = P.frobex();
 		/*
         if (!Y.equals(P.multiply0(E.sms.p))) {
@@ -454,7 +454,7 @@ public class SMSPoint2 {
             k = k.negate();
             P = P.negate();
         }
-		k = k.mod(E.sms.n);
+		k = k.mod(E.sms.getN());
         byte[] e = k.toByteArray();
         SMSPoint2[] mP = new SMSPoint2[16];
         mP[0] = E.Ot;

@@ -1,5 +1,4 @@
 package br.usp.larc.smspairing;
-
 /**
  * SMSCurve2.java
  *
@@ -20,8 +19,10 @@ package br.usp.larc.smspairing;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+import java.io.InputStream;
 import pseudojava.BigInteger;
 import pseudojava.SecureRandom;
+import java.util.Random;
 
 public class SMSCurve2 {
 
@@ -45,7 +46,9 @@ public class SMSCurve2 {
      */
     SMSPoint2 Gt;
 
-    /**
+    public SMSPoint2 getGt() {return Gt;}
+
+	/**
      * The point at infinity
      */
     SMSPoint2 Ot;
@@ -112,7 +115,7 @@ public class SMSCurve2 {
     public SMSPoint2 pointFactory(SecureRandom rand) {
         BigInteger k;
         do {
-            k = new BigInteger(sms.n.bitLength(), rand).mod(sms.n);
+            k = new BigInteger(sms.getN().bitLength(), rand).mod(sms.getN());
         } while (k.signum() == 0);
         return Gt.multiply(k);
     }
@@ -168,6 +171,6 @@ public class SMSCurve2 {
     //*/
 
     public String toString() {
-        return "MNT4': y'^2 = x'^3 - 3*(1+i)^2*x + " + sms.b.toString() + "*(1+i)^3";
+        return "MNT4': y'^2 = x'^3 - 3*(1+i)^2*x + " + sms.b + "*(1+i)^3";
     }
 }
