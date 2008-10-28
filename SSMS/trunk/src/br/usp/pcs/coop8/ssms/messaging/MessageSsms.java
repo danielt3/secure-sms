@@ -16,6 +16,8 @@ public abstract class MessageSsms {
     public static final byte AUTHENTICATE_ME = 0x02;
     public static final byte SIGNCRYPTED_MESSAGE = 0x03;
     protected byte[] messageBytes;
+    protected String sender;
+    protected String destinatary;
 
     /**
      * Método de fábrica, identifica que tipo de mensagem é baseado na primitiva
@@ -42,7 +44,7 @@ public abstract class MessageSsms {
                 ret.deserialize(msgBytes);
                 break;
             default:
-                ret = null;               
+                ret = null;
 
         }
         return ret;
@@ -54,8 +56,24 @@ public abstract class MessageSsms {
     public byte[] getMessageBytes() {
         return this.messageBytes;
     }
-    
+
     protected void deserialize(byte[] rawMessage) {
         this.messageBytes = rawMessage;
+    }
+
+    public String getSender() {
+        return this.sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
+
+    public void setDestinatary(String destinatary) {
+        this.destinatary = destinatary;
+    }
+
+    public String getDestinatary() {
+        return this.destinatary;
     }
 }

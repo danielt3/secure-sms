@@ -21,33 +21,34 @@ public class ssms_main extends MIDlet implements CommandListener {
     private boolean midletPaused = false;
 
     //<editor-fold defaultstate="collapsed" desc=" Generated Fields ">//GEN-BEGIN:|fields|0|
-    private Image image;
-    private SimpleCancellableTask task;
-    private Command okCommand2;
-    private Command backCommand;
+    private Form SSMS_Results;
+    private TextField txtResults;
+    private List ListaInicial;
+    private Form form;
+    private TextField textField;
+    private Form FormAutenticarContato;
+    private TextField txtContatPhone;
+    private Alert alert;
+    private Alert alert1;
+    private Alert alert2;
+    private Alert alert3;
+    private Alert alert4;
+    private Form form1;
+    private TextField txtXA;
+    private TextField txtMyId;
+    private Command cancelCommand;
     private Command cancelCommand1;
     private Command okCommand;
     private Command cancelCommand2;
     private Command okCommand1;
-    private Command okCommand3;
+    private Command okCommand2;
+    private Command backCommand;
     private Command cancelCommand3;
-    private Command cancelCommand;
+    private Command okCommand3;
     private Command cancelCommand4;
     private Command okCommand4;
-    private Form FormAutenticarContato;
-    private TextField txtContatPhone;
-    private Alert alert3;
-    private List ListaInicial;
-    private Form form1;
-    private TextField textField1;
-    private Alert alert4;
-    private Alert alert1;
-    private Alert alert;
-    private Form form;
-    private TextField textField;
-    private Alert alert2;
-    private Form SSMS_Results;
-    private TextField txtResults;
+    private SimpleCancellableTask task;
+    private Image image;
     //</editor-fold>//GEN-END:|fields|0|
    
     //</editor-fold>
@@ -668,9 +669,13 @@ public class ssms_main extends MIDlet implements CommandListener {
      */
     public void method2() {//GEN-END:|114-if|0|114-preIf
         // enter pre-if user code here
-        if (true) {//GEN-LINE:|114-if|1|115-preAction
+        if (((txtXA.getString() != null &&//GEN-BEGIN:|114-if|1|115-preAction
+                txtXA.getString().length()  >= 8)
+                &&
+                (txtMyId.getString() != null &&
+                txtMyId.getString().length()  == 10))) {//GEN-END:|114-if|1|115-preAction
             // write pre-action user code here
-//GEN-LINE:|114-if|2|115-postAction
+            Controller.firstTimeUse(txtXA.getString(), txtMyId.getString());//GEN-LINE:|114-if|2|115-postAction
             // write post-action user code here
         } else {//GEN-LINE:|114-if|3|116-preAction
             // write pre-action user code here
@@ -705,7 +710,7 @@ public class ssms_main extends MIDlet implements CommandListener {
     public Form getForm1() {
         if (form1 == null) {//GEN-END:|107-getter|0|107-preInit
             // write pre-init user code here
-            form1 = new Form("form1", new Item[] { getTextField1() });//GEN-BEGIN:|107-getter|1|107-postInit
+            form1 = new Form("form1", new Item[] { getTxtXA(), getTxtMyId() });//GEN-BEGIN:|107-getter|1|107-postInit
             form1.addCommand(getOkCommand4());
             form1.addCommand(getCancelCommand4());
             form1.setCommandListener(this);//GEN-END:|107-getter|1|107-postInit
@@ -715,18 +720,18 @@ public class ssms_main extends MIDlet implements CommandListener {
     }
     //</editor-fold>//GEN-END:|107-getter|2|
 
-    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: textField1 ">//GEN-BEGIN:|108-getter|0|108-preInit
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: txtXA ">//GEN-BEGIN:|108-getter|0|108-preInit
     /**
-     * Returns an initiliazed instance of textField1 component.
+     * Returns an initiliazed instance of txtXA component.
      * @return the initialized component instance
      */
-    public TextField getTextField1() {
-        if (textField1 == null) {//GEN-END:|108-getter|0|108-preInit
+    public TextField getTxtXA() {
+        if (txtXA == null) {//GEN-END:|108-getter|0|108-preInit
             // write pre-init user code here
-            textField1 = new TextField("Entre com sua senha secreta:", null, 32, TextField.ANY);//GEN-LINE:|108-getter|1|108-postInit
+            txtXA = new TextField("Entre com sua senha secreta:", null, 32, TextField.ANY);//GEN-LINE:|108-getter|1|108-postInit
             // write post-init user code here
         }//GEN-BEGIN:|108-getter|2|
-        return textField1;
+        return txtXA;
     }
     //</editor-fold>//GEN-END:|108-getter|2|
 
@@ -759,6 +764,21 @@ public class ssms_main extends MIDlet implements CommandListener {
         return cancelCommand4;
     }
     //</editor-fold>//GEN-END:|111-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: txtMyId ">//GEN-BEGIN:|129-getter|0|129-preInit
+    /**
+     * Returns an initiliazed instance of txtMyId component.
+     * @return the initialized component instance
+     */
+    public TextField getTxtMyId() {
+        if (txtMyId == null) {//GEN-END:|129-getter|0|129-preInit
+            // write pre-init user code here
+            txtMyId = new TextField("Entre com seu numero de telefone:", null, 32, TextField.ANY);//GEN-LINE:|129-getter|1|129-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|129-getter|2|
+        return txtMyId;
+    }
+    //</editor-fold>//GEN-END:|129-getter|2|
 
 
 

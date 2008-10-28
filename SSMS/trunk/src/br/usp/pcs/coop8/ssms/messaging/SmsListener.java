@@ -5,6 +5,7 @@
 package br.usp.pcs.coop8.ssms.messaging;
 
 import br.usp.pcs.coop8.ssms.application.KgbSsms;
+import br.usp.pcs.coop8.ssms.data.MyPrivateData;
 import br.usp.pcs.coop8.ssms.util.Output;
 import br.usp.pcs.coop8.ssms.util.Util;
 import javax.microedition.io.Connector;
@@ -100,14 +101,13 @@ public class SmsListener
                             MessageSsms msg = MessageSsms.getMessage(binMsg.getPayloadData());
 
                             if (msg instanceof AuthenticationMessage) {
-
+                                handleAuthenticationMessageReceived((AuthenticationMessage) msg, telRemetente);
                             } else if (msg instanceof HereIsYourQaMessage) {
-                                byte myQa[] = ((HereIsYourQaMessage) msg).getQA();
-                            //TODO: persistir meu QA !
-
+                                handleHereIsYourQaMessageReceived((HereIsYourQaMessage) msg, telRemetente);
                             } else if (msg instanceof RequestMyQaMessage) {
-                                //Aqui vou me passar por KGB
-                                KgbSsms.returnQaMessage((RequestMyQaMessage) msg, telRemetente.getBytes());
+                                handleRequestMyQaMessageReceived((RequestMyQaMessage) msg, telRemetente);
+                            } else if (msg instanceof SigncryptedMessage) {
+                                handleSignCryptedMessageReceived((SigncryptedMessage) msg, telRemetente);
                             }
 
                         } catch (Exception e) {
@@ -119,6 +119,31 @@ public class SmsListener
                 }.set(messageConnection);
 
         threadListener.start();
+    }
+
+    private void handleAuthenticationMessageReceived(AuthenticationMessage msg, String telRemetente) {
+        //TODO: Verificar se a chave que chegou é válida, e 
+        //adicionar o novo contado na lista com a nova chave        
+
+    }
+
+    private void handleHereIsYourQaMessageReceived(HereIsYourQaMessage msg, String telRemetente) {
+        byte myQa[] = msg.getQA();
+        //TODO: persistir meu QA !        
+        MyPrivateData myPrivData = null; //TODO: ler do banco        
+        myPrivData.setQA(myQa);
+        Output.println("Recebido meu QA: " + Util.byteArrayToDebugableString(myQa));
+        //TODO: persistir de novo no banco.
+    }
+
+    private void handleRequestMyQaMessageReceived(RequestMyQaMessage msg, String telRemetente) {
+        //Aqui vou me passar por KGB
+        Output.println("Sou KGB, recebido yA: " + Util.byteArrayToDebugableString(msg.getYA()));
+        KgbSsms.returnQaMessage((RequestMyQaMessage) msg, telRemetente.getBytes());        
+    }
+
+    private void handleSignCryptedMessageReceived(SigncryptedMessage msg, String telRemetente) {
+        //TODO: fazer tudo        
     }
 }
 

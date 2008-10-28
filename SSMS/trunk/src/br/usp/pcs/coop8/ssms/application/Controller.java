@@ -4,6 +4,9 @@
  */
 package br.usp.pcs.coop8.ssms.application;
 
+import br.usp.pcs.coop8.ssms.data.GlobalParameters;
+import br.usp.pcs.coop8.ssms.data.MyPrivateData;
+import br.usp.pcs.coop8.ssms.messaging.RequestMyQaMessage;
 import br.usp.pcs.coop8.ssms.messaging.SmsListener;
 import br.usp.pcs.coop8.ssms.protocol.BDCPS;
 import br.usp.pcs.coop8.ssms.protocol.BDCPSAuthority;
@@ -24,29 +27,52 @@ import org.bouncycastle.crypto.digests.SHA1Digest;
  * @author Administrador
  */
 public abstract class Controller {
+    
+    static {
+        // Já começa a escutar o SMS no começão
+        receberSms();
+    }
 
     private static SmsListener smsListener = null;
-    private static int port = 2102;
 
     private Controller() {
     }
 
-    public static void enviarSmsAutenticacao(String telefone) {
-
+    /**
+     * Recebe o xA como texto, e envia o SMS de autenticação para a operadora
+     * @param xA
+     */
+    public static void firstTimeUse(String xA, String id) {
+        
+        //TODO: acho que tem que passar o ID hasheado aqui né.. falta hashear
+        byte[] hashDoId = new byte[20];
+        byte[] hashDoXa = new byte[20];
+        BDCPS bdcps = new BDCPSClient(GlobalParameters.K, 
+                GlobalParameters.PUBLIC_POINT, id.getBytes());
+        bdcps.setSecretValue(hashDoXa);
+        bdcps.setPublicKey();
+        byte[][] myPublicKey = bdcps.getPublicKey();
+        byte[] yA = myPublicKey[0];
+        byte[] hA = myPublicKey[1];
+        byte[] tA = myPublicKey[2];
+        
+        
+        MyPrivateData myData = null; //TODO: Puxar do banco se ja existir um
+        myData.setHA(hA);
+        myData.setIdA(hashDoId);
+        myData.setYA(yA);
+        myData.setTA(tA);
+        myData.setQA(null);
+        
+        //TODO: Salvar assim, com o floggy
+        RequestMyQaMessage reqMessage = new RequestMyQaMessage(yA);
+        enviarSmsBinario(GlobalParameters.KGB_TEL, reqMessage.getMessageBytes());
+        
     }
 
     /**
-     * Pede o Qa para a operadora.
+     * Cria e ativa um novo listener
      */
-    public static void requestMyQa(byte[] xA) {
-    /**
-    BDCPS.getInstance().setPrivateKey(xA);
-    BDCPS.getInstance().setPublicValue();
-    byte[] ya = BDCPS.getInstance().getPublicValue();
-    MessageSsms msg = new RequestMyQaMessage(ya);
-     */
-    }
-
     public static void receberSms() {
         if (smsListener == null) {
             smsListener = new SmsListener();
@@ -76,7 +102,7 @@ public abstract class Controller {
     }
 
     public static void enviarSmsBinario(String phone, byte[] data) {
-        enviarSmsBinario(phone, data, port);
+        enviarSmsBinario(phone, data, GlobalParameters.SMS_PORT);
     }
 
     public static void enviarSmsBinario(String phone, byte[] data, int porta) {
