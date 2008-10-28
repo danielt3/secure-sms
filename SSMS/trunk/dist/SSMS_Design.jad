@@ -1,8 +1,0 @@
-MIDlet-1: ssms_main,,br.usp.pcs.coop8.ssms.application.ssms_main
-MIDlet-Jar-Size: 212388
-MIDlet-Jar-URL: SSMS_Design.jar
-MIDlet-Name: SSMS_Design
-MIDlet-Vendor: Vendor
-MIDlet-Version: 1.0
-MicroEdition-Configuration: CLDC-1.1
-MicroEdition-Profile: MIDP-2.0
