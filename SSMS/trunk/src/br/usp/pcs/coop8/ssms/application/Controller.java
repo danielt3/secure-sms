@@ -4,13 +4,14 @@
  */
 package br.usp.pcs.coop8.ssms.application;
 
-import br.usp.pcs.coop8.ssms.data.GlobalParameters;
+import br.usp.larc.smspairing.SMSPoint;
 import br.usp.pcs.coop8.ssms.data.MyPrivateData;
 import br.usp.pcs.coop8.ssms.messaging.RequestMyQaMessage;
 import br.usp.pcs.coop8.ssms.messaging.SmsListener;
 import br.usp.pcs.coop8.ssms.protocol.BDCPS;
 import br.usp.pcs.coop8.ssms.protocol.BDCPSAuthority;
 import br.usp.pcs.coop8.ssms.protocol.BDCPSClient;
+import br.usp.pcs.coop8.ssms.protocol.BDCPSParameters;
 import br.usp.pcs.coop8.ssms.protocol.exception.CipherException;
 import br.usp.pcs.coop8.ssms.protocol.exception.InvalidMessageException;
 import br.usp.pcs.coop8.ssms.util.Output;
@@ -21,18 +22,18 @@ import javax.wireless.messaging.MessageConnection;
 import javax.wireless.messaging.TextMessage;
 import org.bouncycastle.crypto.Digest;
 import org.bouncycastle.crypto.digests.SHA1Digest;
+import pseudojava.BigInteger;
 
 /**
  * Executa funcionalidades a partir do menu
  * @author Administrador
  */
 public abstract class Controller {
-    
+
     static {
         // Já começa a escutar o SMS no começão
         receberSms();
     }
-
     private static SmsListener smsListener = null;
 
     private Controller() {
@@ -43,31 +44,31 @@ public abstract class Controller {
      * @param xA
      */
     public static void firstTimeUse(String xA, String id) {
-        
+
         //TODO: acho que tem que passar o ID hasheado aqui né.. falta hashear
         byte[] hashDoId = new byte[20];
         byte[] hashDoXa = new byte[20];
-        BDCPS bdcps = new BDCPSClient(GlobalParameters.K, 
-                GlobalParameters.PUBLIC_POINT, id.getBytes());
+        BDCPS bdcps = new BDCPSClient(Configuration.K,
+                BDCPSParameters.getInstance(Configuration.K).PPub.toByteArray(SMSPoint.COMPRESSED), id.getBytes());
         bdcps.setSecretValue(hashDoXa);
         bdcps.setPublicKey();
         byte[][] myPublicKey = bdcps.getPublicKey();
         byte[] yA = myPublicKey[0];
         byte[] hA = myPublicKey[1];
         byte[] tA = myPublicKey[2];
-        
-        
+
+
         MyPrivateData myData = null; //TODO: Puxar do banco se ja existir um
         myData.setHA(hA);
         myData.setIdA(hashDoId);
         myData.setYA(yA);
         myData.setTA(tA);
         myData.setQA(null);
-        
+
         //TODO: Salvar assim, com o floggy
         RequestMyQaMessage reqMessage = new RequestMyQaMessage(yA);
-        enviarSmsBinario(GlobalParameters.KGB_TEL, reqMessage.getMessageBytes());
-        
+        enviarSmsBinario(Configuration.KGB_TEL, reqMessage.getMessageBytes());
+
     }
 
     /**
@@ -102,7 +103,7 @@ public abstract class Controller {
     }
 
     public static void enviarSmsBinario(String phone, byte[] data) {
-        enviarSmsBinario(phone, data, GlobalParameters.SMS_PORT);
+        enviarSmsBinario(phone, data, Configuration.SMS_PORT);
     }
 
     public static void enviarSmsBinario(String phone, byte[] data, int porta) {
@@ -123,6 +124,8 @@ public abstract class Controller {
     }
 
     public static void testinho() {
+        
+        
         Digest sha = null;
 
 
@@ -130,8 +133,12 @@ public abstract class Controller {
 
 
         int bits = 176;
+        
+      
+    
+        BDCPSParameters bdcpsPar = BDCPSParameters.getInstance(bits);
 
-        String masterKey = "honnisoitquimalypense";
+        //String masterKey = "honnisoitquimalypense";
         String aliceKey = "hi i am alice";
         String bobKey = "hi i am bob marley";
 
@@ -139,13 +146,19 @@ public abstract class Controller {
         String id_b = "551188884321";
         String id_auth = "thegodfather";
 
-        byte[] s = new byte[20];
+        byte[] s;// = new byte[20];
         byte[] xa_alice = new byte[20];
         byte[] xb_bob = new byte[20];
 
         try {
-            sha.update(masterKey.getBytes(), 0, masterKey.getBytes().length);
-            sha.doFinal(s, 0);
+           // sha.update(masterKey.getBytes(), 0, masterKey.getBytes().length);
+            //sha.doFinal(s, 0);
+            
+             BigInteger _s500 = new BigInteger("2811324208781249769788073818190026244636491661539281873387241581414870671338535758736366135621660583188369946048623028749823899797612403393315005280995");
+ 
+            s = _s500.mod(BDCPSParameters.getInstance(Configuration.K).N).toByteArray();
+   
+                    
 
             sha.reset();
 
@@ -163,8 +176,8 @@ public abstract class Controller {
             throw new RuntimeException("BDCPS: Digest exception.");
         }
         BDCPS auth = new BDCPSAuthority(bits, s, id_auth.getBytes());
-        BDCPS alice = new BDCPSClient(bits, auth.getPublicPoint(), id_a.getBytes());
-        BDCPS bob = new BDCPSClient(bits, auth.getPublicPoint(), id_b.getBytes());
+        BDCPS alice = new BDCPSClient(bits, bdcpsPar.PPub.toByteArray(SMSPoint.COMPRESSED) /*auth.getPublicPoint()*/, id_a.getBytes());
+        BDCPS bob = new BDCPSClient(bits, bdcpsPar.PPub.toByteArray(SMSPoint.COMPRESSED) /*auth.getPublicPoint()*/, id_b.getBytes());
 
 
 
@@ -205,7 +218,7 @@ public abstract class Controller {
 
         //String plaintext = "Como possíveis aplicações de nossa solução, podemos citar a realização de transações bancárias usando mensagens SMS, sistemas de comunicação que requeiram confidencialidade e integridade (órgãos militares e governamentais, executivos de grandes empresas) ou apenas usuários comuns em busca de maiores níveis de privacidade.Este artigo compreende a descrição do cenário e desafios encontrados no levantamento dos requisitos de um sistema de troca de mensagens SMS seguro e na escolha e aplicação de um esquema de criptografia que garantisse esses requisitos. Desse modo, são discutidos os conceitos dos algoritmos BLMQ (baseado em identidades) e BDCPS (CL-PKC), criado devido ao insucesso do primeiro em atender aos requisitos do projeto.Os algoritmos citados anteriormente utilizam os conceitos de cifrassinatura e vericifração de mensagens. A cifrassinatura consiste em um método de criptografia de chave pública que garante infalsificabilidade e confidencialidade simultaneamente com um overhead menor do que o requerido pela assinatura digital seguida de encriptação de chave pública. Isto é alcançado assinando e encriptando uma mensagem em um único passo. A vericifração consiste da operação inversa, ou seja, a verificação da validade do autor da mensagem e sua decriptação de chave pública, simultaneamente.";
         String plaintext = "Hora da Pizza!";
-        
+
         Output.println("Testo Claro: " + plaintext + " \n");
         byte[] m = plaintext.getBytes();
         byte[][] c = null;
@@ -232,7 +245,7 @@ public abstract class Controller {
             e.printStackTrace();
         }
         if (m_dec != null) {
-             Output.println("Texto Vericifrado: " + new String(m_dec));
+            Output.println("Texto Vericifrado: " + new String(m_dec));
         }
 
 

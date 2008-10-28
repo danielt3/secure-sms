@@ -4,6 +4,7 @@
  */
 package br.usp.pcs.coop8.ssms.messaging;
 
+import br.usp.pcs.coop8.ssms.application.Configuration;
 import br.usp.pcs.coop8.ssms.application.KgbSsms;
 import br.usp.pcs.coop8.ssms.data.MyPrivateData;
 import br.usp.pcs.coop8.ssms.util.Output;
@@ -25,16 +26,16 @@ public class SmsListener
     private Thread threadListener;
 
     /**
-     * Escuta a porta 2102 aguardando o recebimento de um SMS.
+     * Escuta a porta padrão aguardando o recebimento de um SMS.
      * 
      * @param port A porta a ser escutada.
      */
     public SmsListener() {
-        this(2102);
+        this(Configuration.SMS_PORT);
     }
 
     /**
-     * Escuta uma porta, aguardando o recebimento de um SMS.
+     * Escuta uma porta qualquer, aguardando o recebimento de um SMS.
      * 
      * @param port A porta a ser escutada.
      */
@@ -42,6 +43,9 @@ public class SmsListener
         this.port = port;
     }
 
+    /**
+     * Inicia a escuta
+     */
     public void startListening() {
 
         final SmsListener _this = this;
@@ -122,8 +126,8 @@ public class SmsListener
     }
 
     private void handleAuthenticationMessageReceived(AuthenticationMessage msg, String telRemetente) {
-        //TODO: Verificar se a chave que chegou é válida, e 
-        //adicionar o novo contado na lista com a nova chave        
+    //TODO: Verificar se a chave que chegou é válida, e 
+    //adicionar o novo contado na lista com a nova chave        
 
     }
 
@@ -133,17 +137,17 @@ public class SmsListener
         MyPrivateData myPrivData = null; //TODO: ler do banco        
         myPrivData.setQA(myQa);
         Output.println("Recebido meu QA: " + Util.byteArrayToDebugableString(myQa));
-        //TODO: persistir de novo no banco.
+    //TODO: persistir de novo no banco.
     }
 
     private void handleRequestMyQaMessageReceived(RequestMyQaMessage msg, String telRemetente) {
         //Aqui vou me passar por KGB
         Output.println("Sou KGB, recebido yA: " + Util.byteArrayToDebugableString(msg.getYA()));
-        KgbSsms.returnQaMessage((RequestMyQaMessage) msg, telRemetente.getBytes());        
+        KgbSsms.returnQaMessage((RequestMyQaMessage) msg, telRemetente.getBytes());
     }
 
     private void handleSignCryptedMessageReceived(SigncryptedMessage msg, String telRemetente) {
-        //TODO: fazer tudo        
+    //TODO: fazer tudo        
     }
 }
 
