@@ -2666,18 +2666,18 @@ public class BigInteger /*extends Number implements Comparable<BigInteger> */{
         }
 
         // Put sign (if any) and first digit group into result buffer
-        String buf = "";//new StringBuilder(numGroups*digitsPerLong[radix]+1);
+        StringBuffer buf = new StringBuffer(numGroups*digitsPerLong[radix]+1);
         if (signum<0)
-            buf.concat("-");
-        buf.concat(digitGroup[numGroups-1]);
+            buf.append("-");
+        buf.append(digitGroup[numGroups-1]);
 
         // Append remaining digit groups padded with leading zeros
         for (int i=numGroups-2; i>=0; i--) {
             // Prepend (any) leading zeros for this digit group
             int numLeadingZeros = digitsPerLong[radix]-digitGroup[i].length();
             if (numLeadingZeros != 0)
-                buf.concat(zeros[numLeadingZeros]);
-            buf.concat(digitGroup[i]);
+                buf.append(zeros[numLeadingZeros]);
+            buf.append(digitGroup[i]);
         }
         return buf.toString();
     }
