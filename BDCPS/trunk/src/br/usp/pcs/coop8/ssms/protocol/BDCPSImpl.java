@@ -50,8 +50,6 @@ public abstract class BDCPSImpl implements BDCPS{
 
 	protected SMSField4 y_A, g;
 
-	private SecureRandom rnd;
-	
 	protected Logger logger;
 	
 	private static final int LOG_MODE = 5;
@@ -318,11 +316,6 @@ public abstract class BDCPSImpl implements BDCPS{
 		publicKey = new byte[3][];
 	}
 
-	private byte[] getRandomBytes() {
-		byte[] buf = new byte[(int)Math.ceil(1.0*k/8.0)];
-		rnd.nextBytes(buf);
-		return buf;
-	}
 
 	private BigInteger randomBigInteger() {
 		return BDCPSUtil.randomBigInteger(k).mod(sms.getN());

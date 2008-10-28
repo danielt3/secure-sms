@@ -52,9 +52,9 @@ public class BDCPSTest {
         sha.update(bobKey.getBytes(), 0, bobKey.getBytes().length);
         sha.doFinal(xb_bob, 0);
 
-        BDCPS auth = new BDCPSAuthority(bits, s, id_auth.getBytes());
-        BDCPS alice = new BDCPSClient(bits, auth.getPublicPoint(), id_a.getBytes());
-        BDCPS bob = new BDCPSClient(bits, auth.getPublicPoint(), id_b.getBytes());
+        BDCPSAuthority auth = new BDCPSAuthority(bits, s, id_auth.getBytes());
+        BDCPSClient alice = new BDCPSClient(bits, auth.getPublicPoint(), id_a.getBytes());
+        BDCPSClient bob = new BDCPSClient(bits, auth.getPublicPoint(), id_b.getBytes());
 
 
 
