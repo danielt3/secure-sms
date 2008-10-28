@@ -4,13 +4,11 @@
  */
 package br.usp.pcs.coop8.ssms.tests;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.DigestException;
-
 import br.usp.pcs.coop8.ssms.protocol.exception.CipherException;
 import br.usp.pcs.coop8.ssms.protocol.exception.InvalidMessageException;
 import br.usp.pcs.coop8.ssms.protocol.*;
+import org.bouncycastle.crypto.Digest;
+import org.bouncycastle.crypto.digests.SHA1Digest;
 
 /**
  *
@@ -19,11 +17,11 @@ import br.usp.pcs.coop8.ssms.protocol.*;
 public class BDCPSTestCel {
 
     public static void test() {
-        MessageDigest sha = null;
+        Digest sha = null;
 
         try {
-            sha = MessageDigest.getInstance("SHA-1");
-        } catch (NoSuchAlgorithmException e) {
+            sha = new SHA1Digest();
+        } catch (/*NoSuchAlgorithm*/Exception e) {
             System.out.println("BDCPS: Hash Algorithm not found.");
             e.printStackTrace();
         }
@@ -43,25 +41,19 @@ public class BDCPSTestCel {
         byte[] xa_alice = new byte[20];
         byte[] xb_bob = new byte[20];
 
-        try {
-            sha.update(masterKey.getBytes(), 0, masterKey.getBytes().length);
-            sha.digest(s, 0, 20);
+        sha.update(masterKey.getBytes(), 0, masterKey.getBytes().length);
+        sha.doFinal(s, 0);
 
-            sha.reset();
+        sha.reset();
 
-            sha.update(aliceKey.getBytes(), 0, aliceKey.getBytes().length);
-            sha.digest(xa_alice, 0, 20);
+        sha.update(aliceKey.getBytes(), 0, aliceKey.getBytes().length);
+        sha.doFinal(xa_alice, 0);
 
-            sha.reset();
+        sha.reset();
 
-            sha.update(bobKey.getBytes(), 0, bobKey.getBytes().length);
-            sha.digest(xb_bob, 0, 20);
-        } catch (DigestException ex) {
-            System.out.println("BDCPS: Digest exception.");
-            ex.printStackTrace();
-            //TODO: arrumar
-            throw new RuntimeException("BDCPS: Digest exception.");
-        }
+        sha.update(bobKey.getBytes(), 0, bobKey.getBytes().length);
+        sha.doFinal(xb_bob, 0);
+
         BDCPS auth = new BDCPSAuthority(bits, s, id_auth.getBytes());
         BDCPS alice = new BDCPSClient(bits, auth.getPublicPoint(), id_a.getBytes());
         BDCPS bob = new BDCPSClient(bits, auth.getPublicPoint(), id_b.getBytes());
