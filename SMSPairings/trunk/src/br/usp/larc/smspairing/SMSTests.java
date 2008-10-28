@@ -21,9 +21,7 @@ package br.usp.larc.smspairing;
 
 import pseudojava.BigInteger;
 import pseudojava.SecureRandom;
-import java.util.Random;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 
 public class SMSTests {
 
@@ -1061,7 +1059,7 @@ public class SMSTests {
 
 	}
 	
-    public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
+    public static void main(String[] args) throws IOException {
     	//benchmarks(100, 176);
     	/*
     	int iterations = 1;// 100;
