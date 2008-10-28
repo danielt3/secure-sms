@@ -3,29 +3,28 @@
  */
 package br.usp.pcs.coop8.ssms.protocol;
 
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
-import java.security.spec.AlgorithmParameterSpec;
-
-
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-
+//import javax.crypto.BadPaddingException;
+//import javax.crypto.Cipher;
+//import javax.crypto.IllegalBlockSizeException;
+//import javax.crypto.spec.IvParameterSpec;
 import br.usp.larc.smspairing.SMSField4;
 import br.usp.larc.pbarreto.jaes.*;
 import br.usp.pcs.coop8.ssms.protocol.exception.CipherException;
-import java.security.DigestException;
-import javax.crypto.ShortBufferException;
+//import java.security.InvalidAlgorithmParameterException;
+//import java.security.InvalidKeyException;
+//import java.security.spec.AlgorithmParameterSpec;
+//import javax.crypto.ShortBufferException;
 import pseudojava.BigInteger;
 import pseudojava.SecureRandom;
+import org.bouncycastle.crypto.Digest;
+import org.bouncycastle.crypto.digests.SHA1Digest;
+import org.bouncycastle.crypto.modes.SICBlockCipher;
+import org.bouncycastle.crypto.engines.AESEngine;
+import org.bouncycastle.crypto.PBEParametersGenerator;
+import org.bouncycastle.crypto.generators.PKCS5S2ParametersGenerator;
+import org.bouncycastle.crypto.params.KeyParameter;
+import org.bouncycastle.crypto.params.ParametersWithIV;
 
 /**
  * @author rodrigo
@@ -34,17 +33,14 @@ import pseudojava.SecureRandom;
 public class BDCPSUtil {
 
     private static final String HASH_ALGORITHM = "SHA-1";
-    private static final MessageDigest sha;
+    private static final Digest sha;
     private static final SecureRandom rnd;
     private static final String hex = "0123456789abcdef";
 
     static {
-        try {
-            sha = MessageDigest.getInstance(HASH_ALGORITHM);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e.getMessage());
-        }
+
+        sha = new SHA1Digest();
+
         //Pseudo Random Number Generator
         byte[] randSeed = new byte[20];
         (new SecureRandom()).nextBytes(randSeed);
@@ -58,15 +54,9 @@ public class BDCPSUtil {
         sha.update(id, 0, id.length);
 
         byte[] hash0 = new byte[20];
-        try {
-            sha.digest(hash0, 0, 20);
-        } catch (DigestException ex) {
-            System.out.println("BDCPS: Digest exception.");
-            ex.printStackTrace();
-            //TODO: arrumar
-            throw new RuntimeException("BDCPS: Digest exception.");
 
-        }
+        sha.doFinal(hash0, 0);
+
         return new BigInteger(hash0).mod(n);
     }
 
@@ -77,15 +67,8 @@ public class BDCPSUtil {
         sha.update(id, 0, id.length);
 
         byte[] hash1 = new byte[20];
-        try {
-            sha.digest(hash1, 0, 20);
-        } catch (DigestException ex) {
-            System.out.println("BDCPS: Digest exception.");
-            ex.printStackTrace();
-            //TODO: arrumar
-            throw new RuntimeException("BDCPS: Digest exception.");
+        sha.doFinal(hash1, 0);
 
-        }
         return (new BigInteger(hash1)).mod(n);
 
     }
@@ -100,15 +83,8 @@ public class BDCPSUtil {
         sha.update(m, 0, m.length);
 
         byte[] hash3 = new byte[20];
-        try {
-            sha.digest(hash3, 0, 20);
-        } catch (DigestException ex) {
-            System.out.println("BDCPS: Digest exception.");
-            ex.printStackTrace();
-            //TODO: arrumar
-            throw new RuntimeException("BDCPS: Digest exception.");
+        sha.doFinal(hash3, 0);
 
-        }
         return (new BigInteger(hash3)).mod(n);
     }
 
@@ -133,7 +109,7 @@ public class BDCPSUtil {
             key[i] = 0;
         }
 
-        BlockCipher cipher = new AES();
+        AES cipher = new AES();
         cipher.makeKey(key, bits, BlockCipher.DIR_ENCRYPT);
         CMAC cmac = new CMAC(cipher);
         cmac.init();
@@ -145,73 +121,96 @@ public class BDCPSUtil {
 
     private static final byte[] CTR_AES(byte[] r, byte[] data, String mode, SecureRandom rnd) throws CipherException {
 
+        PBEParametersGenerator generator = new PKCS5S2ParametersGenerator();
+
         byte[] iv = new byte[16];
         for (int i = 0; i < iv.length; i++) {
+            //Acho que o IV não pode ser nulo! Pergunte-me por quê... Ass: Eduardo
+            //http://en.wikipedia.org/wiki/Cipher_block_chaining#Counter_.28CTR.29
             iv[i] = (byte) 0;
         }
 
-        byte key[] = new byte[16];
+        byte encryptionkey[] = new byte[16];
         byte[] ret;// = new byte[data.lenght];
-        int _mode;
+        //int _mode;
 
 
 
         //Here we map r to a fixed size hash that will be used as a 128-bit key to AES
-        key = CMAC(r, 128);
+        encryptionkey = CMAC(r, 128);
 
-        Cipher cipher = null;
+
+        generator.init(encryptionkey, iv, 1000);
+
+
+
+        //Cipher cipher = null;
+        SICBlockCipher cipher2 = null;
+
         try {
-            cipher = Cipher.getInstance("AES/CTR/NoPadding");
-        } catch (NoSuchAlgorithmException e) {
+            //cipher = Cipher.getInstance("AES/CTR/NoPadding");
+            cipher2 = new SICBlockCipher(new AESEngine());
+
+        } catch (/*NoSuchAlgorithm*/Exception e) {
             System.out.println("BDCPS: Invalid algorithm.");
             e.printStackTrace();
             throw new CipherException("BDCPS: Invalid algorithm.");
-        } catch (NoSuchPaddingException e) {
-            System.out.println("BDCPS: Invalid padding.");
-            e.printStackTrace();
-            throw new CipherException("BDCPS: Invalid padding.");
         }
 
-        AlgorithmParameterSpec paramSpec = new IvParameterSpec(iv, 0, iv.length);
+        //lgorithmParameterSpec paramSpec = new IvParameterSpec(iv, 0, iv.length);
+        //SecretKeySpec secretKeySpec = new  SecretKeySpec(key, 0, key.length, "AES");
+        KeyParameter keyparam = new KeyParameter(encryptionkey);
+        ParametersWithIV paramwithiv = new ParametersWithIV(keyparam, iv);
 
-        SecretKeySpec secretKeySpec = new SecretKeySpec(key, 0, key.length, "AES");
-
+        /*
         if (mode.equals("ENC")) {
-            _mode = Cipher.ENCRYPT_MODE;
+        _mode = Cipher.ENCRYPT_MODE;
         } else if (mode.equals("DEC")) {
-            _mode = Cipher.DECRYPT_MODE;
+        _mode = Cipher.DECRYPT_MODE;
         } else {
-            throw new IllegalArgumentException("BDCPS: Unknown mode: " + mode);
+        throw new IllegalArgumentException("BDCPS: Unknown mode: " + mode);
+        }
+         */
+
+        //cipher.init(_mode, secretKeySpec, paramSpec);
+        cipher2.init(true, paramwithiv);
+
+
+
+        ret = new byte[data.length];
+        System.out.println("!!! Meu ret tem: " + ret.length + " bytes =)");
+        //cipher.doFinal(data, 0, data.length, ret, 0);
+
+        int numberOfBlocks = (int) Math.ceil(((float) data.length) / ((float) cipher2.getBlockSize()));
+        for (int blockNumber = 0;
+                blockNumber < numberOfBlocks;
+                blockNumber++) {
+            byte[] blockIn = new byte[cipher2.getBlockSize()];
+            byte[] blockOut = new byte[cipher2.getBlockSize()];
+
+
+            int effectiveCurrentBlockSize;
+            //Verifica se é o último bloco e é incompleto
+            if (blockNumber == numberOfBlocks - 1) {
+                // É o último...
+                effectiveCurrentBlockSize = data.length % cipher2.getBlockSize();
+
+                //Se o resto da divisão deu 0, o último bloco é completo =)
+                if (effectiveCurrentBlockSize == 0) {
+                    effectiveCurrentBlockSize = cipher2.getBlockSize();
+                }
+
+            } else {
+                //Não é o último, logo o blockIn terá todos os bytes efetivos
+                effectiveCurrentBlockSize = cipher2.getBlockSize();
+            }
+            
+            System.arraycopy(data, blockNumber*cipher2.getBlockSize(), blockIn, 0, effectiveCurrentBlockSize);                        
+            cipher2.processBlock(blockIn, 0, blockOut, 0);
+            System.arraycopy(blockOut, 0, ret, blockNumber*cipher2.getBlockSize(), effectiveCurrentBlockSize);                    
+            
         }
 
-        try {
-            cipher.init(_mode, secretKeySpec, paramSpec);
-        } catch (InvalidKeyException e) {
-            System.out.println("BDCPS: Invalid key.");
-            e.printStackTrace();
-            throw new CipherException("BDCPS: Invalid key.");
-        } catch (InvalidAlgorithmParameterException e) {
-            System.out.println("BDCPS: Invalid algorithm parameters.");
-            e.printStackTrace();
-            throw new CipherException("BDCPS: Invalid algorithm parameters.");
-        }
-
-        try {
-            ret = new byte[data.length];
-            cipher.doFinal(data, 0, data.length, ret, 0);
-        } catch (IllegalBlockSizeException e) {
-            System.out.println("BDCPS: Bad block size.");
-            e.printStackTrace();
-            throw new CipherException("BDCPS: Bad block size.");
-        } catch (BadPaddingException e) {
-            System.out.println("BDCPS: Bad padding.");
-            e.printStackTrace();
-            throw new CipherException("BDCPS: Bad padding.");
-        } catch (ShortBufferException e) {
-            System.out.println("BDCPS: Short buffer.");
-            e.printStackTrace();
-            throw new CipherException("BDCPS: Short buffer.");
-        }
         return ret;
     }
 
