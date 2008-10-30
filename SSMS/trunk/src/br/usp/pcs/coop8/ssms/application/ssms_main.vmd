@@ -504,6 +504,7 @@
                         <Property name="instanceName" typeID="Pjava.lang.String" value="VstringItem1"/>
                         <Property name="label" typeID="Pjava.lang.String" value="UController.getSelectedMessage().getSender()"/>
                         <Property name="itemCommandListener" typeID="C#ItemCommandListener" value="R8"/>
+                        <Property name="text" typeID="Pjava.lang.String" value="UController.getUnsigncryptedText(txtXA_ReadMessage.getString())"/>
                     </Component>
                     <Component componentID="193" typeID="C#CommandEventSource">
                         <Property name="eventHandler" typeID="C#EventHandler" value="R194"/>

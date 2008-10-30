@@ -51,7 +51,7 @@ public class HereIsYourQaMessage extends MessageSsms {
     }
 
     protected void deserialize(byte[] msgBytes) {
-        super.deserialize(messageBytes);
+        super.deserialize(msgBytes);
         qA = new byte[Util.byteToInt(messageBytes[4])];
         System.arraycopy(msgBytes, 5, qA, 0, qA.length);
     }

@@ -247,7 +247,7 @@ public class SmsListener
 
         //Aqui vou me passar por KGB
         Output.println("Sou KGB, recebido yA: " + Util.byteArrayToDebugableString(msg.getYA()));
-        KgbSsms.returnQaMessage((RequestMyQaMessage) msg, senderPhone.getBytes());
+        KgbSsms.returnQaMessage((RequestMyQaMessage) msg, senderPhone);
     }
 
     private void handleSignCryptedMessageReceived(SigncryptedMessage msg) {

@@ -64,7 +64,7 @@ public class AuthenticationMessage extends MessageSsms {
     }
 
     protected void deserialize(byte[] msgBytes) {
-        super.deserialize(messageBytes);
+        super.deserialize(msgBytes);
         yA = new byte[Util.byteToInt(messageBytes[4])];
         hA = new byte[Util.byteToInt(messageBytes[5])];
         tA = new byte[Util.byteToInt(messageBytes[6])];

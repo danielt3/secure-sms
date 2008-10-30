@@ -9,6 +9,7 @@ import br.usp.pcs.coop8.ssms.messaging.MessageSsms;
 import br.usp.pcs.coop8.ssms.messaging.RequestMyQaMessage;
 import br.usp.pcs.coop8.ssms.protocol.BDCPSAuthority;
 import br.usp.pcs.coop8.ssms.protocol.BDCPSParameters;
+import org.bouncycastle.crypto.digests.SHA1Digest;
 import pseudojava.BigInteger;
 
 /**
@@ -32,19 +33,32 @@ public class KgbSsms {
         return _s500.mod(BDCPSParameters.getInstance(Configuration.K).N).toByteArray();
     }
 
-    public static void returnQaMessage(RequestMyQaMessage rmqam, byte[] id) {
+    public static void returnQaMessage(RequestMyQaMessage rmqam, String id) {
         byte[] yA = rmqam.getYA();
 
-        BDCPSAuthority bdcpsA = new BDCPSAuthority(Configuration.K, getS(), "1175758877".getBytes());
+        byte[] hashIdA = new byte[20];
+        byte[] hashKgbId = new byte[20];
 
-        byte[] qA = bdcpsA.privateKeyExtract(id, yA);
+        SHA1Digest sha = new SHA1Digest();
+        sha.reset();
+        sha.update(id.getBytes(), 0, id.getBytes().length);
+        sha.doFinal(hashIdA, 0);
+
+        sha.reset();
+        sha.update(Configuration.KGB_TEL.getBytes(), 0, Configuration.KGB_TEL.getBytes().length);
+        sha.doFinal(hashKgbId, 0);
+
+
+        BDCPSAuthority bdcpsA = new BDCPSAuthority(Configuration.K, getS(), hashKgbId);
+
+        byte[] qA = bdcpsA.privateKeyExtract(hashIdA, yA);
 
         //TODO: encriptar o qA com alg convencional
 
 
         MessageSsms msg = new HereIsYourQaMessage(qA);
 
-        Controller.enviarSmsBinario(new String(id), msg.getMessageBytes());
+        Controller.enviarSmsBinario(id, msg.getMessageBytes());
 
     }
 }

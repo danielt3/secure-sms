@@ -80,7 +80,7 @@ public class SigncryptedMessage extends MessageSsms implements Persistable {
     }
 
     protected void deserialize(byte[] msgBytes) {
-        super.deserialize(messageBytes);
+        super.deserialize(msgBytes);
         c = new byte[Util.byteToInt(messageBytes[4])];
         h = new byte[Util.byteToInt(messageBytes[5])];
         z = new byte[Util.byteToInt(messageBytes[6])];
