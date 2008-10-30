@@ -23,7 +23,7 @@ public class BDCPSParameters {
     private static Hashtable allInstances = new Hashtable();
     //params = (k; n;G1;G2;GT ; e; P; Q; g; Ppub; h0; h1; h2; h3).
     public final int K;
-    public final String KGB_TEL;
+    //public final String KGB_TEL;
     public final SMSPoint P;
     public final SMSPoint PPub;
     public final SMSPoint2 Q;
@@ -41,7 +41,7 @@ public class BDCPSParameters {
      */
     private BDCPSParameters(int k) {
         this.K = k;
-        KGB_TEL = "1174749679";
+        //KGB_TEL = "1174749679";
 
         SMSParams sms = new SMSParams(k);
         N = sms.getN();
