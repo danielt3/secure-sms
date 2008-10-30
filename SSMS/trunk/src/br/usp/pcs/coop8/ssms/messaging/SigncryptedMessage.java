@@ -6,6 +6,7 @@ package br.usp.pcs.coop8.ssms.messaging;
 
 import br.usp.pcs.coop8.ssms.application.Configuration;
 import br.usp.pcs.coop8.ssms.util.Util;
+import java.util.Date;
 import net.sourceforge.floggy.persistence.Persistable;
 
 /**
@@ -17,6 +18,10 @@ public class SigncryptedMessage extends MessageSsms implements Persistable {
     private byte[] c;
     private byte[] h;
     private byte[] z;
+    //Estes campos tem que ser redundantes mesmo.. senão o floggy não os persite    
+    private String sender;
+    private String destinatary;
+    private Date date;
 
     public byte[] getC() {
         return c;
@@ -88,5 +93,29 @@ public class SigncryptedMessage extends MessageSsms implements Persistable {
         System.arraycopy(msgBytes, 7, c, 0, c.length);
         System.arraycopy(msgBytes, 7 + c.length, h, 0, h.length);
         System.arraycopy(msgBytes, 7 + c.length + h.length, z, 0, z.length);
+    }
+
+    public String getSender() {
+        return this.sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
+
+    public void setDestinatary(String destinatary) {
+        this.destinatary = destinatary;
+    }
+
+    public String getDestinatary() {
+        return this.destinatary;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

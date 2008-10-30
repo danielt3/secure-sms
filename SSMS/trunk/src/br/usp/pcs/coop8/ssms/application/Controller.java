@@ -298,8 +298,8 @@ public abstract class Controller {
 
         byte[][] cryptogram = new byte[3][];
         cryptogram[0] = ((SigncryptedMessage) selectedMessage).getC();
-        cryptogram[0] = ((SigncryptedMessage) selectedMessage).getH();
-        cryptogram[0] = ((SigncryptedMessage) selectedMessage).getZ();
+        cryptogram[1] = ((SigncryptedMessage) selectedMessage).getH();
+        cryptogram[2] = ((SigncryptedMessage) selectedMessage).getZ();
 
         PersistableManager perMan = PersistableManager.getInstance();
         ObjectSet result;

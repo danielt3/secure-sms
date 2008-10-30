@@ -105,7 +105,7 @@ public class SmsListener
                     public void run() {
                         try {
                             BinaryMessage binMsg = (BinaryMessage) conn.receive();
-                            Output.println("Recieved SMS: " +
+                            Output.println("Receieved SMS: " +
                                     Util.byteArrayToDebugableString(binMsg.getPayloadData()));
                             Output.println("Came from: " + binMsg.getAddress());
 
@@ -167,6 +167,7 @@ public class SmsListener
                 //Já temos os parâmetros públicos para este contato.
                 //O que fazer? Acho que devemos ignorar os novos parâmetros
                 //e manter os antigos...
+                Output.println("Parâmetros públicos recebidos para um contato já autenticado. Ingorado.");
                 return;
             } else {
                 //Ainda não conheciamos os parâmetros públicos.. vamos validá-los.
@@ -199,8 +200,10 @@ public class SmsListener
                     contact.setTA(msg.getTA());
 
                     perMan.save(contact);
+                    Output.println("Chave pública recebida e validada. " + contact.getPhone() + " está autenticado.");
                     return;
                 } else {
+                    Output.println("Chave pública recebida não é válida. Ignora o mentiroso.");
                     //Não é válido, é algum mentiroso!                    
                     //Mantém tudo nulo, ignora a mensagem que chegou
                     return;
@@ -254,6 +257,7 @@ public class SmsListener
 
         //Simplesmente persiste a mensagem... Ficará no inbox
         PersistableManager perMan = PersistableManager.getInstance();
+        Output.println("Mensagem crifrassinada recebida de " + msg.getSender());
         try {
             perMan.save(msg);
         } catch (FloggyException ex) {

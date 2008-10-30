@@ -29,11 +29,11 @@ public final class Configuration {
     /**
      * O telefone da KGB
      */
-    public static final String KGB_TEL = "1174749679";
+    public static final String KGB_TEL = "1174749679";// "1174749679";
     /**
      * Porta a ser usada para envio de SMS
      */
-    public static final int SMS_PORT = 2102;
+    public static final int SMS_PORT = 50001;
     
     /**
      * Os parâmetros BDCPS para o K dado.

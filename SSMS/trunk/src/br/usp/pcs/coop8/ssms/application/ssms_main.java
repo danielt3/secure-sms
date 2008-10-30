@@ -70,7 +70,11 @@ public class ssms_main extends MIDlet implements CommandListener {
     private Command okCommand7;
     private Command cancelCommand7;
     private Command okCommand8;
+    private Command helpCommand;
+    private Command cancelCommand9;
     private Command okCommand9;
+    private Command cancelCommand8;
+    private Command okCommand10;
     private SimpleCancellableTask task;
     private Image image;
     //</editor-fold>//GEN-END:|fields|0|
@@ -1067,7 +1071,7 @@ public class ssms_main extends MIDlet implements CommandListener {
     public StringItem getStringItem1() {
         if (stringItem1 == null) {//GEN-END:|181-getter|0|181-preInit
             // write pre-init user code here
-            stringItem1 = new StringItem(Controller.getSelectedMessage().getSender(), null);//GEN-LINE:|181-getter|1|181-postInit
+            stringItem1 = new StringItem(Controller.getSelectedMessage().getSender(), Controller.getSelectedMessage().getDate().toString());//GEN-LINE:|181-getter|1|181-postInit
         // write post-init user code here
         }//GEN-BEGIN:|181-getter|2|
         return stringItem1;
@@ -1166,6 +1170,66 @@ public class ssms_main extends MIDlet implements CommandListener {
         return okCommand9;
     }
     //</editor-fold>//GEN-END:|192-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: helpCommand ">//GEN-BEGIN:|197-getter|0|197-preInit
+    /**
+     * Returns an initiliazed instance of helpCommand component.
+     * @return the initialized component instance
+     */
+    public Command getHelpCommand() {
+        if (helpCommand == null) {//GEN-END:|197-getter|0|197-preInit
+            // write pre-init user code here
+            helpCommand = new Command("Ajuda", Command.HELP, 0);//GEN-LINE:|197-getter|1|197-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|197-getter|2|
+        return helpCommand;
+    }
+    //</editor-fold>//GEN-END:|197-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: cancelCommand9 ">//GEN-BEGIN:|199-getter|0|199-preInit
+    /**
+     * Returns an initiliazed instance of cancelCommand9 component.
+     * @return the initialized component instance
+     */
+    public Command getCancelCommand9() {
+        if (cancelCommand9 == null) {//GEN-END:|199-getter|0|199-preInit
+            // write pre-init user code here
+            cancelCommand9 = new Command("Cancelar", Command.CANCEL, 0);//GEN-LINE:|199-getter|1|199-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|199-getter|2|
+        return cancelCommand9;
+    }
+    //</editor-fold>//GEN-END:|199-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: cancelCommand8 ">//GEN-BEGIN:|195-getter|0|195-preInit
+    /**
+     * Returns an initiliazed instance of cancelCommand8 component.
+     * @return the initialized component instance
+     */
+    public Command getCancelCommand8() {
+        if (cancelCommand8 == null) {//GEN-END:|195-getter|0|195-preInit
+            // write pre-init user code here
+            cancelCommand8 = new Command("Cancelar", Command.CANCEL, 0);//GEN-LINE:|195-getter|1|195-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|195-getter|2|
+        return cancelCommand8;
+    }
+    //</editor-fold>//GEN-END:|195-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: okCommand10 ">//GEN-BEGIN:|203-getter|0|203-preInit
+    /**
+     * Returns an initiliazed instance of okCommand10 component.
+     * @return the initialized component instance
+     */
+    public Command getOkCommand10() {
+        if (okCommand10 == null) {//GEN-END:|203-getter|0|203-preInit
+            // write pre-init user code here
+            okCommand10 = new Command("Ok", Command.OK, 0);//GEN-LINE:|203-getter|1|203-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|203-getter|2|
+        return okCommand10;
+    }
+    //</editor-fold>//GEN-END:|203-getter|2|
     /**
      * Returns a display instance.
      * @return the display instance.
