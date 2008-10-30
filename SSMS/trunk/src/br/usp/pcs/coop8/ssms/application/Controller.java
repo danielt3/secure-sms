@@ -5,8 +5,12 @@
 package br.usp.pcs.coop8.ssms.application;
 
 import br.usp.larc.smspairing.SMSPoint;
+import br.usp.pcs.coop8.ssms.data.Contact;
 import br.usp.pcs.coop8.ssms.data.MyPrivateData;
+import br.usp.pcs.coop8.ssms.messaging.AuthenticationMessage;
+import br.usp.pcs.coop8.ssms.messaging.MessageSsms;
 import br.usp.pcs.coop8.ssms.messaging.RequestMyQaMessage;
+import br.usp.pcs.coop8.ssms.messaging.SigncryptedMessage;
 import br.usp.pcs.coop8.ssms.messaging.SmsListener;
 import br.usp.pcs.coop8.ssms.protocol.BDCPS;
 import br.usp.pcs.coop8.ssms.protocol.BDCPSAuthority;
@@ -20,6 +24,11 @@ import javax.microedition.io.Connector;
 import javax.wireless.messaging.BinaryMessage;
 import javax.wireless.messaging.MessageConnection;
 import javax.wireless.messaging.TextMessage;
+import net.sourceforge.floggy.persistence.Filter;
+import net.sourceforge.floggy.persistence.FloggyException;
+import net.sourceforge.floggy.persistence.ObjectSet;
+import net.sourceforge.floggy.persistence.Persistable;
+import net.sourceforge.floggy.persistence.PersistableManager;
 import org.bouncycastle.crypto.Digest;
 import org.bouncycastle.crypto.digests.SHA1Digest;
 import pseudojava.BigInteger;
@@ -30,13 +39,23 @@ import pseudojava.BigInteger;
  */
 public abstract class Controller {
 
-    static {
-        // Já começa a escutar o SMS no começão
-        receberSms();
-    }
     private static SmsListener smsListener = null;
+    private static ssms_main ssmsApp;
+    private static Contact selectedContact;
+    private static SigncryptedMessage selectedMessage;
 
     private Controller() {
+    }
+
+    /**
+     * Rotina de inicialização da aplicação
+     */
+    public static void startApplication(ssms_main ssmsApp) {
+
+        Controller.ssmsApp = ssmsApp;
+
+        Controller.receberSms();
+        MyPrivateData.getInstance();
     }
 
     /**
@@ -45,29 +64,127 @@ public abstract class Controller {
      */
     public static void firstTimeUse(String xA, String id) {
 
-        //TODO: acho que tem que passar o ID hasheado aqui né.. falta hashear
-        byte[] hashDoId = new byte[20];
         byte[] hashDoXa = new byte[20];
-        BDCPS bdcps = new BDCPSClient(Configuration.K,
-                BDCPSParameters.getInstance(Configuration.K).PPub.toByteArray(SMSPoint.COMPRESSED), id.getBytes());
+        byte[] hashDoId = new byte[20];
+
+        {
+
+            SHA1Digest sha = new SHA1Digest();
+            sha.reset();
+            sha.update(xA.getBytes(), 0, xA.getBytes().length);
+            sha.doFinal(hashDoXa, 0);
+
+            sha.reset();
+            sha.update(id.getBytes(), 0, id.getBytes().length);
+            sha.doFinal(hashDoId, 0);
+        }
+
+
+        BDCPS bdcps = new BDCPSClient(Configuration.K, BDCPSParameters.getInstance(Configuration.K).PPub.toByteArray(SMSPoint.COMPRESSED), hashDoId);
         bdcps.setSecretValue(hashDoXa);
-        bdcps.setPublicKey();
-        byte[][] myPublicKey = bdcps.getPublicKey();
-        byte[] yA = myPublicKey[0];
-        byte[] hA = myPublicKey[1];
-        byte[] tA = myPublicKey[2];
+        bdcps.setPublicValue();
+
+        byte[] yA = bdcps.getPublicValue();
 
 
-        MyPrivateData myData = null; //TODO: Puxar do banco se ja existir um
-        myData.setHA(hA);
-        myData.setIdA(hashDoId);
+
+        MyPrivateData myData = MyPrivateData.getInstance(); //TODO: Puxar do banco se ja existir um
+
+        myData.setIdA(id);
         myData.setYA(yA);
-        myData.setTA(tA);
+
+
+        //Estes só serão preenchidos quando chegar o QA
+        myData.setHA(null);
+        myData.setTA(null);
+
         myData.setQA(null);
 
-        //TODO: Salvar assim, com o floggy
+        PersistableManager perMan = PersistableManager.getInstance();
+        try {
+            perMan.save(myData);
+        } catch (FloggyException ex) {
+            ex.printStackTrace();
+        }
+
         RequestMyQaMessage reqMessage = new RequestMyQaMessage(yA);
         enviarSmsBinario(Configuration.KGB_TEL, reqMessage.getMessageBytes());
+
+    }
+
+    public static void finalizeFirstConfig(String xA) {
+
+        MyPrivateData myPrivData = MyPrivateData.getInstance();
+
+        byte[] hashDoXa = new byte[20];
+        byte[] hashDoId = new byte[20];
+
+        {
+
+            SHA1Digest sha = new SHA1Digest();
+            sha.reset();
+            sha.update(xA.getBytes(), 0, xA.getBytes().length);
+            sha.doFinal(hashDoXa, 0);
+
+            sha.reset();
+            sha.update(myPrivData.getIdA().getBytes(), 0, myPrivData.getIdA().getBytes().length);
+            sha.doFinal(hashDoId, 0);
+        }
+
+
+        BDCPS bdcps = new BDCPSClient(Configuration.K, BDCPSParameters.getInstance(Configuration.K).PPub.toByteArray(SMSPoint.COMPRESSED), hashDoId);
+        bdcps.setSecretValue(hashDoXa);
+        bdcps.setPublicValue();
+
+        bdcps.setPrivateKey(myPrivData.getQA());
+        bdcps.setPublicKey();
+        byte[][] pubKey = bdcps.getPublicKey();
+
+
+        myPrivData.setHA(pubKey[1]);
+        myPrivData.setTA(pubKey[2]);
+
+        PersistableManager perMan = PersistableManager.getInstance();
+        try {
+            perMan.save(myPrivData);
+        } catch (FloggyException ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
+    public static void addNewContact(final String name, final String phone) {
+        try {
+            //Busca no banco por um contacto com este phone
+            PersistableManager perMan = PersistableManager.getInstance();
+
+            ObjectSet results = perMan.find(Contact.class, new Filter() {
+
+                public boolean matches(Persistable arg0) {
+                    return ((Contact) arg0).getPhone().equals(phone);
+                }
+            }, null);
+
+            Contact contact;
+            if (results.size() > 0) {
+                //O contato já estava cadastrado.. Atualiza o nome dele
+                contact = (Contact) results.get(0);
+                contact.setName(name);
+            } else {
+                contact = new Contact(name, phone);
+            }
+
+            //Envia agora a mensagem para o contato
+            MyPrivateData myPrivData = MyPrivateData.getInstance();
+            AuthenticationMessage msg = new AuthenticationMessage(myPrivData.getYA(), myPrivData.getHA(), myPrivData.getTA());
+            enviarSmsBinario(phone, msg.getMessageBytes());
+
+            //Salva o contato
+            perMan.save(contact);
+
+        } catch (FloggyException ex) {
+            ex.printStackTrace();
+        }
 
     }
 
@@ -102,30 +219,176 @@ public abstract class Controller {
 
     }
 
+    public static void sendSigncryptedMessage(String message, String xA) {
+
+        MyPrivateData myPrivData = MyPrivateData.getInstance();
+
+        byte[] hashDoXa = new byte[20];
+        byte[] hashDoIdA = new byte[20];
+        byte[] hashDoIdB = new byte[20];
+
+        {
+
+            SHA1Digest sha = new SHA1Digest();
+            sha.reset();
+            sha.update(xA.getBytes(), 0, xA.getBytes().length);
+            sha.doFinal(hashDoXa, 0);
+
+            sha.reset();
+            sha.update(myPrivData.getIdA().getBytes(), 0, myPrivData.getIdA().getBytes().length);
+            sha.doFinal(hashDoIdA, 0);
+
+            sha.reset();
+            sha.update(selectedContact.getPhone().getBytes(), 0, selectedContact.getPhone().getBytes().length);
+            sha.doFinal(hashDoIdB, 0);
+        }
+
+
+        BDCPS bdcps = new BDCPSClient(Configuration.K, BDCPSParameters.getInstance(Configuration.K).PPub.toByteArray(SMSPoint.COMPRESSED), hashDoIdA);
+        bdcps.setSecretValue(hashDoXa);
+        bdcps.setPublicValue();
+
+        bdcps.setPrivateKey(myPrivData.getQA());
+        bdcps.setPublicKey();
+
+        try {
+            byte[][] cryptogram = bdcps.signcrypt(message.getBytes(), hashDoIdB, selectedContact.getYA());
+            SigncryptedMessage msg = new SigncryptedMessage(cryptogram[0], cryptogram[1], cryptogram[2]);
+
+            enviarSmsBinario(selectedContact.getPhone(), msg.getMessageBytes());
+
+        } catch (CipherException ex) {
+            ex.printStackTrace();
+            return;
+        }
+    }
+
+    public static String getUnsigncryptedText(String xA) {
+
+        MyPrivateData myPrivData = MyPrivateData.getInstance();
+
+        byte[] hashDoXa = new byte[20];
+        byte[] hashDoIdA = new byte[20];
+        byte[] hashDoIdB = new byte[20];
+
+        {
+
+            SHA1Digest sha = new SHA1Digest();
+            sha.reset();
+            sha.update(xA.getBytes(), 0, xA.getBytes().length);
+            sha.doFinal(hashDoXa, 0);
+
+            sha.reset();
+            sha.update(myPrivData.getIdA().getBytes(), 0, myPrivData.getIdA().getBytes().length);
+            sha.doFinal(hashDoIdA, 0);
+
+            sha.reset();
+            sha.update(selectedMessage.getSender().getBytes(), 0, selectedMessage.getSender().getBytes().length);
+            sha.doFinal(hashDoIdB, 0);
+        }
+
+
+        BDCPS bdcps = new BDCPSClient(Configuration.K, BDCPSParameters.getInstance(Configuration.K).PPub.toByteArray(SMSPoint.COMPRESSED), hashDoIdA);
+        bdcps.setSecretValue(hashDoXa);
+        bdcps.setPublicValue();
+
+        bdcps.setPrivateKey(myPrivData.getQA());
+        bdcps.setPublicKey();
+
+
+        byte[][] cryptogram = new byte[3][];
+        cryptogram[0] = ((SigncryptedMessage) selectedMessage).getC();
+        cryptogram[0] = ((SigncryptedMessage) selectedMessage).getH();
+        cryptogram[0] = ((SigncryptedMessage) selectedMessage).getZ();
+
+        PersistableManager perMan = PersistableManager.getInstance();
+        ObjectSet result;
+        try {
+
+            result =
+                    perMan.find(Contact.class, new Filter() {
+
+                public boolean matches(Persistable arg0) {
+                    return ((Contact) arg0).getPhone().equals(selectedMessage.getSender());
+                }
+            }, null);
+
+        } catch (FloggyException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+
+        Contact contact;
+        try {
+            contact = (Contact) result.get(0);
+        } catch (FloggyException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+
+
+        try {
+            byte[] unsigncryptedMsg = bdcps.unsigncrypt(cryptogram, hashDoIdB, contact.getYA());
+            return new String(unsigncryptedMsg);
+
+        } catch (InvalidMessageException ex) {
+            ex.printStackTrace();
+            return null;
+        } catch (CipherException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+
+
+    }
+
     public static void enviarSmsBinario(String phone, byte[] data) {
         enviarSmsBinario(phone, data, Configuration.SMS_PORT);
     }
 
-    public static void enviarSmsBinario(String phone, byte[] data, int porta) {
-        try {
-            String addr = "sms://" + phone + ":" + porta;
-            MessageConnection conn = (MessageConnection) Connector.open(addr);
-            BinaryMessage msg = (BinaryMessage) conn.newMessage(MessageConnection.BINARY_MESSAGE);
+    public static void enviarSmsBinario(final String phone, final byte[] data, final int port) {
 
-            msg.setPayloadData(data);
+        new Thread() {
 
-            conn.send(msg);
-        } catch (IllegalArgumentException iae) {
-        //do something
+            public void run() {
+                try {
+                    String addr = "sms://" + phone + ":" + port;
+                    MessageConnection conn = (MessageConnection) Connector.open(addr);
+                    BinaryMessage msg = (BinaryMessage) conn.newMessage(MessageConnection.BINARY_MESSAGE);
 
-        } catch (Exception e) {
-        //do something
-        }
+                    msg.setPayloadData(data);
+
+                    conn.send(msg);
+                } catch (IllegalArgumentException iae) {
+                //do something
+
+                } catch (Exception e) {
+                //do something
+                }
+            }
+        }.start();
+
+    }
+
+    public static void setSelectedContact(Contact contact) {
+        Controller.selectedContact = contact;
+    }
+
+    public static Contact getSelectedContact() {
+        return Controller.selectedContact;
+    }
+
+    public static void setSelectedMessage(SigncryptedMessage selectedMessage) {
+        Controller.selectedMessage = selectedMessage;
+    }
+
+    public static SigncryptedMessage getSelectedMessage() {
+        return Controller.selectedMessage;
     }
 
     public static void testinho() {
-        
-        
+
+
         Digest sha = null;
 
 
@@ -133,9 +396,9 @@ public abstract class Controller {
 
 
         int bits = 176;
-        
-      
-    
+
+
+
         BDCPSParameters bdcpsPar = BDCPSParameters.getInstance(bits);
 
         //String masterKey = "honnisoitquimalypense";
@@ -151,14 +414,14 @@ public abstract class Controller {
         byte[] xb_bob = new byte[20];
 
         try {
-           // sha.update(masterKey.getBytes(), 0, masterKey.getBytes().length);
+            // sha.update(masterKey.getBytes(), 0, masterKey.getBytes().length);
             //sha.doFinal(s, 0);
-            
-             BigInteger _s500 = new BigInteger("2811324208781249769788073818190026244636491661539281873387241581414870671338535758736366135621660583188369946048623028749823899797612403393315005280995");
- 
+
+            BigInteger _s500 = new BigInteger("2811324208781249769788073818190026244636491661539281873387241581414870671338535758736366135621660583188369946048623028749823899797612403393315005280995");
+
             s = _s500.mod(BDCPSParameters.getInstance(Configuration.K).N).toByteArray();
-   
-                    
+
+
 
             sha.reset();
 

@@ -4,6 +4,8 @@
  */
 package br.usp.pcs.coop8.ssms.messaging;
 
+import java.util.Date;
+
 /**
  *
  * @author Administrador
@@ -18,6 +20,7 @@ public abstract class MessageSsms {
     protected byte[] messageBytes;
     protected String sender;
     protected String destinatary;
+    protected Date date;
 
     /**
      * Método de fábrica, identifica que tipo de mensagem é baseado na primitiva
@@ -75,5 +78,13 @@ public abstract class MessageSsms {
 
     public String getDestinatary() {
         return this.destinatary;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

@@ -4,6 +4,7 @@
  */
 package br.usp.pcs.coop8.ssms.messaging;
 
+import br.usp.pcs.coop8.ssms.application.Configuration;
 import br.usp.pcs.coop8.ssms.util.Util;
 
 /**
@@ -38,29 +39,38 @@ public class AuthenticationMessage extends MessageSsms {
         return tA;
     }
 
-    private byte[] serialize(byte[] yA, byte[] hA, byte[] tA) {
+    private static byte[] serialize(byte[] yA, byte[] hA, byte[] tA) {
 
-        byte[] msgBytes = new byte[140];
-        //22 bytes cada..         
-        msgBytes[0] = (byte) ((int) Util.BYTE_BASE_VERSAO ^ (int) MessageSsms.AUTHENTICATE_ME);
-        //msgBytes[1] = (byte) BDCPS.getInstance().getK();
+        byte[] msgBytes = new byte[4 + 3 + yA.length + hA.length + tA.length];
 
-        System.arraycopy(yA, 0, msgBytes, 2, 22);
-        System.arraycopy(hA, 0, msgBytes, 24, 22);
-        System.arraycopy(tA, 0, msgBytes, 46, 22);
+        //4 bytes iniciais do protocolo
+        msgBytes[0] = Util.BYTE_BASE_VERSAO;
+        msgBytes[1] = MessageSsms.AUTHENTICATE_ME;
+        msgBytes[2] = (byte) Configuration.K;
+        msgBytes[3] = (byte) 0x00; //Reservado para segmentação
+
+        //Bytes indicando o tamanho dos campos:
+        msgBytes[4] = (byte) yA.length;
+        msgBytes[5] = (byte) hA.length;
+        msgBytes[6] = (byte) tA.length;
+
+        //Campos:        
+        System.arraycopy(yA, 0, msgBytes, 7, yA.length);
+        System.arraycopy(hA, 0, msgBytes, 7 + yA.length, hA.length);
+        System.arraycopy(tA, 0, msgBytes, 7 + yA.length + hA.length, tA.length);
 
         return msgBytes;
 
     }
 
-    public void deserialize(byte[] rawMessage) {
+    protected void deserialize(byte[] msgBytes) {
         super.deserialize(messageBytes);
-        yA = new byte[22];
-        hA = new byte[22];
-        tA = new byte[22];
-        System.arraycopy(messageBytes, 2, yA, 0, 22);
-        System.arraycopy(messageBytes, 24, hA, 0, 22);
-        System.arraycopy(messageBytes, 46, tA, 0, 22);
+        yA = new byte[Util.byteToInt(messageBytes[4])];
+        hA = new byte[Util.byteToInt(messageBytes[5])];
+        tA = new byte[Util.byteToInt(messageBytes[6])];
 
+        System.arraycopy(msgBytes, 7, yA, 0, yA.length);
+        System.arraycopy(msgBytes, 7 + yA.length, hA, 0, hA.length);
+        System.arraycopy(msgBytes, 7 + yA.length + hA.length, tA, 0, tA.length);
     }
 }

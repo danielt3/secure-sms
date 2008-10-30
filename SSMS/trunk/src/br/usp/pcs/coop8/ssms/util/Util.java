@@ -14,7 +14,7 @@ import pseudojava.BigInteger;
 public class Util {
 
     //01010000 (os 4 bits menos signifiativos são reservados para o nibble de controle da primitiva
-    public static byte BYTE_BASE_VERSAO = 0x5;
+    public static byte BYTE_BASE_VERSAO = 0x50;
 
     public static boolean isLong(String arg) {
         try {
@@ -23,6 +23,17 @@ public class Util {
         } catch (Exception ex) {
             return false;
         }
+    }
+
+    /**
+     * Converte um byte (unsigned) para um inteiro entre 0 e 255
+     */
+    public static int byteToInt(byte b) {
+        int i = (int) b;
+        if (i < 0) {
+            i = 256 + i;
+        }
+        return i;
     }
 
     /**

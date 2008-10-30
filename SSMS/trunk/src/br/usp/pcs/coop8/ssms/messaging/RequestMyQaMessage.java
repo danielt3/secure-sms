@@ -4,7 +4,7 @@
  */
 package br.usp.pcs.coop8.ssms.messaging;
 
-import br.usp.pcs.coop8.ssms.protocol.BDCPS;
+import br.usp.pcs.coop8.ssms.application.Configuration;
 import br.usp.pcs.coop8.ssms.util.Util;
 
 /**
@@ -12,7 +12,6 @@ import br.usp.pcs.coop8.ssms.util.Util;
  */
 public class RequestMyQaMessage extends MessageSsms {
 
-    private int maxCharacters = 140;
     private byte[] yA;
 
     protected RequestMyQaMessage() {
@@ -22,20 +21,26 @@ public class RequestMyQaMessage extends MessageSsms {
         this.yA = yA;
         this.messageBytes = serialize(yA);
     }
-    
+
     public byte[] getYA() {
         return this.yA;
     }
 
     private static byte[] serialize(byte[] yA) {
 
+        byte[] msgBytes = new byte[4 + 1 + yA.length];
 
-        byte[] msgBytes = new byte[140];
-        //22 bytes cada..         
-        msgBytes[0] = (byte) ((int) Util.BYTE_BASE_VERSAO ^ (int) MessageSsms.GIMME_QA);
-        //msgBytes[1] = (byte) BDCPS.getInstance().getK();
+        //4 bytes iniciais do protocolo
+        msgBytes[0] = Util.BYTE_BASE_VERSAO;
+        msgBytes[1] = MessageSsms.GIMME_QA;
+        msgBytes[2] = (byte) Configuration.K;
+        msgBytes[3] = (byte) 0x00; //Reservado para segmentação
 
-        System.arraycopy(yA, 0, msgBytes, 2, 22);
+        //Bytes indicando o tamanho dos campos:
+        msgBytes[4] = (byte) yA.length;
+
+        //Campos:        
+        System.arraycopy(yA, 0, msgBytes, 5, yA.length);
 
         return msgBytes;
 
@@ -43,7 +48,7 @@ public class RequestMyQaMessage extends MessageSsms {
 
     protected void deserialize(byte[] msgBytes) {
         super.deserialize(messageBytes);
-        yA = new byte[22];
-        System.arraycopy(msgBytes, 2, yA, 0, 22);
+        yA = new byte[Util.byteToInt(messageBytes[4])];
+        System.arraycopy(msgBytes, 5, yA, 0, yA.length);
     }
 }

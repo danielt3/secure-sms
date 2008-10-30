@@ -4,7 +4,10 @@
  */
 package br.usp.pcs.coop8.ssms.data;
 
+import net.sourceforge.floggy.persistence.FloggyException;
+import net.sourceforge.floggy.persistence.ObjectSet;
 import net.sourceforge.floggy.persistence.Persistable;
+import net.sourceforge.floggy.persistence.PersistableManager;
 
 /**
  * Representa os parâmetros
@@ -12,10 +15,40 @@ import net.sourceforge.floggy.persistence.Persistable;
 public class MyPrivateData implements Persistable {
 
     private byte[] qA;
-    private byte[] idA;
+    private String idA;
     private byte[] yA;
     private byte[] tA;
     private byte[] hA;
+    private static MyPrivateData myDataInstance = null;
+
+    public MyPrivateData() {
+        
+    }
+    /**
+     * Retorna a instância persistente
+     * @return
+     */
+    public static MyPrivateData getInstance() {
+        if (myDataInstance == null) {
+            try {
+                //Verifica se tem no Floggy
+                PersistableManager perMan = PersistableManager.getInstance();
+                ObjectSet results = perMan.find(MyPrivateData.class, null, null);
+
+                if (results == null || results.size() == 0) {
+                    //Retorna uma instância com os campos nulos
+                    myDataInstance = new MyPrivateData();
+                    perMan.save(myDataInstance);
+                } else {
+                    myDataInstance = (MyPrivateData) results.get(0);
+                }
+
+            } catch (FloggyException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return myDataInstance;
+    }
 
     public byte[] getHA() {
         return hA;
@@ -25,11 +58,11 @@ public class MyPrivateData implements Persistable {
         this.hA = hA;
     }
 
-    public byte[] getIdA() {
+    public String getIdA() {
         return idA;
     }
 
-    public void setIdA(byte[] idA) {
+    public void setIdA(String idA) {
         this.idA = idA;
     }
 

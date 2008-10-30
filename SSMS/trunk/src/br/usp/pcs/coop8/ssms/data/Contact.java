@@ -17,26 +17,16 @@ public class Contact implements Persistable {
     private byte[] yA;
     private byte[] tA;
     private byte[] hA;
-    private boolean validated;
 
+    //Só o fato de ter yA setado já significa que está validado
+    //private boolean validated;
     public Contact() {
-    }
-
-    public Contact(String name, String phone, byte[] yA, byte[] tA, byte[] hA) {
-
-        this.name = name;
-        this.phone = phone;
-        this.yA = yA;
-        this.tA = tA;
-        this.hA = hA;
-        this.validated = false;
     }
 
     public Contact(String name, String phone) {
 
         this.name = name;
         this.phone = phone;
-        this.validated = false;
     }
 
     public String getName() {
@@ -63,11 +53,15 @@ public class Contact implements Persistable {
         return tA;
     }
 
-    public boolean isKeyValid() {
-        return validated;
+    public void setYA(byte[] yA) {
+        this.yA = yA;
     }
 
-    public void setKeyValid(boolean value) {
-        this.validated = value;
+    public void setHA(byte[] hA) {
+        this.hA = hA;
+    }
+
+    public void setTA(byte[] tA) {
+        this.tA = tA;
     }
 }
