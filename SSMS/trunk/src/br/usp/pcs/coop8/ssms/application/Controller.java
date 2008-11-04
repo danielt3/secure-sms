@@ -47,6 +47,16 @@ public abstract class Controller {
     private Controller() {
     }
 
+    public static void resetData() {
+        PersistableManager perMan = PersistableManager.getInstance();
+        try {
+            perMan.deleteAll();
+        } catch (FloggyException ex) {
+            ex.printStackTrace();
+        }
+        MyPrivateData.clearInstance();
+    }
+
     /**
      * Rotina de inicialização da aplicação
      */

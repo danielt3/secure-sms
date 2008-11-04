@@ -24,6 +24,10 @@ public class MyPrivateData implements Persistable {
     public MyPrivateData() {
         
     }
+    
+    public static void clearInstance() {
+        myDataInstance = null;
+    }
     /**
      * Retorna a instância persistente
      * @return

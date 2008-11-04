@@ -26,8 +26,6 @@ public class ssms_main extends MIDlet implements CommandListener {
     private boolean midletPaused = false;
 
     //<editor-fold defaultstate="collapsed" desc=" Generated Fields ">//GEN-BEGIN:|fields|0|
-    private Form SSMS_Results;
-    private TextField txtResults;
     private List ListaInicial;
     private Form form;
     private TextField textField;
@@ -70,11 +68,11 @@ public class ssms_main extends MIDlet implements CommandListener {
     private Command okCommand7;
     private Command cancelCommand7;
     private Command okCommand8;
+    private Command okCommand10;
     private Command helpCommand;
     private Command cancelCommand9;
     private Command okCommand9;
     private Command cancelCommand8;
-    private Command okCommand10;
     private SimpleCancellableTask task;
     private Image image;
     //</editor-fold>//GEN-END:|fields|0|
@@ -200,125 +198,85 @@ public class ssms_main extends MIDlet implements CommandListener {
                 // write pre-action user code here
                 ListaInicialAction();//GEN-LINE:|7-commandAction|6|28-postAction
             // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|7|23-preAction
-        } else if (displayable == SSMS_Results) {
-            if (command == cancelCommand) {//GEN-END:|7-commandAction|7|23-preAction
-                // write pre-action user code here
-                exitMIDlet();//GEN-LINE:|7-commandAction|8|23-postAction
-            // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|9|142-preAction
+            }//GEN-BEGIN:|7-commandAction|7|142-preAction
         } else if (displayable == alert5) {
-            if (command == okCommand5) {//GEN-END:|7-commandAction|9|142-preAction
+            if (command == okCommand5) {//GEN-END:|7-commandAction|7|142-preAction
                 // write pre-action user code here
-                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|10|142-postAction
+                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|8|142-postAction
             // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|11|55-preAction
+            }//GEN-BEGIN:|7-commandAction|9|55-preAction
         } else if (displayable == form) {
-            if (command == cancelCommand1) {//GEN-END:|7-commandAction|11|55-preAction
+            if (command == cancelCommand1) {//GEN-END:|7-commandAction|9|55-preAction
                 // write pre-action user code here
-                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|12|55-postAction
+                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|10|55-postAction
             // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|13|112-preAction
+            }//GEN-BEGIN:|7-commandAction|11|112-preAction
         } else if (displayable == form1) {
-            if (command == cancelCommand4) {//GEN-END:|7-commandAction|13|112-preAction
+            if (command == cancelCommand4) {//GEN-END:|7-commandAction|11|112-preAction
                 // write pre-action user code here
-                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|14|112-postAction
+                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|12|112-postAction
             // write post-action user code here
-            } else if (command == okCommand4) {//GEN-LINE:|7-commandAction|15|110-preAction
+            } else if (command == okCommand4) {//GEN-LINE:|7-commandAction|13|110-preAction
                 // write pre-action user code here
-                method2();//GEN-LINE:|7-commandAction|16|110-postAction
+                method2();//GEN-LINE:|7-commandAction|14|110-postAction
             // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|17|149-preAction
+            }//GEN-BEGIN:|7-commandAction|15|149-preAction
         } else if (displayable == form2) {
-            if (command == cancelCommand5) {//GEN-END:|7-commandAction|17|149-preAction
+            if (command == cancelCommand5) {//GEN-END:|7-commandAction|15|149-preAction
                 // write pre-action user code here
-                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|18|149-postAction
+                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|16|149-postAction
             // write post-action user code here
-            } else if (command == okCommand6) {//GEN-LINE:|7-commandAction|19|147-preAction
+            } else if (command == okCommand6) {//GEN-LINE:|7-commandAction|17|147-preAction
                 // write pre-action user code here
-                Controller.finalizeFirstConfig(txtXA_GerarPubs.getString());//GEN-LINE:|7-commandAction|20|147-postAction
+                Controller.finalizeFirstConfig(txtXA_GerarPubs.getString());//GEN-LINE:|7-commandAction|18|147-postAction
             // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|21|170-preAction
+            }//GEN-BEGIN:|7-commandAction|19|170-preAction
         } else if (displayable == form3) {
-            if (command == cancelCommand6) {//GEN-END:|7-commandAction|21|170-preAction
+            if (command == cancelCommand6) {//GEN-END:|7-commandAction|19|170-preAction
                 // write pre-action user code here
-                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|22|170-postAction
+                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|20|170-postAction
             // write post-action user code here
-            } else if (command == okCommand7) {//GEN-LINE:|7-commandAction|23|168-preAction
+            } else if (command == okCommand7) {//GEN-LINE:|7-commandAction|21|168-preAction
                 // write pre-action user code here
-                Controller.sendSigncryptedMessage(txtMessage.getString(), txtXA_SendMessage.getString());//GEN-LINE:|7-commandAction|24|168-postAction
+                Controller.sendSigncryptedMessage(txtMessage.getString(), txtXA_SendMessage.getString());//GEN-LINE:|7-commandAction|22|168-postAction
             // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|25|193-preAction
+            }//GEN-BEGIN:|7-commandAction|23|193-preAction
         } else if (displayable == form4) {
-            if (command == okCommand9) {//GEN-END:|7-commandAction|25|193-preAction
+            if (command == okCommand9) {//GEN-END:|7-commandAction|23|193-preAction
                 // write pre-action user code here
-                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|26|193-postAction
+                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|24|193-postAction
             // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|27|188-preAction
+            }//GEN-BEGIN:|7-commandAction|25|188-preAction
         } else if (displayable == form5) {
-            if (command == cancelCommand7) {//GEN-END:|7-commandAction|27|188-preAction
+            if (command == cancelCommand7) {//GEN-END:|7-commandAction|25|188-preAction
                 // write pre-action user code here
-                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|28|188-postAction
+                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|26|188-postAction
             // write post-action user code here
-            } else if (command == okCommand8) {//GEN-LINE:|7-commandAction|29|186-preAction
+            } else if (command == okCommand8) {//GEN-LINE:|7-commandAction|27|186-preAction
                 // write pre-action user code here
-                switchDisplayable(null, getForm4());//GEN-LINE:|7-commandAction|30|186-postAction
+                switchDisplayable(null, getForm4());//GEN-LINE:|7-commandAction|28|186-postAction
             // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|31|158-preAction
+            }//GEN-BEGIN:|7-commandAction|29|158-preAction
         } else if (displayable == listContacts) {
-            if (command == List.SELECT_COMMAND) {//GEN-END:|7-commandAction|31|158-preAction
+            if (command == List.SELECT_COMMAND) {//GEN-END:|7-commandAction|29|158-preAction
                 // write pre-action user code here
-                listContactsAction();//GEN-LINE:|7-commandAction|32|158-postAction
+                listContactsAction();//GEN-LINE:|7-commandAction|30|158-postAction
             // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|33|175-preAction
+            }//GEN-BEGIN:|7-commandAction|31|175-preAction
         } else if (displayable == listMessages) {
-            if (command == List.SELECT_COMMAND) {//GEN-END:|7-commandAction|33|175-preAction
+            if (command == List.SELECT_COMMAND) {//GEN-END:|7-commandAction|31|175-preAction
                 // write pre-action user code here
-                listMessagesAction();//GEN-LINE:|7-commandAction|34|175-postAction
+                listMessagesAction();//GEN-LINE:|7-commandAction|32|175-postAction
             // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|35|7-postCommandAction
-        }//GEN-END:|7-commandAction|35|7-postCommandAction
+            }//GEN-BEGIN:|7-commandAction|33|7-postCommandAction
+        }//GEN-END:|7-commandAction|33|7-postCommandAction
     // write post-action user code here
-    }//GEN-BEGIN:|7-commandAction|36|
-    //</editor-fold>//GEN-END:|7-commandAction|36|
-    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: SSMS_Results ">//GEN-BEGIN:|20-getter|0|20-preInit
-    /**
-     * Returns an initiliazed instance of SSMS_Results component.
-     * @return the initialized component instance
-     */
-    public Form getSSMS_Results() {
-        if (SSMS_Results == null) {//GEN-END:|20-getter|0|20-preInit
-            // write pre-init user code here
+    }//GEN-BEGIN:|7-commandAction|34|
+    //</editor-fold>//GEN-END:|7-commandAction|34|
 
-            SSMS_Results = new Form("SSMS_Results", new Item[] { getTxtResults() });//GEN-BEGIN:|20-getter|1|20-postInit
-            SSMS_Results.addCommand(getCancelCommand());
-            SSMS_Results.setCommandListener(this);//GEN-END:|20-getter|1|20-postInit
-        // write post-init user code here
-        }//GEN-BEGIN:|20-getter|2|
-        return SSMS_Results;
-    }
-    //</editor-fold>//GEN-END:|20-getter|2|
 
-    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: txtResults ">//GEN-BEGIN:|25-getter|0|25-preInit
-    /**
-     * Returns an initiliazed instance of txtResults component.
-     * @return the initialized component instance
-     */
-    public TextField getTxtResults() {
-        if (txtResults == null) {//GEN-END:|25-getter|0|25-preInit
-            // write pre-init user code here
-            try {
-                SMSTests.main(null);
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
 
-            txtResults = new TextField("txtResults", Output.getOutput(), Output.getOutput().length(), TextField.ANY);//GEN-LINE:|25-getter|1|25-postInit
-        // write post-init user code here
-        }//GEN-BEGIN:|25-getter|2|
-        return txtResults;
-    }
-    //</editor-fold>//GEN-END:|25-getter|2|
+
 
     //<editor-fold defaultstate="collapsed" desc=" Generated Getter: ListaInicial ">//GEN-BEGIN:|26-getter|0|26-preInit
     /**
@@ -334,8 +292,8 @@ public class ssms_main extends MIDlet implements CommandListener {
             ListaInicial.append("Enviar torpedo", null);
             ListaInicial.append("Ver mensagens", null);
             ListaInicial.append("Ver OutPut", null);
-            ListaInicial.append("Teste BDCPS", null);
-            ListaInicial.append("ITM", null);
+            ListaInicial.append("Executar testes", null);
+            ListaInicial.append("Limpar dados", null);
             ListaInicial.setCommandListener(this);
             ListaInicial.setSelectedFlags(new boolean[] { false, false, false, false, false, false, false });//GEN-END:|26-getter|1|26-postInit
         // write post-init user code here
@@ -372,14 +330,14 @@ public class ssms_main extends MIDlet implements CommandListener {
                 // write pre-action user code here
                 switchDisplayable(null, getForm());//GEN-LINE:|26-action|10|35-postAction
             // write post-action user code here
-            } else if (__selectedString.equals("Teste BDCPS")) {//GEN-LINE:|26-action|11|123-preAction
+            } else if (__selectedString.equals("Executar testes")) {//GEN-LINE:|26-action|11|127-preAction
                 // write pre-action user code here
-                br.usp.pcs.coop8.ssms.tests.BDCPSTestCel.test();//GEN-LINE:|26-action|12|123-postAction
+                Controller.testinho();//GEN-LINE:|26-action|12|127-postAction
             // write post-action user code here
-            } else if (__selectedString.equals("ITM")) {//GEN-LINE:|26-action|13|127-preAction
+            } else if (__selectedString.equals("Limpar dados")) {//GEN-LINE:|26-action|13|204-preAction
                 // write pre-action user code here
-                Controller.testinho();//GEN-LINE:|26-action|14|127-postAction
-            // write post-action user code here
+                Controller.resetData();//GEN-LINE:|26-action|14|204-postAction
+                // write post-action user code here
             }//GEN-BEGIN:|26-action|15|26-postAction
         }//GEN-END:|26-action|15|26-postAction
     // enter post-action user code here
@@ -397,6 +355,7 @@ public class ssms_main extends MIDlet implements CommandListener {
             form.addCommand(getCancelCommand1());
             form.setCommandListener(this);//GEN-END:|51-getter|1|51-postInit
         // write post-init user code here
+            
         }//GEN-BEGIN:|51-getter|2|
         return form;
     }
@@ -413,6 +372,12 @@ public class ssms_main extends MIDlet implements CommandListener {
             textField = new TextField("textField", Output.getOutput(), ((Output.getOutput().length() != 0)//GEN-BEGIN:|52-getter|1|52-postInit
                     ? Output.getOutput().length() : 1), TextField.ANY);//GEN-END:|52-getter|1|52-postInit
         // write post-init user code here
+        } else {
+             // Atualiza o texto            
+            textField.setMaxSize(((Output.getOutput().length() != 0)
+                    ? Output.getOutput().length() : 1));
+            textField.setString(Output.getOutput());
+            
         }//GEN-BEGIN:|52-getter|2|
         return textField;
     }
@@ -1057,7 +1022,10 @@ public class ssms_main extends MIDlet implements CommandListener {
             form4 = new Form("form4", new Item[] { getStringItem1(), getTextField1() });//GEN-BEGIN:|180-getter|1|180-postInit
             form4.addCommand(getOkCommand9());
             form4.setCommandListener(this);//GEN-END:|180-getter|1|180-postInit
-        // write post-init user code here
+        // write post-init user code here 
+        } else {
+            // Garante que irá atualizar o texto
+            ((TextField)form4.get(1)).setString(Controller.getUnsigncryptedText(txtXA_ReadMessage.getString()));            
         }//GEN-BEGIN:|180-getter|2|
         return form4;
     }
@@ -1086,8 +1054,11 @@ public class ssms_main extends MIDlet implements CommandListener {
     public TextField getTextField1() {
         if (textField1 == null) {//GEN-END:|182-getter|0|182-preInit
             // write pre-init user code here
-            textField1 = new TextField("Mensagem:", Controller.getUnsigncryptedText(txtXA_ReadMessage.getString()), 32, TextField.ANY);//GEN-LINE:|182-getter|1|182-postInit
+            textField1 = new TextField("Mensagem:", Controller.getUnsigncryptedText(txtXA_ReadMessage.getString()), 140, TextField.ANY);//GEN-LINE:|182-getter|1|182-postInit
         // write post-init user code here
+        } else {
+            // Garante que irá atualizar o texto
+            textField1.setString(Controller.getUnsigncryptedText(txtXA_ReadMessage.getString()));
         }//GEN-BEGIN:|182-getter|2|
         return textField1;
     }
