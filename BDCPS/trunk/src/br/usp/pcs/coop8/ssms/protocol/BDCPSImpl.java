@@ -304,13 +304,16 @@ public abstract class BDCPSImpl implements BDCPS{
 	/*   #### Auxliliary Methods #### */
 
 	protected void initParams() {
-		sms = new SMSParams(k);
-		E = new SMSCurve(sms);
-		E2 = new SMSCurve2(E);
-		P = E.getG();
-		Q = E2.getGt();
-		pair = new SMSPairing(E2);
-		g = pair.ate(Q, P);
+                BDCPSParameters bdcpsParams = BDCPSParameters.getInstance(k);
+                sms = bdcpsParams.SMSPARAMS;
+		//sms = new SMSParams(k);
+		E = bdcpsParams.E;
+		E2 = bdcpsParams.E2;
+		P = bdcpsParams.P;
+		Q = bdcpsParams.Q;
+		pair = bdcpsParams.PAIR;
+		g = bdcpsParams.g;
+                
 		logger = new Logger(LOG_MODE);
 		privateKey = new byte[3][];
 		publicKey = new byte[3][];

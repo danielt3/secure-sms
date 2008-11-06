@@ -25,7 +25,8 @@ public class BDCPSClient extends BDCPSImpl {
 	 * Client setup. Must be run before any method.
 	 * 
 	 * @param bits 		Security parameter (key size)
-	 * @param masterKey The trust authority's public point byte representation
+	 * @param param The trust authority's public point byte representation
+         * @param id The hash of the client's phone
 	 * @author 			rodrigo
 	 * @since 			2008-10-25
 	 */	
