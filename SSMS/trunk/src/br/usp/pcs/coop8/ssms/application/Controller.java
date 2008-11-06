@@ -4,11 +4,9 @@
  */
 package br.usp.pcs.coop8.ssms.application;
 
-import br.usp.larc.smspairing.SMSPoint;
 import br.usp.pcs.coop8.ssms.data.Contact;
 import br.usp.pcs.coop8.ssms.data.MyPrivateData;
 import br.usp.pcs.coop8.ssms.messaging.AuthenticationMessage;
-import br.usp.pcs.coop8.ssms.messaging.MessageSsms;
 import br.usp.pcs.coop8.ssms.messaging.RequestMyQaMessage;
 import br.usp.pcs.coop8.ssms.messaging.SigncryptedMessage;
 import br.usp.pcs.coop8.ssms.messaging.SmsListener;
@@ -90,7 +88,7 @@ public abstract class Controller {
         }
 
 
-        BDCPS bdcps = new BDCPSClient(Configuration.K, BDCPSParameters.getInstance(Configuration.K).PPub.toByteArray(SMSPoint.COMPRESSED), hashDoId);
+        BDCPS bdcps = new BDCPSClient(Configuration.K, BDCPSParameters.getInstance(Configuration.K).PPubBytes, hashDoId);
         bdcps.setSecretValue(hashDoXa);
         bdcps.setPublicValue();
 
@@ -142,7 +140,7 @@ public abstract class Controller {
         }
 
 
-        BDCPS bdcps = new BDCPSClient(Configuration.K, BDCPSParameters.getInstance(Configuration.K).PPub.toByteArray(SMSPoint.COMPRESSED), hashDoId);
+        BDCPS bdcps = new BDCPSClient(Configuration.K, BDCPSParameters.getInstance(Configuration.K).PPubBytes, hashDoId);
         bdcps.setSecretValue(hashDoXa);
         bdcps.setPublicValue();
 
@@ -254,7 +252,7 @@ public abstract class Controller {
         }
 
 
-        BDCPS bdcps = new BDCPSClient(Configuration.K, BDCPSParameters.getInstance(Configuration.K).PPub.toByteArray(SMSPoint.COMPRESSED), hashDoIdA);
+        BDCPS bdcps = new BDCPSClient(Configuration.K, BDCPSParameters.getInstance(Configuration.K).PPubBytes, hashDoIdA);
         bdcps.setSecretValue(hashDoXa);
         bdcps.setPublicValue();
 
@@ -298,7 +296,7 @@ public abstract class Controller {
         }
 
 
-        BDCPS bdcps = new BDCPSClient(Configuration.K, BDCPSParameters.getInstance(Configuration.K).PPub.toByteArray(SMSPoint.COMPRESSED), hashDoIdA);
+        BDCPS bdcps = new BDCPSClient(Configuration.K, BDCPSParameters.getInstance(Configuration.K).PPubBytes, hashDoIdA);
         bdcps.setSecretValue(hashDoXa);
         bdcps.setPublicValue();
 
@@ -449,8 +447,8 @@ public abstract class Controller {
             throw new RuntimeException("BDCPS: Digest exception.");
         }
         BDCPS auth = new BDCPSAuthority(bits, s, id_auth.getBytes());
-        BDCPS alice = new BDCPSClient(bits, bdcpsPar.PPub.toByteArray(SMSPoint.COMPRESSED) /*auth.getPublicPoint()*/, id_a.getBytes());
-        BDCPS bob = new BDCPSClient(bits, bdcpsPar.PPub.toByteArray(SMSPoint.COMPRESSED) /*auth.getPublicPoint()*/, id_b.getBytes());
+        BDCPS alice = new BDCPSClient(bits, bdcpsPar.PPubBytes /*auth.getPublicPoint()*/, id_a.getBytes());
+        BDCPS bob = new BDCPSClient(bits, bdcpsPar.PPubBytes /*auth.getPublicPoint()*/, id_b.getBytes());
 
 
 

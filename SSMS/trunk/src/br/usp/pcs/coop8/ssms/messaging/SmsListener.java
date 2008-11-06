@@ -4,7 +4,6 @@
  */
 package br.usp.pcs.coop8.ssms.messaging;
 
-import br.usp.larc.smspairing.SMSPoint;
 import br.usp.pcs.coop8.ssms.application.Configuration;
 import br.usp.pcs.coop8.ssms.application.KgbSsms;
 import br.usp.pcs.coop8.ssms.data.Contact;
@@ -24,7 +23,6 @@ import net.sourceforge.floggy.persistence.ObjectSet;
 import net.sourceforge.floggy.persistence.Persistable;
 import net.sourceforge.floggy.persistence.PersistableManager;
 import org.bouncycastle.crypto.digests.SHA1Digest;
-import pseudojava.FilterInputStream;
 
 /**
  *
@@ -185,7 +183,7 @@ public class SmsListener
                 sha.update(senderPhone.getBytes(), 0, senderPhone.getBytes().length);
                 sha.doFinal(hashIdB, 0);
 
-                BDCPSClient bdcps = new BDCPSClient(Configuration.K, BDCPSParameters.getInstance(Configuration.K).PPub.toByteArray(SMSPoint.COMPRESSED), hashMyId);
+                BDCPSClient bdcps = new BDCPSClient(Configuration.K, BDCPSParameters.getInstance(Configuration.K).PPubBytes, hashMyId);
 
                 byte[][] publicKeyB = new byte[3][];
                 publicKeyB[0] = msg.getYA();
