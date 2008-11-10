@@ -103,7 +103,7 @@
             </Component>
             <Component componentID="10" typeID="C#DisplayablesCategory">
                 <Component componentID="26" typeID="Cjavax.microedition.lcdui.List">
-                    <Property name="instanceName" typeID="Pjava.lang.String" value="VListaInicial"/>
+                    <Property name="instanceName" typeID="Pjava.lang.String" value="VlistaInicial"/>
                     <Property name="commands" typeID="1C#CommandEventSource" value="A1:3_R28"/>
                     <Property name="title" typeID="Pjava.lang.String" value="VSSMS"/>
                     <Property name="commandListener" typeID="C#CommandListener" value="R7"/>
@@ -199,7 +199,7 @@
                     </Component>
                 </Component>
                 <Component componentID="61" typeID="Cjavax.microedition.lcdui.Form">
-                    <Property name="instanceName" typeID="Pjava.lang.String" value="VFormAutenticarContato"/>
+                    <Property name="instanceName" typeID="Pjava.lang.String" value="VformAutenticarContato"/>
                     <Property name="commands" typeID="1C#CommandEventSource" value="A2:3_R664_R211"/>
                     <Property name="title" typeID="Pjava.lang.String" value="VAutenticar contato"/>
                     <Property name="commandListener" typeID="C#CommandListener" value="R7"/>
@@ -517,11 +517,11 @@
     <FlowScene version="1">
         <Node componentID="130" descriptorID="componentNode130" x="-109" y="386"/>
         <Node componentID="183" descriptorID="componentNode183" x="549" y="206"/>
-        <Node componentID="61" descriptorID="componentNode61" x="372" y="472"/>
+        <Node componentID="61" descriptorID="componentNode61" x="371" y="472"/>
         <Node componentID="124" descriptorID="componentNode124" x="-109" y="84"/>
         <Node componentID="155" descriptorID="componentNode155" x="584" y="407"/>
         <Node componentID="121" descriptorID="componentNode121" x="483" y="617"/>
-        <Node componentID="26" descriptorID="componentNode26" x="140" y="193"/>
+        <Node componentID="26" descriptorID="componentNode26" x="140" y="194"/>
         <Node componentID="180" descriptorID="componentNode180" x="610" y="335"/>
         <Node componentID="51" descriptorID="componentNode51" x="186" y="524"/>
         <Node componentID="135" descriptorID="componentNode135" x="-109" y="517"/>

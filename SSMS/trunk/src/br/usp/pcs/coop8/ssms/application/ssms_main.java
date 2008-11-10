@@ -26,10 +26,10 @@ public class ssms_main extends MIDlet implements CommandListener {
     private boolean midletPaused = false;
 
     //<editor-fold defaultstate="collapsed" desc=" Generated Fields ">//GEN-BEGIN:|fields|0|
-    private List ListaInicial;
+    private List listaInicial;
     private Form formOutput;
     private TextField textField;
-    private Form FormAutenticarContato;
+    private Form formAutenticarContato;
     private TextField txtContactPhone;
     private TextField txtContactName;
     private Alert alert4;
@@ -142,125 +142,125 @@ public class ssms_main extends MIDlet implements CommandListener {
      */
     public void commandAction(Command command, Displayable displayable) {//GEN-END:|7-commandAction|0|7-preCommandAction
         // write pre-action user code here
-        if (displayable == FormAutenticarContato) {//GEN-BEGIN:|7-commandAction|1|211-preAction
-            if (command == cancelCommand) {//GEN-END:|7-commandAction|1|211-preAction
+        if (displayable == alert5) {//GEN-BEGIN:|7-commandAction|1|213-preAction
+            if (command == okCommand) {//GEN-END:|7-commandAction|1|213-preAction
                 // write pre-action user code here
-                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|2|211-postAction
+                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|2|213-postAction
                 // write post-action user code here
-            } else if (command == okCommand) {//GEN-LINE:|7-commandAction|3|66-preAction
-                // write pre-action user code here
-                Controller.addNewContact(txtContactName.getString(), txtContactPhone.getString());//GEN-LINE:|7-commandAction|4|66-postAction
-            // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|5|28-preAction
-        } else if (displayable == ListaInicial) {
-            if (command == List.SELECT_COMMAND) {//GEN-END:|7-commandAction|5|28-preAction
-                // write pre-action user code here
-                ListaInicialAction();//GEN-LINE:|7-commandAction|6|28-postAction
-            // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|7|213-preAction
-        } else if (displayable == alert5) {
-            if (command == okCommand) {//GEN-END:|7-commandAction|7|213-preAction
-                // write pre-action user code here
-                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|8|213-postAction
-                // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|9|231-preAction
+            }//GEN-BEGIN:|7-commandAction|3|231-preAction
         } else if (displayable == form3) {
-            if (command == cancelCommand) {//GEN-END:|7-commandAction|9|231-preAction
+            if (command == cancelCommand) {//GEN-END:|7-commandAction|3|231-preAction
                 // write pre-action user code here
-                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|10|231-postAction
+                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|4|231-postAction
                 // write post-action user code here
-            } else if (command == okCommand) {//GEN-LINE:|7-commandAction|11|230-preAction
+            } else if (command == okCommand) {//GEN-LINE:|7-commandAction|5|230-preAction
                 // write pre-action user code here
-                Controller.sendSigncryptedMessage(txtMessage.getString(), txtXA_SendMessage.getString());//GEN-LINE:|7-commandAction|12|230-postAction
+                Controller.sendSigncryptedMessage(txtMessage.getString(), txtXA_SendMessage.getString());//GEN-LINE:|7-commandAction|6|230-postAction
                 // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|13|223-preAction
+            }//GEN-BEGIN:|7-commandAction|7|223-preAction
         } else if (displayable == form4) {
-            if (command == okCommand) {//GEN-END:|7-commandAction|13|223-preAction
+            if (command == okCommand) {//GEN-END:|7-commandAction|7|223-preAction
                 // write pre-action user code here
-                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|14|223-postAction
+                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|8|223-postAction
                 // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|15|227-preAction
+            }//GEN-BEGIN:|7-commandAction|9|227-preAction
         } else if (displayable == form5) {
-            if (command == cancelCommand) {//GEN-END:|7-commandAction|15|227-preAction
+            if (command == cancelCommand) {//GEN-END:|7-commandAction|9|227-preAction
                 // write pre-action user code here
-                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|16|227-postAction
+                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|10|227-postAction
                 // write post-action user code here
-            } else if (command == okCommand) {//GEN-LINE:|7-commandAction|17|225-preAction
+            } else if (command == okCommand) {//GEN-LINE:|7-commandAction|11|225-preAction
                 // write pre-action user code here
-                switchDisplayable(null, getForm4());//GEN-LINE:|7-commandAction|18|225-postAction
+                switchDisplayable(null, getForm4());//GEN-LINE:|7-commandAction|12|225-postAction
                 // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|19|207-preAction
-        } else if (displayable == formFirstUse) {
-            if (command == cancelCommand) {//GEN-END:|7-commandAction|19|207-preAction
+            }//GEN-BEGIN:|7-commandAction|13|211-preAction
+        } else if (displayable == formAutenticarContato) {
+            if (command == cancelCommand) {//GEN-END:|7-commandAction|13|211-preAction
                 // write pre-action user code here
-                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|20|207-postAction
+                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|14|211-postAction
                 // write post-action user code here
-            } else if (command == okCommand) {//GEN-LINE:|7-commandAction|21|206-preAction
+            } else if (command == okCommand) {//GEN-LINE:|7-commandAction|15|66-preAction
                 // write pre-action user code here
-                method2();//GEN-LINE:|7-commandAction|22|206-postAction
-                // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|23|216-preAction
-        } else if (displayable == formFirstUse2) {
-            if (command == cancelCommand) {//GEN-END:|7-commandAction|23|216-preAction
-                // write pre-action user code here
-                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|24|216-postAction
-                // write post-action user code here
-            } else if (command == okCommand) {//GEN-LINE:|7-commandAction|25|215-preAction
-                // write pre-action user code here
-                Controller.finalizeFirstConfig(txtXA_GerarPubs.getString());//GEN-LINE:|7-commandAction|26|215-postAction
-                // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|27|219-preAction
-        } else if (displayable == formOutput) {
-            if (command == cancelCommand) {//GEN-END:|7-commandAction|27|219-preAction
-                // write pre-action user code here
-                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|28|219-postAction
-                // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|29|158-preAction
-        } else if (displayable == listContacts) {
-            if (command == List.SELECT_COMMAND) {//GEN-END:|7-commandAction|29|158-preAction
-                // write pre-action user code here
-                listContactsAction();//GEN-LINE:|7-commandAction|30|158-postAction
+                Controller.addNewContact(txtContactName.getString(), txtContactPhone.getString());//GEN-LINE:|7-commandAction|16|66-postAction
             // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|31|175-preAction
-        } else if (displayable == listMessages) {
-            if (command == List.SELECT_COMMAND) {//GEN-END:|7-commandAction|31|175-preAction
+            }//GEN-BEGIN:|7-commandAction|17|207-preAction
+        } else if (displayable == formFirstUse) {
+            if (command == cancelCommand) {//GEN-END:|7-commandAction|17|207-preAction
                 // write pre-action user code here
-                listMessagesAction();//GEN-LINE:|7-commandAction|32|175-postAction
+                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|18|207-postAction
+                // write post-action user code here
+            } else if (command == okCommand) {//GEN-LINE:|7-commandAction|19|206-preAction
+                // write pre-action user code here
+                method2();//GEN-LINE:|7-commandAction|20|206-postAction
+                // write post-action user code here
+            }//GEN-BEGIN:|7-commandAction|21|216-preAction
+        } else if (displayable == formFirstUse2) {
+            if (command == cancelCommand) {//GEN-END:|7-commandAction|21|216-preAction
+                // write pre-action user code here
+                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|22|216-postAction
+                // write post-action user code here
+            } else if (command == okCommand) {//GEN-LINE:|7-commandAction|23|215-preAction
+                // write pre-action user code here
+                Controller.finalizeFirstConfig(txtXA_GerarPubs.getString());//GEN-LINE:|7-commandAction|24|215-postAction
+                // write post-action user code here
+            }//GEN-BEGIN:|7-commandAction|25|219-preAction
+        } else if (displayable == formOutput) {
+            if (command == cancelCommand) {//GEN-END:|7-commandAction|25|219-preAction
+                // write pre-action user code here
+                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|26|219-postAction
+                // write post-action user code here
+            }//GEN-BEGIN:|7-commandAction|27|158-preAction
+        } else if (displayable == listContacts) {
+            if (command == List.SELECT_COMMAND) {//GEN-END:|7-commandAction|27|158-preAction
+                // write pre-action user code here
+                listContactsAction();//GEN-LINE:|7-commandAction|28|158-postAction
+            // write post-action user code here
+            }//GEN-BEGIN:|7-commandAction|29|175-preAction
+        } else if (displayable == listMessages) {
+            if (command == List.SELECT_COMMAND) {//GEN-END:|7-commandAction|29|175-preAction
+                // write pre-action user code here
+                listMessagesAction();//GEN-LINE:|7-commandAction|30|175-postAction
+            // write post-action user code here
+            }//GEN-BEGIN:|7-commandAction|31|28-preAction
+        } else if (displayable == listaInicial) {
+            if (command == List.SELECT_COMMAND) {//GEN-END:|7-commandAction|31|28-preAction
+                // write pre-action user code here
+                listaInicialAction();//GEN-LINE:|7-commandAction|32|28-postAction
             // write post-action user code here
             }//GEN-BEGIN:|7-commandAction|33|7-postCommandAction
         }//GEN-END:|7-commandAction|33|7-postCommandAction
     // write post-action user code here
     }//GEN-BEGIN:|7-commandAction|34|
     //</editor-fold>//GEN-END:|7-commandAction|34|
-    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: ListaInicial ">//GEN-BEGIN:|26-getter|0|26-preInit
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: listaInicial ">//GEN-BEGIN:|26-getter|0|26-preInit
     /**
-     * Returns an initiliazed instance of ListaInicial component.
+     * Returns an initiliazed instance of listaInicial component.
      * @return the initialized component instance
      */
     public List getListaInicial() {
-        if (ListaInicial == null) {//GEN-END:|26-getter|0|26-preInit
+        if (listaInicial == null) {//GEN-END:|26-getter|0|26-preInit
             // write pre-init user code here
-            ListaInicial = new List("SSMS", Choice.IMPLICIT);//GEN-BEGIN:|26-getter|1|26-postInit
-            ListaInicial.append("Primeiro uso", null);
-            ListaInicial.append("Autenticar Contato", null);
-            ListaInicial.append("Enviar torpedo", null);
-            ListaInicial.append("Ver mensagens", null);
-            ListaInicial.append("Ver OutPut", null);
-            ListaInicial.append("Executar testes", null);
-            ListaInicial.append("Limpar dados", null);
-            ListaInicial.setCommandListener(this);
-            ListaInicial.setSelectedFlags(new boolean[] { false, false, false, false, false, false, false });//GEN-END:|26-getter|1|26-postInit
+            listaInicial = new List("SSMS", Choice.IMPLICIT);//GEN-BEGIN:|26-getter|1|26-postInit
+            listaInicial.append("Primeiro uso", null);
+            listaInicial.append("Autenticar Contato", null);
+            listaInicial.append("Enviar torpedo", null);
+            listaInicial.append("Ver mensagens", null);
+            listaInicial.append("Ver OutPut", null);
+            listaInicial.append("Executar testes", null);
+            listaInicial.append("Limpar dados", null);
+            listaInicial.setCommandListener(this);
+            listaInicial.setSelectedFlags(new boolean[] { false, false, false, false, false, false, false });//GEN-END:|26-getter|1|26-postInit
         // write post-init user code here
         }//GEN-BEGIN:|26-getter|2|
-        return ListaInicial;
+        return listaInicial;
     }
     //</editor-fold>//GEN-END:|26-getter|2|
 
-    //<editor-fold defaultstate="collapsed" desc=" Generated Method: ListaInicialAction ">//GEN-BEGIN:|26-action|0|26-preAction
+    //<editor-fold defaultstate="collapsed" desc=" Generated Method: listaInicialAction ">//GEN-BEGIN:|26-action|0|26-preAction
     /**
-     * Performs an action assigned to the selected list element in the ListaInicial component.
+     * Performs an action assigned to the selected list element in the listaInicial component.
      */
-    public void ListaInicialAction() {//GEN-END:|26-action|0|26-preAction
+    public void listaInicialAction() {//GEN-END:|26-action|0|26-preAction
         // enter pre-action user code here
         String __selectedString = getListaInicial().getString(getListaInicial().getSelectedIndex());//GEN-BEGIN:|26-action|1|105-preAction
         if (__selectedString != null) {
@@ -337,21 +337,21 @@ public class ssms_main extends MIDlet implements CommandListener {
     //</editor-fold>//GEN-END:|52-getter|2|
 
 
-    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: FormAutenticarContato ">//GEN-BEGIN:|61-getter|0|61-preInit
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: formAutenticarContato ">//GEN-BEGIN:|61-getter|0|61-preInit
     /**
-     * Returns an initiliazed instance of FormAutenticarContato component.
+     * Returns an initiliazed instance of formAutenticarContato component.
      * @return the initialized component instance
      */
     public Form getFormAutenticarContato() {
-        if (FormAutenticarContato == null) {//GEN-END:|61-getter|0|61-preInit
+        if (formAutenticarContato == null) {//GEN-END:|61-getter|0|61-preInit
             // write pre-init user code here
-            FormAutenticarContato = new Form("Autenticar contato", new Item[] { getTxtContactPhone(), getTxtContactName() });//GEN-BEGIN:|61-getter|1|61-postInit
-            FormAutenticarContato.addCommand(getOkCommand());
-            FormAutenticarContato.addCommand(getCancelCommand());
-            FormAutenticarContato.setCommandListener(this);//GEN-END:|61-getter|1|61-postInit
+            formAutenticarContato = new Form("Autenticar contato", new Item[] { getTxtContactPhone(), getTxtContactName() });//GEN-BEGIN:|61-getter|1|61-postInit
+            formAutenticarContato.addCommand(getOkCommand());
+            formAutenticarContato.addCommand(getCancelCommand());
+            formAutenticarContato.setCommandListener(this);//GEN-END:|61-getter|1|61-postInit
         // write post-init user code here
         }//GEN-BEGIN:|61-getter|2|
-        return FormAutenticarContato;
+        return formAutenticarContato;
     }
     //</editor-fold>//GEN-END:|61-getter|2|
 
