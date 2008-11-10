@@ -10,6 +10,7 @@ import br.usp.pcs.coop8.ssms.data.Contact;
 import br.usp.pcs.coop8.ssms.data.MyPrivateData;
 import br.usp.pcs.coop8.ssms.messaging.SigncryptedMessage;
 import br.usp.pcs.coop8.ssms.protocol.exception.CipherException;
+import javax.microedition.io.PushRegistry;
 import javax.microedition.midlet.*;
 import javax.microedition.lcdui.*;
 import net.sourceforge.floggy.persistence.Filter;
@@ -38,7 +39,7 @@ public class SSMSMain extends MIDlet implements CommandListener {
     private TextField txtContactPhone;
     private TextField txtContactName;
     private TextField txtMessage;
-    private TextField txtMyId;    
+    private TextField txtMyId;
     private TextField txtXAFirstTime1;
     private TextField txtXAFirstTime2;
     private TextField txtXASendMessage;
@@ -73,8 +74,8 @@ public class SSMSMain extends MIDlet implements CommandListener {
         txtXAFirstTime2 = new TextField("Senha secreta:", null, 32, TextField.PASSWORD);
         txtXASendMessage = new TextField("Senha secreta:", null, 32, TextField.PASSWORD);
         txtXAReadMessage = new TextField("Senha secreta:", null, 32, TextField.PASSWORD);
-        
-        // write post-initialize user code here
+
+    // write post-initialize user code here
     }
     //</editor-fold>                          
 
@@ -83,10 +84,23 @@ public class SSMSMain extends MIDlet implements CommandListener {
      * Performs an action assigned to the Mobile Device - MIDlet Started point.
      */
     public void startMIDlet() {
-        // write pre-action user code here
+        /** Initialize the text if we were started manually. */
+        String[] connections = PushRegistry.listConnections(true);
+
+        if ((connections == null) || (connections.length == 0)) {
+        // Foi iniciado pelo usuário
+        } else {
+            //Foi iniciado pelo push registry
+
+            Output.println("Iniciando pelo push registry!");
+        }
+
+        // Foi iniciado pelo usuário
         Controller.startApplication(this);
 
         switchDisplayable(null, getListaInicial());
+
+
     // write post-action user code here
     }
     //</editor-fold>                           
@@ -430,7 +444,6 @@ public class SSMSMain extends MIDlet implements CommandListener {
         return formFirstUse;
     }
     //</editor-fold>                        
-                   
     //<editor-fold defaultstate="collapsed" desc=" Generated Getter: txtMyId ">                                     
     /**
      * Returns an initiliazed instance of txtMyId component.
@@ -604,8 +617,6 @@ public class SSMSMain extends MIDlet implements CommandListener {
         return txtMessage;
     }
     //</editor-fold>                        
-
-           
     //<editor-fold defaultstate="collapsed" desc=" Generated Getter: listMessages ">                                     
     /**
      * Returns an initiliazed instance of listMessages component.
@@ -729,8 +740,6 @@ public class SSMSMain extends MIDlet implements CommandListener {
         return formXAReadMessage;
     }
     //</editor-fold>                        
-
-                      
     /**
      * Returns a display instance.
      * @return the display instance.
