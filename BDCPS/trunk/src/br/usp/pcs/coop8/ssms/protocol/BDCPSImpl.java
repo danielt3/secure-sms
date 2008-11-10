@@ -292,7 +292,7 @@ public abstract class BDCPSImpl implements BDCPS{
 			logger.debug("The failed message is: " + new String(m));
 			logger.debug("The failed message is: " + BDCPSUtil.printByteArray(m));
 			
-			throw new InvalidMessageException("BDCPS: Invalid message!");
+			throw new InvalidMessageException("BDCPS: Invalid message!", new String(m));
 		}
 		logger.debug("Message after unsigncrypt: " + new String(m));
 		logger.debug("Message after unsigncrypt: " + BDCPSUtil.printByteArray(m));
