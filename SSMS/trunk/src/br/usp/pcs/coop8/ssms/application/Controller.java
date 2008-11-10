@@ -353,7 +353,7 @@ public abstract class Controller {
 
         } catch (InvalidMessageException ex) {
             ex.printStackTrace();
-            return ex.getFailedMessage();
+            return "Erro, identidade do remetente não pode ser confirmada";
         } catch (CipherException ex) {
             ex.printStackTrace();
             throw ex;
