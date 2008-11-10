@@ -38,7 +38,7 @@ import pseudojava.BigInteger;
 public abstract class Controller {
 
     private static SmsListener smsListener = null;
-    private static ssms_main ssmsApp;
+    private static SSMSMain ssmsApp;
     private static Contact selectedContact;
     private static SigncryptedMessage selectedMessage;
 
@@ -60,11 +60,23 @@ public abstract class Controller {
      */
     public static void startApplication(ssms_main ssmsApp) {
 
+        //Controller.ssmsApp = ssmsApp;
+
+        Controller.receberSms();
+        MyPrivateData.getInstance();
+    }
+    
+        /**
+     * Rotina de inicialização da aplicação
+     */
+    public static void startApplication(SSMSMain ssmsApp) {
+
         Controller.ssmsApp = ssmsApp;
 
         Controller.receberSms();
         MyPrivateData.getInstance();
     }
+    
 
     /**
      * Recebe o xA como texto, e envia o SMS de autenticação para a operadora
@@ -271,7 +283,7 @@ public abstract class Controller {
         }
     }
 
-    public static String getUnsigncryptedText(String xA) {
+    public static String getUnsigncryptedText(String xA) throws CipherException {
 
         MyPrivateData myPrivData = MyPrivateData.getInstance();
 
@@ -341,10 +353,10 @@ public abstract class Controller {
 
         } catch (InvalidMessageException ex) {
             ex.printStackTrace();
-            return null;
+            return ex.getFailedMessage();
         } catch (CipherException ex) {
             ex.printStackTrace();
-            return null;
+            throw ex;
         }
 
 

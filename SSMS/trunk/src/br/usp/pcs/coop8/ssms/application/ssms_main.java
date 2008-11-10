@@ -9,6 +9,7 @@ import br.usp.larc.smspairing.*;
 import br.usp.pcs.coop8.ssms.data.Contact;
 import br.usp.pcs.coop8.ssms.data.MyPrivateData;
 import br.usp.pcs.coop8.ssms.messaging.SigncryptedMessage;
+import br.usp.pcs.coop8.ssms.protocol.exception.CipherException;
 import javax.microedition.midlet.*;
 import javax.microedition.lcdui.*;
 import net.sourceforge.floggy.persistence.Filter;
@@ -49,6 +50,7 @@ public class ssms_main extends MIDlet implements CommandListener {
     private Form formReadMessage;
     private TextField textField1;
     private StringItem stringItem1;
+    private Alert alert;
     private Command cancelCommand;
     private Command okCommand;
     //</editor-fold>//GEN-END:|fields|0|
@@ -804,7 +806,12 @@ String __selectedString = getListContacts ().getString (getListContacts ().getSe
         // write post-init user code here 
         } else {
             // Garante que irá atualizar o texto
-            textField1.setString(Controller.getUnsigncryptedText(txtXA_ReadMessage.getString()));
+            try {
+                textField1.setString(Controller.getUnsigncryptedText(txtXA_ReadMessage.getString()));
+            } catch (CipherException ex) {
+                textField1 = new TextField("Mensagem:", "ERRO!", 140, TextField.ANY);                                     
+            }
+
         }//GEN-BEGIN:|180-getter|2|
         return formReadMessage;
     }
@@ -833,8 +840,13 @@ String __selectedString = getListContacts ().getString (getListContacts ().getSe
     public TextField getTextField1() {
         if (textField1 == null) {//GEN-END:|182-getter|0|182-preInit
             // write pre-init user code here
+            try {
             textField1 = new TextField("Mensagem:", Controller.getUnsigncryptedText(txtXA_ReadMessage.getString()), 140, TextField.ANY);//GEN-LINE:|182-getter|1|182-postInit
         // write post-init user code here
+            } catch (CipherException ex) {
+                textField1 = new TextField("Mensagem:", "ERRO!", 140, TextField.ANY);                                     
+            }
+        
         }//GEN-BEGIN:|182-getter|2|
         return textField1;
     }
@@ -872,6 +884,22 @@ String __selectedString = getListContacts ().getString (getListContacts ().getSe
         return txtXA_ReadMessage;
     }
     //</editor-fold>//GEN-END:|184-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: alert ">//GEN-BEGIN:|234-getter|0|234-preInit
+    /**
+     * Returns an initiliazed instance of alert component.
+     * @return the initialized component instance
+     */
+    public Alert getAlert() {
+        if (alert == null) {//GEN-END:|234-getter|0|234-preInit
+            // write pre-init user code here
+            alert = new Alert("alert", "Este contato ainda n\u00E3o est\u00E1 autenticado. Imposs\u00EDvel enviar mensagem.", null, null);//GEN-BEGIN:|234-getter|1|234-postInit
+            alert.setTimeout(Alert.FOREVER);//GEN-END:|234-getter|1|234-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|234-getter|2|
+        return alert;
+    }
+    //</editor-fold>//GEN-END:|234-getter|2|
 
 
 
