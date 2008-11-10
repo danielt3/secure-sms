@@ -624,7 +624,7 @@ public class ssms_main extends MIDlet implements CommandListener {
     public void listContactsAction() {//GEN-END:|157-action|0|157-preAction
         // enter pre-action user code here
         if (true) {
-            final String __selectedString = getListContacts().getString(getListContacts().getSelectedIndex());
+            final String __selectedString = listContacts.getString(listContacts.getSelectedIndex());
             if (__selectedString != null) {
                 try {
                     PersistableManager perMan = PersistableManager.getInstance();
@@ -644,9 +644,11 @@ public class ssms_main extends MIDlet implements CommandListener {
             }
             return;
         }
+        /*
 
         String __selectedString = getListContacts().getString(getListContacts().getSelectedIndex());//GEN-LINE:|157-action|1|157-postAction
-    // enter post-action user code here
+    */
+         // enter post-action user code here
     }//GEN-BEGIN:|157-action|2|
     //</editor-fold>//GEN-END:|157-action|2|
     //<editor-fold defaultstate="collapsed" desc=" Generated Getter: formSendMessage ">//GEN-BEGIN:|162-getter|0|162-preInit
