@@ -34,15 +34,15 @@ public class SSMSMain extends MIDlet implements CommandListener {
     private Form formSendMessage;
     private Form formXAReadMessage;
     private Form formReadMessage;
-    private TextField textField;
+    private TextField txtOutput;
     private TextField txtContactPhone;
     private TextField txtContactName;
-    private TextField txtXA;
-    private TextField txtMyId;
-    private TextField txtXA_SendMessage;
     private TextField txtMessage;
-    private TextField txtXA_GerarPubs;
-    private TextField txtXA_ReadMessage;
+    private TextField txtMyId;    
+    private TextField txtXAFirstTime1;
+    private TextField txtXAFirstTime2;
+    private TextField txtXASendMessage;
+    private TextField txtXAReadMessage;
     private TextField textField1;
     private List listContacts;
     private List listMessages;
@@ -69,8 +69,12 @@ public class SSMSMain extends MIDlet implements CommandListener {
      */
     private void initialize() {
         // write pre-initialize user code here
-        txtXA_GerarPubs = new TextField("Digite sua senha secreta:", null, 32, TextField.ANY);
-    // write post-initialize user code here
+        txtXAFirstTime1 = new TextField("Senha secreta:", null, 32, TextField.PASSWORD);
+        txtXAFirstTime2 = new TextField("Senha secreta:", null, 32, TextField.PASSWORD);
+        txtXASendMessage = new TextField("Senha secreta:", null, 32, TextField.PASSWORD);
+        txtXAReadMessage = new TextField("Senha secreta:", null, 32, TextField.PASSWORD);
+        
+        // write post-initialize user code here
     }
     //</editor-fold>                          
 
@@ -148,7 +152,7 @@ public class SSMSMain extends MIDlet implements CommandListener {
         } else if (displayable == formFirstUse2) {
             if (command == okCommand) {
                 // write pre-action user code here
-                Controller.finalizeFirstConfig(txtXA_GerarPubs.getString());
+                Controller.finalizeFirstConfig(txtXAFirstTime2.getString());
                 switchDisplayable(null, getListaInicial());
             // write post-action user code here
             }
@@ -161,7 +165,7 @@ public class SSMSMain extends MIDlet implements CommandListener {
         } else if (displayable == formSendMessage) {
             if (command == okCommand) {
                 // write pre-action user code here
-                Controller.sendSigncryptedMessage(txtMessage.getString(), txtXA_SendMessage.getString());
+                Controller.sendSigncryptedMessage(txtMessage.getString(), txtXASendMessage.getString());
                 switchDisplayable(null, getListaInicial());
             // write post-action user code here
             }
@@ -293,15 +297,15 @@ public class SSMSMain extends MIDlet implements CommandListener {
     public Form getFormOutput() {
         if (formOutput == null) {
             // write pre-init user code here
-            formOutput = new Form("Output", new Item[]{getTextField()});
+            formOutput = new Form("Output", new Item[]{getTxtOutput()});
             formOutput.addCommand(cancelCommandFirstScreen);
             formOutput.setCommandListener(this);
         // write post-init user code here
         } else {
             //Reinicializa o campo texto:            
-            textField.setMaxSize(((Output.getOutput().length() != 0)
+            txtOutput.setMaxSize(((Output.getOutput().length() != 0)
                     ? Output.getOutput().length() : 1));
-            textField.setString(Output.getOutput());
+            txtOutput.setString(Output.getOutput());
         }
         return formOutput;
     }
@@ -312,15 +316,15 @@ public class SSMSMain extends MIDlet implements CommandListener {
      * Returns an initiliazed instance of textField component.
      * @return the initialized component instance
      */
-    public TextField getTextField() {
-        if (textField == null) {
+    public TextField getTxtOutput() {
+        if (txtOutput == null) {
             // write pre-init user code here
-            textField = new TextField("textField", Output.getOutput(), ((Output.getOutput().length() != 0)
+            txtOutput = new TextField("textField", Output.getOutput(), ((Output.getOutput().length() != 0)
                     ? Output.getOutput().length() : 1), TextField.ANY);
         // write post-init user code here        
 
         }
-        return textField;
+        return txtOutput;
     }
     //</editor-fold>                       
     //<editor-fold defaultstate="collapsed" desc=" Generated Getter: formAutenticarContato ">                                   
@@ -349,7 +353,7 @@ public class SSMSMain extends MIDlet implements CommandListener {
     public TextField getTxtContactPhone() {
         if (txtContactPhone == null) {
             // write pre-init user code here
-            txtContactPhone = new TextField("Telefone do contato", null, 10, TextField.ANY);
+            txtContactPhone = new TextField("Telefone do contato", null, 10, TextField.PHONENUMBER);
         // write post-init user code here
         }
         return txtContactPhone;
@@ -376,12 +380,12 @@ public class SSMSMain extends MIDlet implements CommandListener {
      */
     public void method2() {
         // enter pre-if user code here
-        if (((txtXA.getString() != null &&
-                txtXA.getString().length() >= 8) &&
+        if (((txtXAFirstTime1.getString() != null &&
+                txtXAFirstTime1.getString().length() >= 8) &&
                 (txtMyId.getString() != null &&
                 txtMyId.getString().length() == 10))) {
             // write pre-action user code here
-            Controller.firstTimeUse(txtXA.getString(), txtMyId.getString());
+            Controller.firstTimeUse(txtXAFirstTime1.getString(), txtMyId.getString());
             switchDisplayable(null, getListaInicial());
         // write post-action user code here
         } else {
@@ -417,7 +421,7 @@ public class SSMSMain extends MIDlet implements CommandListener {
     public Form getFormFirstUse() {
         if (formFirstUse == null) {
             // write pre-init user code here
-            formFirstUse = new Form("Primeiro uso", new Item[]{getTxtXA(), getTxtMyId()});
+            formFirstUse = new Form("Primeiro uso", new Item[]{txtXAFirstTime1, getTxtMyId()});
             formFirstUse.addCommand(getOkCommand());
             formFirstUse.addCommand(cancelCommandFirstScreen);
             formFirstUse.setCommandListener(this);
@@ -426,21 +430,7 @@ public class SSMSMain extends MIDlet implements CommandListener {
         return formFirstUse;
     }
     //</editor-fold>                        
-
-    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: txtXA ">                                     
-    /**
-     * Returns an initiliazed instance of txtXA component.
-     * @return the initialized component instance
-     */
-    public TextField getTxtXA() {
-        if (txtXA == null) {
-            // write pre-init user code here
-            txtXA = new TextField("Entre com sua senha secreta:", null, 32, TextField.ANY);
-        // write post-init user code here
-        }
-        return txtXA;
-    }
-    //</editor-fold>                        
+                   
     //<editor-fold defaultstate="collapsed" desc=" Generated Getter: txtMyId ">                                     
     /**
      * Returns an initiliazed instance of txtMyId component.
@@ -449,7 +439,7 @@ public class SSMSMain extends MIDlet implements CommandListener {
     public TextField getTxtMyId() {
         if (txtMyId == null) {
             // write pre-init user code here
-            txtMyId = new TextField("Entre com seu numero de telefone:", null, 32, TextField.ANY);
+            txtMyId = new TextField("Entre com seu numero de telefone:", null, 32, TextField.PHONENUMBER);
         // write post-init user code here
         }
         return txtMyId;
@@ -481,7 +471,7 @@ public class SSMSMain extends MIDlet implements CommandListener {
     public Form getFormFirstUse2() {
         if (formFirstUse2 == null) {
             // write pre-init user code here
-            formFirstUse2 = new Form("Calcular par\u00E2metros p\u00FAblicos", new Item[]{txtXA_GerarPubs});
+            formFirstUse2 = new Form("Calcular par\u00E2metros p\u00FAblicos", new Item[]{txtXAFirstTime2});
             formFirstUse2.addCommand(getOkCommand());
             formFirstUse2.addCommand(cancelCommandFirstScreen);
             formFirstUse2.setCommandListener(this);
@@ -590,7 +580,7 @@ public class SSMSMain extends MIDlet implements CommandListener {
     public Form getFormSendMessage() {
         if (formSendMessage == null) {
             // write pre-init user code here
-            formSendMessage = new Form("Enviar mensagem", new Item[]{new StringItem(Controller.getSelectedContact().getName() + "/" + Controller.getSelectedContact().getPhone(), ""), getTxtMessage(), getTxtXA_SendMessage()});
+            formSendMessage = new Form("Enviar mensagem", new Item[]{new StringItem(Controller.getSelectedContact().getName() + "/" + Controller.getSelectedContact().getPhone(), ""), getTxtMessage(), txtXASendMessage});
             formSendMessage.addCommand(getOkCommand());
             formSendMessage.addCommand(cancelCommandFirstScreen);
             formSendMessage.setCommandListener(this);
@@ -615,20 +605,7 @@ public class SSMSMain extends MIDlet implements CommandListener {
     }
     //</editor-fold>                        
 
-    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: txtXA_SendMessage ">                                     
-    /**
-     * Returns an initiliazed instance of txtXA_SendMessage component.
-     * @return the initialized component instance
-     */
-    public TextField getTxtXA_SendMessage() {
-        if (txtXA_SendMessage == null) {
-            // write pre-init user code here
-            txtXA_SendMessage = new TextField("Senha secreta:", null, 32, TextField.ANY);
-        // write post-init user code here
-        }
-        return txtXA_SendMessage;
-    }
-    //</editor-fold>                        
+           
     //<editor-fold defaultstate="collapsed" desc=" Generated Getter: listMessages ">                                     
     /**
      * Returns an initiliazed instance of listMessages component.
@@ -710,7 +687,7 @@ public class SSMSMain extends MIDlet implements CommandListener {
         // Garante que irá atualizar o texto
         String clearText;
         try {
-            clearText = Controller.getUnsigncryptedText(txtXA_ReadMessage.getString());
+            clearText = Controller.getUnsigncryptedText(txtXAReadMessage.getString());
         } catch (CipherException ex) {
             clearText = "Erro na vericifração, senha inválida ou o remetente não é confiável.";
         }
@@ -743,7 +720,7 @@ public class SSMSMain extends MIDlet implements CommandListener {
     public Form getFormXAReadMessage() {
         if (formXAReadMessage == null) {
             // write pre-init user code here
-            formXAReadMessage = new Form("Ler mensagem", new Item[]{getTxtXA_ReadMessage()});
+            formXAReadMessage = new Form("Ler mensagem", new Item[]{txtXAReadMessage});
             formXAReadMessage.addCommand(getOkCommand());
             formXAReadMessage.addCommand(cancelCommandFirstScreen);
             formXAReadMessage.setCommandListener(this);
@@ -753,20 +730,7 @@ public class SSMSMain extends MIDlet implements CommandListener {
     }
     //</editor-fold>                        
 
-    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: txtXA_ReadMessage ">                                     
-    /**
-     * Returns an initiliazed instance of txtXA_ReadMessage component.
-     * @return the initialized component instance
-     */
-    public TextField getTxtXA_ReadMessage() {
-        if (txtXA_ReadMessage == null) {
-            // write pre-init user code here
-            txtXA_ReadMessage = new TextField("Senha secreta:", null, 32, TextField.ANY);
-        // write post-init user code here
-        }
-        return txtXA_ReadMessage;
-    }
-    //</editor-fold>                        
+                      
     /**
      * Returns a display instance.
      * @return the display instance.
