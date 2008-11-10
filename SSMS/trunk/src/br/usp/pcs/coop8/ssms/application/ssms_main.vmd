@@ -367,7 +367,7 @@
                     </Component>
                 </Component>
                 <Component componentID="162" typeID="Cjavax.microedition.lcdui.Form">
-                    <Property name="instanceName" typeID="Pjava.lang.String" value="Vform3"/>
+                    <Property name="instanceName" typeID="Pjava.lang.String" value="VformSendMessage"/>
                     <Property name="commands" typeID="1C#CommandEventSource" value="A2:4_R2304_R231"/>
                     <Property name="title" typeID="Pjava.lang.String" value="VEnviar mensagem"/>
                     <Property name="commandListener" typeID="C#CommandListener" value="R7"/>
@@ -413,7 +413,7 @@
                     </Component>
                 </Component>
                 <Component componentID="183" typeID="Cjavax.microedition.lcdui.Form">
-                    <Property name="instanceName" typeID="Pjava.lang.String" value="Vform5"/>
+                    <Property name="instanceName" typeID="Pjava.lang.String" value="VformXAReadMessage"/>
                     <Property name="commands" typeID="1C#CommandEventSource" value="A2:4_R2254_R227"/>
                     <Property name="title" typeID="Pjava.lang.String" value="VLer mensagem"/>
                     <Property name="commandListener" typeID="C#CommandListener" value="R7"/>
@@ -445,7 +445,7 @@
                     </Component>
                 </Component>
                 <Component componentID="180" typeID="Cjavax.microedition.lcdui.Form">
-                    <Property name="instanceName" typeID="Pjava.lang.String" value="Vform4"/>
+                    <Property name="instanceName" typeID="Pjava.lang.String" value="VformReadMessage"/>
                     <Property name="commands" typeID="1C#CommandEventSource" value="A1:4_R223"/>
                     <Property name="title" typeID="Pjava.lang.String" value="VMensagem"/>
                     <Property name="commandListener" typeID="C#CommandListener" value="R7"/>
@@ -535,7 +535,7 @@
         <Node componentID="126" descriptorID="componentNode126" x="-121" y="274"/>
         <Node componentID="114" descriptorID="componentNode114" x="91" y="652"/>
         <Node componentID="157" descriptorID="componentNode157" x="309" y="19"/>
-        <Node componentID="162" descriptorID="componentNode162" x="536" y="29"/>
+        <Node componentID="162" descriptorID="componentNode162" x="536" y="28"/>
         <Node componentID="144" descriptorID="componentNode144" x="-151" y="620"/>
     </FlowScene>
 </VisualDesign>

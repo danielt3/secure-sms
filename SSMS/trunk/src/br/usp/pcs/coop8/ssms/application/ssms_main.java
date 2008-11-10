@@ -41,13 +41,13 @@ public class ssms_main extends MIDlet implements CommandListener {
     private Form formFirstUse2;
     private TextField txtXA_GerarPubs;
     private List listMessages;
-    private Form form3;
+    private Form formSendMessage;
     private TextField txtXA_SendMessage;
     private TextField txtMessage;
     private StringItem stringItem;
-    private Form form5;
+    private Form formXAReadMessage;
     private TextField txtXA_ReadMessage;
-    private Form form4;
+    private Form formReadMessage;
     private TextField textField1;
     private StringItem stringItem1;
     private Command cancelCommand;
@@ -147,67 +147,67 @@ public class ssms_main extends MIDlet implements CommandListener {
                 // write pre-action user code here
                 switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|2|213-postAction
                 // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|3|231-preAction
-        } else if (displayable == form3) {
-            if (command == cancelCommand) {//GEN-END:|7-commandAction|3|231-preAction
-                // write pre-action user code here
-                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|4|231-postAction
-                // write post-action user code here
-            } else if (command == okCommand) {//GEN-LINE:|7-commandAction|5|230-preAction
-                // write pre-action user code here
-                Controller.sendSigncryptedMessage(txtMessage.getString(), txtXA_SendMessage.getString());//GEN-LINE:|7-commandAction|6|230-postAction
-                // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|7|223-preAction
-        } else if (displayable == form4) {
-            if (command == okCommand) {//GEN-END:|7-commandAction|7|223-preAction
-                // write pre-action user code here
-                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|8|223-postAction
-                // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|9|227-preAction
-        } else if (displayable == form5) {
-            if (command == cancelCommand) {//GEN-END:|7-commandAction|9|227-preAction
-                // write pre-action user code here
-                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|10|227-postAction
-                // write post-action user code here
-            } else if (command == okCommand) {//GEN-LINE:|7-commandAction|11|225-preAction
-                // write pre-action user code here
-                switchDisplayable(null, getForm4());//GEN-LINE:|7-commandAction|12|225-postAction
-                // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|13|211-preAction
+            }//GEN-BEGIN:|7-commandAction|3|211-preAction
         } else if (displayable == formAutenticarContato) {
-            if (command == cancelCommand) {//GEN-END:|7-commandAction|13|211-preAction
+            if (command == cancelCommand) {//GEN-END:|7-commandAction|3|211-preAction
                 // write pre-action user code here
-                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|14|211-postAction
+                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|4|211-postAction
                 // write post-action user code here
-            } else if (command == okCommand) {//GEN-LINE:|7-commandAction|15|66-preAction
+            } else if (command == okCommand) {//GEN-LINE:|7-commandAction|5|66-preAction
                 // write pre-action user code here
-                Controller.addNewContact(txtContactName.getString(), txtContactPhone.getString());//GEN-LINE:|7-commandAction|16|66-postAction
+                Controller.addNewContact(txtContactName.getString(), txtContactPhone.getString());//GEN-LINE:|7-commandAction|6|66-postAction
             // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|17|207-preAction
+            }//GEN-BEGIN:|7-commandAction|7|207-preAction
         } else if (displayable == formFirstUse) {
-            if (command == cancelCommand) {//GEN-END:|7-commandAction|17|207-preAction
+            if (command == cancelCommand) {//GEN-END:|7-commandAction|7|207-preAction
                 // write pre-action user code here
-                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|18|207-postAction
+                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|8|207-postAction
                 // write post-action user code here
-            } else if (command == okCommand) {//GEN-LINE:|7-commandAction|19|206-preAction
+            } else if (command == okCommand) {//GEN-LINE:|7-commandAction|9|206-preAction
                 // write pre-action user code here
-                method2();//GEN-LINE:|7-commandAction|20|206-postAction
+                method2();//GEN-LINE:|7-commandAction|10|206-postAction
                 // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|21|216-preAction
+            }//GEN-BEGIN:|7-commandAction|11|216-preAction
         } else if (displayable == formFirstUse2) {
-            if (command == cancelCommand) {//GEN-END:|7-commandAction|21|216-preAction
+            if (command == cancelCommand) {//GEN-END:|7-commandAction|11|216-preAction
                 // write pre-action user code here
-                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|22|216-postAction
+                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|12|216-postAction
                 // write post-action user code here
-            } else if (command == okCommand) {//GEN-LINE:|7-commandAction|23|215-preAction
+            } else if (command == okCommand) {//GEN-LINE:|7-commandAction|13|215-preAction
                 // write pre-action user code here
-                Controller.finalizeFirstConfig(txtXA_GerarPubs.getString());//GEN-LINE:|7-commandAction|24|215-postAction
+                Controller.finalizeFirstConfig(txtXA_GerarPubs.getString());//GEN-LINE:|7-commandAction|14|215-postAction
                 // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|25|219-preAction
+            }//GEN-BEGIN:|7-commandAction|15|219-preAction
         } else if (displayable == formOutput) {
-            if (command == cancelCommand) {//GEN-END:|7-commandAction|25|219-preAction
+            if (command == cancelCommand) {//GEN-END:|7-commandAction|15|219-preAction
                 // write pre-action user code here
-                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|26|219-postAction
+                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|16|219-postAction
+                // write post-action user code here
+            }//GEN-BEGIN:|7-commandAction|17|223-preAction
+        } else if (displayable == formReadMessage) {
+            if (command == okCommand) {//GEN-END:|7-commandAction|17|223-preAction
+                // write pre-action user code here
+                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|18|223-postAction
+                // write post-action user code here
+            }//GEN-BEGIN:|7-commandAction|19|231-preAction
+        } else if (displayable == formSendMessage) {
+            if (command == cancelCommand) {//GEN-END:|7-commandAction|19|231-preAction
+                // write pre-action user code here
+                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|20|231-postAction
+                // write post-action user code here
+            } else if (command == okCommand) {//GEN-LINE:|7-commandAction|21|230-preAction
+                // write pre-action user code here
+                Controller.sendSigncryptedMessage(txtMessage.getString(), txtXA_SendMessage.getString());//GEN-LINE:|7-commandAction|22|230-postAction
+                // write post-action user code here
+            }//GEN-BEGIN:|7-commandAction|23|227-preAction
+        } else if (displayable == formXAReadMessage) {
+            if (command == cancelCommand) {//GEN-END:|7-commandAction|23|227-preAction
+                // write pre-action user code here
+                switchDisplayable(null, getListaInicial());//GEN-LINE:|7-commandAction|24|227-postAction
+                // write post-action user code here
+            } else if (command == okCommand) {//GEN-LINE:|7-commandAction|25|225-preAction
+                // write pre-action user code here
+                switchDisplayable(null, getFormReadMessage());//GEN-LINE:|7-commandAction|26|225-postAction
                 // write post-action user code here
             }//GEN-BEGIN:|7-commandAction|27|158-preAction
         } else if (displayable == listContacts) {
@@ -649,21 +649,21 @@ public class ssms_main extends MIDlet implements CommandListener {
     // enter post-action user code here
     }//GEN-BEGIN:|157-action|2|
     //</editor-fold>//GEN-END:|157-action|2|
-    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: form3 ">//GEN-BEGIN:|162-getter|0|162-preInit
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: formSendMessage ">//GEN-BEGIN:|162-getter|0|162-preInit
     /**
-     * Returns an initiliazed instance of form3 component.
+     * Returns an initiliazed instance of formSendMessage component.
      * @return the initialized component instance
      */
-    public Form getForm3() {
-        if (form3 == null) {//GEN-END:|162-getter|0|162-preInit
+    public Form getFormSendMessage() {
+        if (formSendMessage == null) {//GEN-END:|162-getter|0|162-preInit
             // write pre-init user code here
-            form3 = new Form("Enviar mensagem", new Item[] { getStringItem(), getTxtMessage(), getTxtXA_SendMessage() });//GEN-BEGIN:|162-getter|1|162-postInit
-            form3.addCommand(getOkCommand());
-            form3.addCommand(getCancelCommand());
-            form3.setCommandListener(this);//GEN-END:|162-getter|1|162-postInit
+            formSendMessage = new Form("Enviar mensagem", new Item[] { getStringItem(), getTxtMessage(), getTxtXA_SendMessage() });//GEN-BEGIN:|162-getter|1|162-postInit
+            formSendMessage.addCommand(getOkCommand());
+            formSendMessage.addCommand(getCancelCommand());
+            formSendMessage.setCommandListener(this);//GEN-END:|162-getter|1|162-postInit
         // write post-init user code here
         }//GEN-BEGIN:|162-getter|2|
-        return form3;
+        return formSendMessage;
     }
     //</editor-fold>//GEN-END:|162-getter|2|
 
@@ -781,23 +781,23 @@ public class ssms_main extends MIDlet implements CommandListener {
     // enter post-action user code here
     }//GEN-BEGIN:|174-action|2|
     //</editor-fold>//GEN-END:|174-action|2|
-    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: form4 ">//GEN-BEGIN:|180-getter|0|180-preInit
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: formReadMessage ">//GEN-BEGIN:|180-getter|0|180-preInit
     /**
-     * Returns an initiliazed instance of form4 component.
+     * Returns an initiliazed instance of formReadMessage component.
      * @return the initialized component instance
      */
-    public Form getForm4() {
-        if (form4 == null) {//GEN-END:|180-getter|0|180-preInit
+    public Form getFormReadMessage() {
+        if (formReadMessage == null) {//GEN-END:|180-getter|0|180-preInit
             // write pre-init user code here
-            form4 = new Form("Mensagem", new Item[] { getStringItem1(), getTextField1() });//GEN-BEGIN:|180-getter|1|180-postInit
-            form4.addCommand(getOkCommand());
-            form4.setCommandListener(this);//GEN-END:|180-getter|1|180-postInit
+            formReadMessage = new Form("Mensagem", new Item[] { getStringItem1(), getTextField1() });//GEN-BEGIN:|180-getter|1|180-postInit
+            formReadMessage.addCommand(getOkCommand());
+            formReadMessage.setCommandListener(this);//GEN-END:|180-getter|1|180-postInit
         // write post-init user code here 
         } else {
             // Garante que irá atualizar o texto
             textField1.setString(Controller.getUnsigncryptedText(txtXA_ReadMessage.getString()));
         }//GEN-BEGIN:|180-getter|2|
-        return form4;
+        return formReadMessage;
     }
     //</editor-fold>//GEN-END:|180-getter|2|
 
@@ -831,21 +831,21 @@ public class ssms_main extends MIDlet implements CommandListener {
     }
     //</editor-fold>//GEN-END:|182-getter|2|
 
-    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: form5 ">//GEN-BEGIN:|183-getter|0|183-preInit
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: formXAReadMessage ">//GEN-BEGIN:|183-getter|0|183-preInit
     /**
-     * Returns an initiliazed instance of form5 component.
+     * Returns an initiliazed instance of formXAReadMessage component.
      * @return the initialized component instance
      */
-    public Form getForm5() {
-        if (form5 == null) {//GEN-END:|183-getter|0|183-preInit
+    public Form getFormXAReadMessage() {
+        if (formXAReadMessage == null) {//GEN-END:|183-getter|0|183-preInit
             // write pre-init user code here
-            form5 = new Form("Ler mensagem", new Item[] { getTxtXA_ReadMessage() });//GEN-BEGIN:|183-getter|1|183-postInit
-            form5.addCommand(getOkCommand());
-            form5.addCommand(getCancelCommand());
-            form5.setCommandListener(this);//GEN-END:|183-getter|1|183-postInit
+            formXAReadMessage = new Form("Ler mensagem", new Item[] { getTxtXA_ReadMessage() });//GEN-BEGIN:|183-getter|1|183-postInit
+            formXAReadMessage.addCommand(getOkCommand());
+            formXAReadMessage.addCommand(getCancelCommand());
+            formXAReadMessage.setCommandListener(this);//GEN-END:|183-getter|1|183-postInit
         // write post-init user code here
         }//GEN-BEGIN:|183-getter|2|
-        return form5;
+        return formXAReadMessage;
     }
     //</editor-fold>//GEN-END:|183-getter|2|
 
