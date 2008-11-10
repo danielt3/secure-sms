@@ -16,7 +16,6 @@ import net.sourceforge.floggy.persistence.FloggyException;
 import net.sourceforge.floggy.persistence.ObjectSet;
 import net.sourceforge.floggy.persistence.Persistable;
 import net.sourceforge.floggy.persistence.PersistableManager;
-import org.netbeans.microedition.util.SimpleCancellableTask;
 
 /**
  * @author nano
@@ -142,6 +141,13 @@ public class ssms_main extends MIDlet implements CommandListener {
      */
     public void commandAction(Command command, Displayable displayable) {//GEN-END:|7-commandAction|0|7-preCommandAction
         // write pre-action user code here
+        
+        if (command == cancelCommand && 
+                (displayable == listContacts || displayable == listMessages)) {
+            switchDisplayable(null, getListaInicial());
+        }
+            
+        
         if (displayable == alert5) {//GEN-BEGIN:|7-commandAction|1|213-preAction
             if (command == okCommand) {//GEN-END:|7-commandAction|1|213-preAction
                 // write pre-action user code here
@@ -596,6 +602,7 @@ public class ssms_main extends MIDlet implements CommandListener {
             listContacts.setCommandListener(this);
             listContacts.setSelectedFlags(new boolean[] {  });//GEN-END:|157-getter|1|157-postInit
         // write post-init user code here
+            listContacts.addCommand(getCancelCommand());
         } else {
             listContacts.deleteAll();
         }
@@ -646,7 +653,7 @@ public class ssms_main extends MIDlet implements CommandListener {
         }
         /*
 
-        String __selectedString = getListContacts().getString(getListContacts().getSelectedIndex());//GEN-LINE:|157-action|1|157-postAction
+String __selectedString = getListContacts ().getString (getListContacts ().getSelectedIndex ());//GEN-LINE:|157-action|1|157-postAction
     */
          // enter post-action user code here
     }//GEN-BEGIN:|157-action|2|
@@ -730,7 +737,7 @@ public class ssms_main extends MIDlet implements CommandListener {
             listMessages.setCommandListener(this);
             listMessages.setSelectedFlags(new boolean[] {  });//GEN-END:|174-getter|1|174-postInit
         // write post-init user code here
-
+            listMessages.addCommand(getCancelCommand());
         } else {
             //Atualizar a lista
             listMessages.deleteAll();
