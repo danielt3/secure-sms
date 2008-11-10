@@ -637,7 +637,7 @@ public class ssms_main extends MIDlet implements CommandListener {
 
                     Controller.setSelectedContact((Contact) results.get(0));
 
-                    switchDisplayable(null, getForm3());
+                    switchDisplayable(null, getFormSendMessage());
                 } catch (FloggyException ex) {
                     ex.printStackTrace();
                 }
@@ -770,7 +770,7 @@ public class ssms_main extends MIDlet implements CommandListener {
                     
                     Controller.setSelectedMessage((SigncryptedMessage) results.get(0));
 
-                    switchDisplayable(null, getForm5());
+                    switchDisplayable(null, getFormXAReadMessage());
                 } catch (FloggyException ex) {
                     ex.printStackTrace();
                 }
