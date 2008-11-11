@@ -20,14 +20,16 @@ public class MyPrivateData implements Persistable {
     private byte[] tA;
     private byte[] hA;
     private static MyPrivateData myDataInstance = null;
+    private String kgbPhone;
 
     public MyPrivateData() {
-        
+
     }
-    
+
     public static void clearInstance() {
         myDataInstance = null;
     }
+
     /**
      * Retorna a instância persistente
      * @return
@@ -37,7 +39,8 @@ public class MyPrivateData implements Persistable {
             try {
                 //Verifica se tem no Floggy
                 PersistableManager perMan = PersistableManager.getInstance();
-                ObjectSet results = perMan.find(MyPrivateData.class, null, null);
+
+                ObjectSet results = perMan.find(MyPrivateData.getThisClass(), null, null);
 
                 if (results == null || results.size() == 0) {
                     //Retorna uma instância com os campos nulos
@@ -50,6 +53,7 @@ public class MyPrivateData implements Persistable {
             } catch (FloggyException ex) {
                 ex.printStackTrace();
             }
+
         }
         return myDataInstance;
     }
@@ -92,5 +96,26 @@ public class MyPrivateData implements Persistable {
 
     public void setYA(byte[] yA) {
         this.yA = yA;
+    }
+
+    public String getKgbPhone() {
+        if (kgbPhone == null) {
+            //preehcne com o default
+            kgbPhone = "1174749679";
+        }
+        return kgbPhone;
+    }
+
+    public void setKgbPhone(String kgbPhone) {
+        this.kgbPhone = kgbPhone;
+    }
+
+    public static Class getThisClass() {
+        try {
+            return Class.forName("br.usp.pcs.coop8.ssms.data.MyPrivateData");
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
 }

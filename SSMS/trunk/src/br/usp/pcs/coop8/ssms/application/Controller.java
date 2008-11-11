@@ -58,17 +58,6 @@ public abstract class Controller {
     /**
      * Rotina de inicialização da aplicação
      */
-    public static void startApplication(ssms_main ssmsApp) {
-
-        //Controller.ssmsApp = ssmsApp;
-
-        Controller.receberSms();
-        MyPrivateData.getInstance();
-    }
-    
-        /**
-     * Rotina de inicialização da aplicação
-     */
     public static void startApplication(SSMSMain ssmsApp) {
 
         Controller.ssmsApp = ssmsApp;
@@ -76,7 +65,6 @@ public abstract class Controller {
         Controller.receberSms();
         MyPrivateData.getInstance();
     }
-    
 
     /**
      * Recebe o xA como texto, e envia o SMS de autenticação para a operadora
@@ -128,7 +116,7 @@ public abstract class Controller {
         }
 
         RequestMyQaMessage reqMessage = new RequestMyQaMessage(yA);
-        enviarSmsBinario(Configuration.KGB_TEL, reqMessage.getMessageBytes());
+        enviarSmsBinario(myData.getKgbPhone(), reqMessage.getMessageBytes());
 
     }
 
@@ -175,10 +163,12 @@ public abstract class Controller {
 
     public static void addNewContact(final String name, final String phone) {
         try {
+
             //Busca no banco por um contacto com este phone
             PersistableManager perMan = PersistableManager.getInstance();
 
-            ObjectSet results = perMan.find(Contact.class, new Filter() {
+
+            ObjectSet results = perMan.find(Contact.getThisClass(), new Filter() {
 
                 public boolean matches(Persistable arg0) {
                     return ((Contact) arg0).getPhone().equals(phone);
@@ -326,7 +316,7 @@ public abstract class Controller {
         try {
 
             result =
-                    perMan.find(Contact.class, new Filter() {
+                    perMan.find(Contact.getThisClass(), new Filter() {
 
                 public boolean matches(Persistable arg0) {
                     return ((Contact) arg0).getPhone().equals(selectedMessage.getSender());
@@ -359,34 +349,38 @@ public abstract class Controller {
             throw ex;
         }
 
-
     }
 
-    public static void enviarSmsBinario(String phone, byte[] data) {
+    public static void enviarSmsBinarioMesmaThread(String phone, byte[] data) {
         enviarSmsBinario(phone, data, Configuration.SMS_PORT);
     }
 
-    public static void enviarSmsBinario(final String phone, final byte[] data, final int port) {
-
+    public static void enviarSmsBinario(final String phone, final byte[] data) {
         new Thread() {
 
             public void run() {
-                try {
-                    String addr = "sms://" + phone + ":" + port;
-                    MessageConnection conn = (MessageConnection) Connector.open(addr);
-                    BinaryMessage msg = (BinaryMessage) conn.newMessage(MessageConnection.BINARY_MESSAGE);
-
-                    msg.setPayloadData(data);
-
-                    conn.send(msg);
-                } catch (IllegalArgumentException iae) {
-                //do something
-
-                } catch (Exception e) {
-                //do something
-                }
+                enviarSmsBinario(phone, data, Configuration.SMS_PORT);
             }
         }.start();
+
+    }
+
+    private static void enviarSmsBinario(String phone, byte[] data, int port) {
+
+        try {
+            String addr = "sms://" + phone + ":" + port;
+            MessageConnection conn = (MessageConnection) Connector.open(addr);
+            BinaryMessage msg = (BinaryMessage) conn.newMessage(MessageConnection.BINARY_MESSAGE);
+
+            msg.setPayloadData(data);
+
+            conn.send(msg);
+        } catch (IllegalArgumentException iae) {
+        //do something
+
+        } catch (Exception e) {
+        //do something
+        }
 
     }
 

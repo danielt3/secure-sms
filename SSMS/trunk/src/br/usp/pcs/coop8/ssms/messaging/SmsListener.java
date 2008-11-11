@@ -34,6 +34,7 @@ public class SmsListener
     private int port;
     private MessageConnection messageConnection;
     private Thread threadListener;
+    private boolean killAppAfterReceived = false;
 
     /**
      * Escuta a porta padrão aguardando o recebimento de um SMS.
@@ -71,8 +72,12 @@ public class SmsListener
                 }
             }
         }.start();
+    }
 
+    public void receiveOneMessageAndExit() {
 
+        this.killAppAfterReceived = true;
+        startListening();
     }
 
     public void stopListening() {
@@ -113,10 +118,16 @@ public class SmsListener
                             String telRemetente = binMsg.getAddress().substring(7, 17);
 
                             MessageSsms msg = MessageSsms.getMessage(binMsg.getPayloadData());
-                            msg.setSender(telRemetente);
-                            msg.setDate(new Date());
 
-                            if (msg instanceof AuthenticationMessage) {
+                            if (msg != null) {
+                                msg.setSender(telRemetente);
+                                msg.setDate(new Date());
+                            }
+
+                            if (msg == null) {
+                                //Mensagem desconhecida recebida
+                                Output.println("Mensagem desconhecida ignorada.");
+                            } else if (msg instanceof AuthenticationMessage) {
                                 handleAuthenticationMessageReceived((AuthenticationMessage) msg);
                             } else if (msg instanceof HereIsYourQaMessage) {
                                 handleHereIsYourQaMessageReceived((HereIsYourQaMessage) msg);
@@ -127,7 +138,7 @@ public class SmsListener
                             }
 
                         } catch (Exception e) {
-                            Output.println("SMS recieve Exception " + e);
+                            Output.println("SMS receieve Exception " + e);
                             e.printStackTrace();
                         }
 
@@ -145,7 +156,7 @@ public class SmsListener
 
             PersistableManager perMan = PersistableManager.getInstance();
 
-            ObjectSet results = perMan.find(Contact.class, new Filter() {
+            ObjectSet results = perMan.find(Contact.getThisClass(), new Filter() {
 
                 public boolean matches(Persistable arg0) {
                     return ((Contact) arg0).getPhone().equals(senderPhone);

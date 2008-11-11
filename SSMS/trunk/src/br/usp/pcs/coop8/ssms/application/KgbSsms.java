@@ -4,6 +4,7 @@
  */
 package br.usp.pcs.coop8.ssms.application;
 
+import br.usp.pcs.coop8.ssms.data.MyPrivateData;
 import br.usp.pcs.coop8.ssms.messaging.HereIsYourQaMessage;
 import br.usp.pcs.coop8.ssms.messaging.MessageSsms;
 import br.usp.pcs.coop8.ssms.messaging.RequestMyQaMessage;
@@ -45,7 +46,7 @@ public class KgbSsms {
         sha.doFinal(hashIdA, 0);
 
         sha.reset();
-        sha.update(Configuration.KGB_TEL.getBytes(), 0, Configuration.KGB_TEL.getBytes().length);
+        sha.update(MyPrivateData.getInstance().getKgbPhone().getBytes(), 0, MyPrivateData.getInstance().getKgbPhone().getBytes().length);
         sha.doFinal(hashKgbId, 0);
 
 
@@ -58,7 +59,7 @@ public class KgbSsms {
 
         MessageSsms msg = new HereIsYourQaMessage(qA);
 
-        Controller.enviarSmsBinario(id, msg.getMessageBytes());
+        Controller.enviarSmsBinarioMesmaThread(id, msg.getMessageBytes());
 
     }
 }

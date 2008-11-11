@@ -26,10 +26,10 @@ public final class Configuration {
      * Número de bits do primo N
      */
     public static final int K = 176;    
-    /**
-     * O telefone da KGB
-     */
-    public static final String KGB_TEL = "1174749679";// "1174749679";
+    ///**
+    // * O telefone da KGB
+    // */
+    //public static final String KGB_TEL = "1185841768";// "1174749679";
     /**
      * Porta a ser usada para envio de SMS
      */

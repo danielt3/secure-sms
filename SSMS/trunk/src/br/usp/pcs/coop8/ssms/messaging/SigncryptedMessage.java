@@ -118,4 +118,13 @@ public class SigncryptedMessage extends MessageSsms implements Persistable {
     public void setDate(Date date) {
         this.date = date;
     }
+    
+    public static Class getThisClass() {
+        try {
+            return Class.forName("br.usp.pcs.coop8.ssms.messaging.SigncryptedMessage");
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
 }

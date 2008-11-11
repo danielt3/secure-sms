@@ -40,6 +40,7 @@ public class SSMSMain extends MIDlet implements CommandListener {
     private TextField txtContactName;
     private TextField txtMessage;
     private TextField txtMyId;
+    private TextField txtKgbId;
     private TextField txtXAFirstTime1;
     private TextField txtXAFirstTime2;
     private TextField txtXASendMessage;
@@ -84,21 +85,21 @@ public class SSMSMain extends MIDlet implements CommandListener {
      * Performs an action assigned to the Mobile Device - MIDlet Started point.
      */
     public void startMIDlet() {
-        /** Initialize the text if we were started manually. */
+
         String[] connections = PushRegistry.listConnections(true);
 
         if ((connections == null) || (connections.length == 0)) {
-        // Foi iniciado pelo usuário
+            // Foi iniciado pelo usuário
+            Controller.startApplication(this);
+
+            switchDisplayable(null, getListaInicial());
         } else {
             //Foi iniciado pelo push registry
 
             Output.println("Iniciando pelo push registry!");
         }
 
-        // Foi iniciado pelo usuário
-        Controller.startApplication(this);
 
-        switchDisplayable(null, getListaInicial());
 
 
     // write post-action user code here
@@ -224,7 +225,7 @@ public class SSMSMain extends MIDlet implements CommandListener {
             listaInicial.append("Autenticar Contato", null);
             listaInicial.append("Enviar torpedo", null);
             listaInicial.append("Ver mensagens", null);
-            listaInicial.append("Ver OutPut", null);
+            listaInicial.append("Ver Output", null);
             listaInicial.append("Executar testes", null);
             listaInicial.append("Limpar dados", null);
             listaInicial.setCommandListener(this);
@@ -397,8 +398,10 @@ public class SSMSMain extends MIDlet implements CommandListener {
         if (((txtXAFirstTime1.getString() != null &&
                 txtXAFirstTime1.getString().length() >= 8) &&
                 (txtMyId.getString() != null &&
-                txtMyId.getString().length() == 10))) {
+                txtMyId.getString().length() == 10) && (txtKgbId.getString() != null &&
+                txtKgbId.getString().length() == 10))) {
             // write pre-action user code here
+            MyPrivateData.getInstance().setKgbPhone(txtKgbId.getString());
             Controller.firstTimeUse(txtXAFirstTime1.getString(), txtMyId.getString());
             switchDisplayable(null, getListaInicial());
         // write post-action user code here
@@ -435,7 +438,7 @@ public class SSMSMain extends MIDlet implements CommandListener {
     public Form getFormFirstUse() {
         if (formFirstUse == null) {
             // write pre-init user code here
-            formFirstUse = new Form("Primeiro uso", new Item[]{txtXAFirstTime1, getTxtMyId()});
+            formFirstUse = new Form("Primeiro uso", new Item[]{txtXAFirstTime1, getTxtMyId(), getTxtKgbId()});
             formFirstUse.addCommand(getOkCommand());
             formFirstUse.addCommand(cancelCommandFirstScreen);
             formFirstUse.setCommandListener(this);
@@ -457,7 +460,22 @@ public class SSMSMain extends MIDlet implements CommandListener {
         }
         return txtMyId;
     }
-    //</editor-fold>                        
+    //</editor-fold>              
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: txtKgbId ">                                     
+    /**
+     * Returns an initiliazed instance of txtMyId component.
+     * @return the initialized component instance
+     */
+    public TextField getTxtKgbId() {
+        if (txtKgbId == null) {
+            // write pre-init user code here
+            txtKgbId = new TextField("Entre com o numero de telefone da KGB:", null, 32, TextField.PHONENUMBER);
+        // write post-init user code here
+        }
+        txtKgbId.setString(MyPrivateData.getInstance().getKgbPhone());
+        return txtKgbId;
+    }
+    //</editor-fold>  
     //<editor-fold defaultstate="collapsed" desc=" Generated Getter: alert5 ">                                     
     /**
      * Returns an initiliazed instance of alert5 component.
@@ -528,7 +546,9 @@ public class SSMSMain extends MIDlet implements CommandListener {
             //Sempre preenche
             try {
                 PersistableManager perMan = PersistableManager.getInstance();
-                ObjectSet results = perMan.find(Contact.class, null, null);
+
+
+                ObjectSet results = perMan.find(Contact.getThisClass(), null, null);
 
                 for (int i = 0; i < results.size(); i++) {
                     listContacts.append(((Contact) results.get(i)).getName() + "/" + ((Contact) results.get(i)).getPhone(), null);
@@ -553,7 +573,7 @@ public class SSMSMain extends MIDlet implements CommandListener {
             if (__selectedString != null) {
                 try {
                     PersistableManager perMan = PersistableManager.getInstance();
-                    ObjectSet results = perMan.find(Contact.class, new Filter() {
+                    ObjectSet results = perMan.find(Contact.getThisClass(), new Filter() {
 
                         public boolean matches(Persistable arg0) {
                             return ((Contact) arg0).getPhone().equals(__selectedString.substring(__selectedString.length() - 10, __selectedString.length()));
@@ -638,7 +658,7 @@ public class SSMSMain extends MIDlet implements CommandListener {
             //Sempre preenche a lista
             try {
                 PersistableManager perMan = PersistableManager.getInstance();
-                ObjectSet results = perMan.find(SigncryptedMessage.class, null, null);
+                ObjectSet results = perMan.find(SigncryptedMessage.getThisClass(), null, null);
 
                 for (int i = 0; i < results.size(); i++) {
                     listMessages.append(((SigncryptedMessage) results.get(i)).getSender() + "/" + ((SigncryptedMessage) results.get(i)).getDate(), null);
@@ -662,7 +682,7 @@ public class SSMSMain extends MIDlet implements CommandListener {
             if (__selectedString != null) {
                 try {
                     PersistableManager perMan = PersistableManager.getInstance();
-                    ObjectSet results = perMan.find(SigncryptedMessage.class, new Filter() {
+                    ObjectSet results = perMan.find(SigncryptedMessage.getThisClass(), new Filter() {
 
                         public boolean matches(Persistable arg0) {
                             return __selectedString.equals(((SigncryptedMessage) arg0).getSender() + "/" + ((SigncryptedMessage) arg0).getDate());
