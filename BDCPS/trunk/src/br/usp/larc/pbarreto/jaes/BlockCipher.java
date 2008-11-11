@@ -96,6 +96,6 @@ abstract public class BlockCipher {
     /**
      * Cleanup the block cipher context.
      */
-    abstract public void finalize();
+    abstract public void doFinalize();
 
 }

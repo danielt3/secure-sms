@@ -152,7 +152,7 @@ public final class CMAC extends MAC {
         System.arraycopy(T, 0, tag, 0, (t < block_size) ? t : block_size);
     }
 
-    public void finalize() {
+    public void doFinalize() {
         //Arrays.fill(L, 0);
         //Arrays.fill(V, 0);
         //Arrays.fill(T, (byte)0);

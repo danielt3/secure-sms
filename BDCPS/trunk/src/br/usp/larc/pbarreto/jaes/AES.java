@@ -651,7 +651,7 @@ public final class AES extends BlockCipher {
     /**
      * Destroy all sensitive information in this object.
      */
-    public final void finalize() {
+    public final void doFinalize() {
         if (rek != null) {
             for (int i = 0; i < rek.length; i++) {
                 rek[i] = 0;

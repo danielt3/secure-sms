@@ -9,7 +9,6 @@ import br.usp.pcs.coop8.ssms.protocol.exception.CipherException;
 import br.usp.pcs.coop8.ssms.protocol.exception.InvalidMessageException;
 import br.usp.pcs.coop8.ssms.util.Logger;
 import pseudojava.BigInteger;
-import pseudojava.SecureRandom;
 
 /**
  * @author rodrigo

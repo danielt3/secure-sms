@@ -181,7 +181,12 @@ public class BDCPSUtil {
         System.out.println("!!! Meu ret tem: " + ret.length + " bytes =)");
         //cipher.doFinal(data, 0, data.length, ret, 0);
 
-        int numberOfBlocks = (int) Math.ceil(((float) data.length) / ((float) cipher2.getBlockSize()));
+        int numberOfBlocks = data.length / cipher2.getBlockSize();
+        if ((data.length % cipher2.getBlockSize()) > 0) {
+            numberOfBlocks++;
+        }
+
+
         for (int blockNumber = 0;
                 blockNumber < numberOfBlocks;
                 blockNumber++) {
@@ -204,11 +209,11 @@ public class BDCPSUtil {
                 //Não é o último, logo o blockIn terá todos os bytes efetivos
                 effectiveCurrentBlockSize = cipher2.getBlockSize();
             }
-            
-            System.arraycopy(data, blockNumber*cipher2.getBlockSize(), blockIn, 0, effectiveCurrentBlockSize);                        
+
+            System.arraycopy(data, blockNumber * cipher2.getBlockSize(), blockIn, 0, effectiveCurrentBlockSize);
             cipher2.processBlock(blockIn, 0, blockOut, 0);
-            System.arraycopy(blockOut, 0, ret, blockNumber*cipher2.getBlockSize(), effectiveCurrentBlockSize);                    
-            
+            System.arraycopy(blockOut, 0, ret, blockNumber * cipher2.getBlockSize(), effectiveCurrentBlockSize);
+
         }
 
         return ret;
