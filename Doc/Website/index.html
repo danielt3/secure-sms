@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Sistema de SMS Seguro</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="central">
+	<div id="header">
+		<br />
+		<a href="index.html">Sistema de SMS Seguro</a>
+	</div>
+    <ul id="navlist">
+      <li><a id="n1" href="index.html">Página inicial</a></li>
+      <li><a id="n2" href="arquivos.html">Arquivos</a></li>
+      <li><a id="n3" href="documentos.html">Documentos</a></li>
+      <li><a id="n4" href="links.html">Links</a></li>
+      <li><a id="n5" href="contato.html">Contato</a></li>      
+      	  
+    </ul>
+	<div id="content">
+	
+		<div id="rightside">
+			<h1>Introdução</h1>
+			<p>				
+				Este site visa a apresentar o projeto de formatura desenvolvido por alunos formandos em Engenharia de Computação pela Escola Politécnica da Universidade de São Paulo. Trata-se de um novo protocolo criptográfico que garante autenticidade, confidencialidade e integridade no envio de mensagens SMS, utilizando criptografia convencional sem certificados e criptografia
+				baseada em identidades para validação da chave pública. São apresentados ainda aspectos da nossa solução, um esquema criptográfico inovador, métricas, resultados de testes de desempenho.
+			</p>
+			<h1>Motivação</h1>
+			<p>
+			     A motivação do projeto surgiu da ausência de soluções universalmente adotadas para garantir segurança em  mensagens SMS. As mensagens trafegam pela rede celular de forma insegura, passando obrigatoriamente por pelo menos um intermediário não 100% confiável: a operadora do serviço de telefonia. As mensagens podem ficar armazenadas em texto plano no banco de dados da operadora, de forma que pessoas mal intencionadas infiltradas no sistema podem ser capazes de visualizar, alterar e até enviar mensagens em nome de outra pessoa. Há também outros métodos para interceptar mensagens SMS.
+			</p>
+			
+			<h1>Tecnologia</h1>
+			<p>
+				A adoção da Criptografia Baseada em Curvas Elípticas possibilitou o desenvolvimento de uma solução com chaves de tamanho reduzido e isenta de certificados, trazendo velocidade e economia nas transações em dispositivos móveis.
+			</p>
+			
+			
+			<h1>Solução e Aplicações</h1>
+			<p>
+				No desenvolvimento do projeto foi gerado um novo protocolo de segurança denominado BDCPS, cujas letras referenciam os autores. Trata-se de nova tecnologia criptográfica mais eficiente que os algoritmos até o momento conhecidos. O sistema é implementado usando a linguagem de programação Java e executa em qualquer celular que possua ambiente JavaME.
+				Como possíveis aplicações de nossa solução, podemos citar a realização de transações bancárias usando mensagens SMS, sistemas de comunicação que requeiram confidencialidade e integridade (orgãos militares e governamentais, executivos de grandes empresas) ou apenas usuários comuns em busca de maiores níveis de privacidade.
+			</p>
+			
+			
+			<h1>Arquitetura</h1>
+			<p>
+				A arquitetura básica se constitui de:
+			</p><p>
+				A) Uma autoridade de confiança denominada Key Generation Bureau que é responsável por gerar uma parte da chave privada de um novo usuário que deseja usar o sistema.
+			</p><p>
+				B) 2 ou mais dispositivos móveis que desejam se comunicar de forma segura. Na primeira conversa entre os usuários Alice e Bob ambos se autenticam sem a necessidade de consultar certificados e, a partir de então, podem conversar normalmente.
+			</p>
+		</div>
+		<div id="footer"><p></p></div>
+	</div>
+	<div id="imagepreloader"><img src="images/buttonover.gif" alt="mouseover" /></div>
+</div>
+</body>
+</html>
