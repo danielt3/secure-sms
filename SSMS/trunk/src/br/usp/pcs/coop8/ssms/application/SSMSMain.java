@@ -287,7 +287,7 @@ public class SSMSMain extends MIDlet implements CommandListener {
                     switchDisplayable(null, getListMessages());
                 }
 
-            } else if (__selectedString.equals("Ver OutPut")) {
+            } else if (__selectedString.equals("Ver Output")) {
 
                 switchDisplayable(null, getFormOutput());
 
