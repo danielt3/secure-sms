@@ -113,9 +113,16 @@ public class SmsListener
                             Output.println("Came from: " + binMsg.getAddress());
 
                             // A string é assim: sms://01185841768
+                            //Mas também vem assim as vezes: sms://+5511etctc
 
                             //Desse jeito vem 10 dígitos
-                            String telRemetente = binMsg.getAddress().substring(7, 17);
+                            String telRemetente;
+                            if (binMsg.getAddress().startsWith("sms://+55")) {
+                                
+                                telRemetente = binMsg.getAddress().substring(9, 19);
+                            } else {
+                                telRemetente = binMsg.getAddress().substring(7, 17);
+                            }
 
                             MessageSsms msg = MessageSsms.getMessage(binMsg.getPayloadData());
 
