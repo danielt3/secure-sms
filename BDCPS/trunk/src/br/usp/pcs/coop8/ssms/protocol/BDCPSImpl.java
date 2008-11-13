@@ -85,6 +85,14 @@ public abstract class BDCPSImpl implements BDCPS{
 		//logger.debug("BDCPS: SetPublicValue "+y_A.toString());
 		
 	}
+        
+        /**
+         * Sets y_A, if it is already known there is no need to calculate it again.
+         * @param y_A
+         */
+        public void setPublicValue(byte[] y_A) {
+            this.y_A = new SMSField4(sms, y_A, 0);
+        }
 
 	/**
 	 * This method computes an entity's identity-based private key

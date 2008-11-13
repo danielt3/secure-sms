@@ -29,6 +29,12 @@ public interface BDCPS {
 	 * @author rodrigo
 	 */
 	public abstract void setPublicValue();
+        
+        /**
+         * Sets y_A, if it is already known there is no need to calculate it again.
+         * @param y_A
+         */
+        public void setPublicValue(byte[] y_A);
 
 	/**
 	 * This method computes an entity's identity-based private key

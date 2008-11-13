@@ -49,6 +49,7 @@ public class BDCPSAuthority extends BDCPSImpl {
 		this.id = id;
 		initParams();
 		s = masterKey.mod(sms.getN());
+                this.x_A = s; //xA do KGB é o S
 		Ppub = P.multiply(s);		
 		
 		//logger.debug("Ppubs are " + (Ppub.equals(Ppub2)? "equal" : "different"));
@@ -66,7 +67,8 @@ public class BDCPSAuthority extends BDCPSImpl {
 		
 		//TODO: check k
 		SMSPoint2 Q_A = Q.multiply( (BDCPSUtil.h1(y_A, id, sms.getN()).add(s)).modInverse(sms.getN())).normalize();
-		if (!checkPrivateKey(Q_A, y_A, id)) throw new RuntimeException ("BDCPS: Failure at Check-Private-Key");
+		//Desnecessário fazer esse assert, estava apenas deixando mais lento:             
+                //if (!checkPrivateKey(Q_A, y_A, id)) throw new RuntimeException ("BDCPS: Failure at Check-Private-Key");
 		return Q_A.toByteArray(SMSPoint2.COMPRESSED);
 	}
 
