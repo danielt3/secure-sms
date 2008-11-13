@@ -229,27 +229,33 @@ public class SmsListener
 
     private void handleHereIsYourQaMessageReceived(HereIsYourQaMessage msg) {
 
-        byte[] myQa = msg.getQA();
-
-        //Chegou o QA
-
         MyPrivateData myPrivData = MyPrivateData.getInstance();
 
 
-        myPrivData.setQA(myQa);
+        if (!msg.getSender().equals(myPrivData.getKgbPhone())) {
+            Output.println("QA recebido de alguém diferente da KGB. Ignordado. Recebido de: " + msg.getSender());
+            return;
+        } else if (myPrivData.getQA() != null || myPrivData.getEncryptedQA_c() != null) {
+            Output.println("QA recebido da KGB, porém já havia sido recebido anterioriormente. Ignorado.");
+            return;
+        } else {
+            //QA chegou em boa hora
 
-        // Esses aqui o usuário vai precisar fornecer o xA para calcular...
-        // Deixamos o QA guardado e vamos pedir o XA quando conveniente
-        myPrivData.setHA(null);
-        myPrivData.setTA(null);
+            myPrivData.setEncryptedQA_c(msg.getQA());
+            myPrivData.setEncryptedQA_h(msg.getH());
+            myPrivData.setEncryptedQA_z(msg.getZ());
 
-        PersistableManager perMan = PersistableManager.getInstance();
-        try {
-            perMan.save(myPrivData);
-        } catch (FloggyException ex) {
-            ex.printStackTrace();
+            PersistableManager perMan = PersistableManager.getInstance();
+            try {
+                perMan.save(myPrivData);
+            } catch (FloggyException ex) {
+                ex.printStackTrace();
+            }
+            Output.println("Recebido meu QA cifrado.");
         }
-        Output.println("Recebido meu QA: " + Util.byteArrayToDebugableString(myQa));
+
+    //Chegou o QA, precisamos decriptá-lo
+
 
     }
 

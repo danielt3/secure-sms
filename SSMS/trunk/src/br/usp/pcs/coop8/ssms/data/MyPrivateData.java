@@ -19,8 +19,12 @@ public class MyPrivateData implements Persistable {
     private byte[] yA;
     private byte[] tA;
     private byte[] hA;
-    private static MyPrivateData myDataInstance = null;
+    private byte[] encryptedQA_c;
+    private byte[] encryptedQA_h;
+    private byte[] encryptedQA_z;
     private String kgbPhone;
+    private static MyPrivateData myDataInstance = null;
+    
 
     public MyPrivateData() {
 
@@ -97,6 +101,31 @@ public class MyPrivateData implements Persistable {
     public void setYA(byte[] yA) {
         this.yA = yA;
     }
+    
+    public byte[] getEncryptedQA_c() {
+        return encryptedQA_c;
+    }
+    
+    public void setEncryptedQA_c(byte[] encryptedQA_c) {
+        this.encryptedQA_c = encryptedQA_c;
+    }
+    
+    public byte[] getEncryptedQA_h() {
+        return encryptedQA_h;
+    }
+    
+    public void setEncryptedQA_h(byte[] encryptedQA_h) {
+        this.encryptedQA_h = encryptedQA_h;
+    }
+    
+    public byte[] getEncryptedQA_z() {
+        return encryptedQA_z;
+    }
+    
+    public void setEncryptedQA_z(byte[] encryptedQA_z) {
+        this.encryptedQA_z = encryptedQA_z;
+    }
+    
 
     public String getKgbPhone() {
         if (kgbPhone == null) {

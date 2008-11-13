@@ -4,6 +4,8 @@
  */
 package br.usp.pcs.coop8.ssms.messaging;
 
+import br.usp.pcs.coop8.ssms.application.Configuration;
+import br.usp.pcs.coop8.ssms.util.Util;
 import java.util.Date;
 
 /**
@@ -51,6 +53,35 @@ public abstract class MessageSsms {
 
         }
         return ret;
+    }
+
+    protected static byte[] serialize(byte primitive, byte[][] args) {
+
+        int tamanhoArgs = 0;
+        for (int i = 0; i < args.length; i++) {
+            tamanhoArgs += args[i].length;
+        }
+
+        //4 bytes de cabeçalho
+        //args.length bytes reservados para o tamanho dos argumentos, 1 byte para cada argumento
+        byte[] msgBytes = new byte[4 + args.length + tamanhoArgs];
+
+        //4 bytes iniciais do protocolo
+        msgBytes[0] = Util.BYTE_BASE_VERSAO;
+        msgBytes[1] = primitive;
+        msgBytes[2] = (byte) Configuration.K;
+        msgBytes[3] = (byte) 0x00; //Reservado para segmentação
+
+        //Bytes indicando o tamanho dos campos:
+        int bytesWritten = 0;
+        for (int i = 0; i < args.length; i++) {
+            msgBytes[4 + i] = (byte) args[i].length;
+            System.arraycopy(args[i], 0, msgBytes, 4 + args.length + bytesWritten, args[i].length);
+            bytesWritten += args[i].length;
+
+        }
+        return msgBytes;
+
     }
 
     /**

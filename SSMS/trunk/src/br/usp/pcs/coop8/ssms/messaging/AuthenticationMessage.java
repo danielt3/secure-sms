@@ -24,7 +24,7 @@ public class AuthenticationMessage extends MessageSsms {
         this.yA = yA;
         this.hA = hA;
         this.tA = tA;
-        this.messageBytes = serialize(yA, hA, tA);
+        this.messageBytes = serialize(MessageSsms.AUTHENTICATE_ME, new byte[][]{yA, hA, tA});
     }
 
     public byte[] getYA() {
@@ -37,30 +37,6 @@ public class AuthenticationMessage extends MessageSsms {
 
     public byte[] getTA() {
         return tA;
-    }
-
-    private static byte[] serialize(byte[] yA, byte[] hA, byte[] tA) {
-
-        byte[] msgBytes = new byte[4 + 3 + yA.length + hA.length + tA.length];
-
-        //4 bytes iniciais do protocolo
-        msgBytes[0] = Util.BYTE_BASE_VERSAO;
-        msgBytes[1] = MessageSsms.AUTHENTICATE_ME;
-        msgBytes[2] = (byte) Configuration.K;
-        msgBytes[3] = (byte) 0x00; //Reservado para segmentação
-
-        //Bytes indicando o tamanho dos campos:
-        msgBytes[4] = (byte) yA.length;
-        msgBytes[5] = (byte) hA.length;
-        msgBytes[6] = (byte) tA.length;
-
-        //Campos:        
-        System.arraycopy(yA, 0, msgBytes, 7, yA.length);
-        System.arraycopy(hA, 0, msgBytes, 7 + yA.length, hA.length);
-        System.arraycopy(tA, 0, msgBytes, 7 + yA.length + hA.length, tA.length);
-
-        return msgBytes;
-
     }
 
     protected void deserialize(byte[] msgBytes) {

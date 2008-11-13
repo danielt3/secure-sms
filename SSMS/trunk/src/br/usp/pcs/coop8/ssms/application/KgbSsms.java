@@ -10,6 +10,8 @@ import br.usp.pcs.coop8.ssms.messaging.MessageSsms;
 import br.usp.pcs.coop8.ssms.messaging.RequestMyQaMessage;
 import br.usp.pcs.coop8.ssms.protocol.BDCPSAuthority;
 import br.usp.pcs.coop8.ssms.protocol.BDCPSParameters;
+import br.usp.pcs.coop8.ssms.protocol.exception.CipherException;
+import br.usp.pcs.coop8.ssms.util.Output;
 import org.bouncycastle.crypto.digests.SHA1Digest;
 import pseudojava.BigInteger;
 
@@ -35,7 +37,7 @@ public class KgbSsms {
     }
 
     public static void returnQaMessage(RequestMyQaMessage rmqam, String id) {
-        byte[] yA = rmqam.getYA();
+
 
         byte[] hashIdA = new byte[20];
         byte[] hashKgbId = new byte[20];
@@ -46,20 +48,36 @@ public class KgbSsms {
         sha.doFinal(hashIdA, 0);
 
         sha.reset();
-        sha.update(MyPrivateData.getInstance().getKgbPhone().getBytes(), 0, MyPrivateData.getInstance().getKgbPhone().getBytes().length);
+        sha.update(MyPrivateData.getInstance().getIdA().getBytes(), 0, MyPrivateData.getInstance().getIdA().getBytes().length);
         sha.doFinal(hashKgbId, 0);
 
+        byte[] yA = rmqam.getYA();
 
+        //byte[][] cryptogram = new byte[3][];
+        //cryptogram[0] = rmqam.getYA(); //yA encriptado
+        //cryptogram[1] = rmqam.getH();
+        //cryptogram[2] = rmqam.getZ();
         BDCPSAuthority bdcpsA = new BDCPSAuthority(Configuration.K, getS(), hashKgbId);
+
+
 
         byte[] qA = bdcpsA.privateKeyExtract(hashIdA, yA);
 
-        //TODO: encriptar o qA com alg convencional
+        bdcpsA.setPublicValue();
+        byte[][] cryptogram;
+        try {
+            cryptogram = bdcpsA.signcrypt(qA, hashIdA, yA);
+        } catch (CipherException ex) {
+            ex.printStackTrace();
+            Output.println("Exception excriptando qA");
+            return;
+        }
 
 
-        MessageSsms msg = new HereIsYourQaMessage(qA);
+        MessageSsms msg = new HereIsYourQaMessage(cryptogram[0], cryptogram[1], cryptogram[2]);
 
         Controller.enviarSmsBinarioMesmaThread(id, msg.getMessageBytes());
+
 
     }
 }

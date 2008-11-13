@@ -4,7 +4,6 @@
  */
 package br.usp.pcs.coop8.ssms.messaging;
 
-import br.usp.pcs.coop8.ssms.application.Configuration;
 import br.usp.pcs.coop8.ssms.util.Util;
 
 /**
@@ -14,6 +13,8 @@ import br.usp.pcs.coop8.ssms.util.Util;
 public class HereIsYourQaMessage extends MessageSsms {
 
     private byte[] qA;
+    private byte[] h;
+    private byte[] z;
 
     protected HereIsYourQaMessage() {
     }
@@ -21,38 +22,33 @@ public class HereIsYourQaMessage extends MessageSsms {
     /**
      * 
      */
-    public HereIsYourQaMessage(byte[] qA) {
+    public HereIsYourQaMessage(byte[] qA, byte[] h, byte[] z) {
         this.qA = qA;
-        this.messageBytes = serialize(qA);
+        this.h = h;
+        this.z = z;
+        this.messageBytes = serialize(MessageSsms.HERE_IS_YOUR_QA, new byte[][]{qA, h, z});
     }
 
     public byte[] getQA() {
         return this.qA;
     }
 
-    private static byte[] serialize(byte[] qA) {
+    public byte[] getH() {
+        return h;
+    }
 
-        byte[] msgBytes = new byte[4 + 1 + qA.length];
-
-        //4 bytes iniciais do protocolo
-        msgBytes[0] = Util.BYTE_BASE_VERSAO;
-        msgBytes[1] = MessageSsms.HERE_IS_YOUR_QA;
-        msgBytes[2] = (byte) Configuration.K;
-        msgBytes[3] = (byte) 0x00; //Reservado para segmentação
-
-        //Bytes indicando o tamanho dos campos:
-        msgBytes[4] = (byte) qA.length;
-
-        //Campos:        
-        System.arraycopy(qA, 0, msgBytes, 5, qA.length);
-
-        return msgBytes;
-
+    public byte[] getZ() {
+        return z;
     }
 
     protected void deserialize(byte[] msgBytes) {
         super.deserialize(msgBytes);
         qA = new byte[Util.byteToInt(messageBytes[4])];
-        System.arraycopy(msgBytes, 5, qA, 0, qA.length);
+        h = new byte[Util.byteToInt(messageBytes[5])];
+        z = new byte[Util.byteToInt(messageBytes[6])];
+
+        System.arraycopy(msgBytes, 7, qA, 0, qA.length);
+        System.arraycopy(msgBytes, 7 + qA.length, h, 0, h.length);
+        System.arraycopy(msgBytes, 7 + qA.length + h.length, z, 0, z.length);
     }
 }

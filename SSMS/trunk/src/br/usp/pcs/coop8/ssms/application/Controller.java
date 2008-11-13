@@ -72,8 +72,12 @@ public abstract class Controller {
      */
     public static void firstTimeUse(String xA, String id) {
 
+
         byte[] hashDoXa = new byte[20];
         byte[] hashDoId = new byte[20];
+        byte[] hashDoTelKgb = new byte[20];
+
+        MyPrivateData myData = MyPrivateData.getInstance();
 
         {
 
@@ -85,10 +89,14 @@ public abstract class Controller {
             sha.reset();
             sha.update(id.getBytes(), 0, id.getBytes().length);
             sha.doFinal(hashDoId, 0);
+
+            sha.reset();
+            sha.update(myData.getKgbPhone().getBytes(), 0, myData.getKgbPhone().getBytes().length);
+            sha.doFinal(hashDoTelKgb, 0);
         }
 
 
-        BDCPS bdcps = new BDCPSClient(Configuration.K, BDCPSParameters.getInstance(Configuration.K).PPubBytes, hashDoId);
+        BDCPSClient bdcps = new BDCPSClient(Configuration.K, BDCPSParameters.getInstance(Configuration.K).PPubBytes, hashDoId);
         bdcps.setSecretValue(hashDoXa);
         bdcps.setPublicValue();
 
@@ -96,7 +104,7 @@ public abstract class Controller {
 
 
 
-        MyPrivateData myData = MyPrivateData.getInstance(); //TODO: Puxar do banco se ja existir um
+
 
         myData.setIdA(id);
         myData.setYA(yA);
@@ -115,8 +123,20 @@ public abstract class Controller {
             ex.printStackTrace();
         }
 
-        RequestMyQaMessage reqMessage = new RequestMyQaMessage(yA);
+        // Encriptar o yA:
+        //byte[][] cryptogram;
+        //try {
+        //    cryptogram = bdcps.signcrypt(yA, hashDoTelKgb, BDCPSParameters.getInstance(Configuration.K).yKgbBytes);
+        //} catch (CipherException ex) {
+        //    ex.printStackTrace();
+        //    Output.println("Exception encriptando yA: " + ex.getMessage());
+        //    return;
+        //}
+
+        RequestMyQaMessage reqMessage = new RequestMyQaMessage(yA);//cryptogram[0], cryptogram[1], cryptogram[2]);
+
         enviarSmsBinario(myData.getKgbPhone(), reqMessage.getMessageBytes());
+
 
     }
 
@@ -126,6 +146,7 @@ public abstract class Controller {
 
         byte[] hashDoXa = new byte[20];
         byte[] hashDoId = new byte[20];
+        byte[] hashIdKgb = new byte[20];
 
         {
 
@@ -137,13 +158,44 @@ public abstract class Controller {
             sha.reset();
             sha.update(myPrivData.getIdA().getBytes(), 0, myPrivData.getIdA().getBytes().length);
             sha.doFinal(hashDoId, 0);
+            
+            sha.reset();
+            sha.update(myPrivData.getKgbPhone().getBytes(), 0, myPrivData.getKgbPhone().getBytes().length);
+            sha.doFinal(hashIdKgb, 0);
         }
 
 
-        BDCPS bdcps = new BDCPSClient(Configuration.K, BDCPSParameters.getInstance(Configuration.K).PPubBytes, hashDoId);
+        BDCPSClient bdcps = new BDCPSClient(Configuration.K, BDCPSParameters.getInstance(Configuration.K).PPubBytes, hashDoId);
         bdcps.setSecretValue(hashDoXa);
-        bdcps.setPublicValue();
-
+        bdcps.setPublicValue(myPrivData.getYA());
+        byte[] myQa;
+        try {
+        myQa =  bdcps.unsigncrypt(new byte[][]{myPrivData.getEncryptedQA_c(),myPrivData.getEncryptedQA_h(),myPrivData.getEncryptedQA_z()}, hashIdKgb, BDCPSParameters.getInstance(Configuration.K).yKgbBytes);
+        } catch (InvalidMessageException ex) {
+            ex.printStackTrace();
+            Output.println("Erro, assinatura da KGB é inválida, QA é invalido.");
+            //TODO: avisar usuário
+            return;
+        }
+        catch (CipherException ex) {
+            ex.printStackTrace();
+            Output.println("Erro, assinatura da KGB é inválida, QA é invalido.");
+            //TODO: avisar 
+            return;
+        }
+        
+        if (!bdcps.checkPrivateKey(myQa, myPrivData.getYA(), hashDoId)) {
+            Output.println("Erro, recebido QA inválido, não passou no checkPrivateKey. Ignorado.");
+            //validar o QA com a fórmula, e avisar usuário caso esteja tudo errado.
+            return;
+        }
+        
+        //TUDO OK
+        myPrivData.setQA(myQa);
+        myPrivData.setEncryptedQA_c(null);
+        myPrivData.setEncryptedQA_h(null);
+        myPrivData.setEncryptedQA_z(null);
+        
         bdcps.setPrivateKey(myPrivData.getQA());
         bdcps.setPublicKey();
         byte[][] pubKey = bdcps.getPublicKey();
@@ -256,10 +308,10 @@ public abstract class Controller {
 
         BDCPS bdcps = new BDCPSClient(Configuration.K, BDCPSParameters.getInstance(Configuration.K).PPubBytes, hashDoIdA);
         bdcps.setSecretValue(hashDoXa);
-        bdcps.setPublicValue();
+        bdcps.setPublicValue(myPrivData.getYA());
 
-        bdcps.setPrivateKey(myPrivData.getQA());
-        bdcps.setPublicKey();
+        //bdcps.setPrivateKey(myPrivData.getQA());
+        //bdcps.setPublicKey();
 
         try {
             byte[][] cryptogram = bdcps.signcrypt(message.getBytes(), hashDoIdB, selectedContact.getYA());
@@ -300,10 +352,10 @@ public abstract class Controller {
 
         BDCPS bdcps = new BDCPSClient(Configuration.K, BDCPSParameters.getInstance(Configuration.K).PPubBytes, hashDoIdA);
         bdcps.setSecretValue(hashDoXa);
-        bdcps.setPublicValue();
+        bdcps.setPublicValue(myPrivData.getYA());
 
-        bdcps.setPrivateKey(myPrivData.getQA());
-        bdcps.setPublicKey();
+        //bdcps.setPrivateKey(myPrivData.getQA());
+        //bdcps.setPublicKey();
 
 
         byte[][] cryptogram = new byte[3][];
@@ -449,7 +501,6 @@ public abstract class Controller {
         } catch (/*Digest*/Exception ex) {
             System.out.println("BDCPS: Digest exception.");
             ex.printStackTrace();
-            //TODO: arrumar
             throw new RuntimeException("BDCPS: Digest exception.");
         }
         BDCPS auth = new BDCPSAuthority(bits, s, id_auth.getBytes());

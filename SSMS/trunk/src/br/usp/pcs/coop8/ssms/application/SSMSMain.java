@@ -245,7 +245,7 @@ public class SSMSMain extends MIDlet implements CommandListener {
         String __selectedString = getListaInicial().getString(getListaInicial().getSelectedIndex());
         if (__selectedString != null) {
             if (__selectedString.equals("Primeiro uso")) {
-                if (MyPrivateData.getInstance().getQA() == null) {
+                if (MyPrivateData.getInstance().getEncryptedQA_c() == null && MyPrivateData.getInstance().getQA() == null) {
                     switchDisplayable(null, getFormFirstUse());
                 } else {
                     if (MyPrivateData.getInstance().getTA() == null) {
@@ -502,7 +502,7 @@ public class SSMSMain extends MIDlet implements CommandListener {
     public Form getFormFirstUse2() {
         if (formFirstUse2 == null) {
             // write pre-init user code here
-            formFirstUse2 = new Form("Calcular par\u00E2metros p\u00FAblicos", new Item[]{txtXAFirstTime2});
+            formFirstUse2 = new Form("Calcular par\u00E2metros", new Item[]{txtXAFirstTime2});
             formFirstUse2.addCommand(getOkCommand());
             formFirstUse2.addCommand(cancelCommandFirstScreen);
             formFirstUse2.setCommandListener(this);
