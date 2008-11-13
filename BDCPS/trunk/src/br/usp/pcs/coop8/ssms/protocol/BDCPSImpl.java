@@ -339,8 +339,8 @@ public abstract class BDCPSImpl implements BDCPS{
 		return this.y_A.toByteArray();
 	}
 
-	public boolean checkPrivateKey(SMSPoint2 Q_A, SMSField4 y_A, byte[] id) {
-		return pair.ate(Q_A, P.multiply(BDCPSUtil.h1(y_A, id, sms.getN())).add(Ppub)).equals(g);
+	public boolean checkPrivateKey(byte[] Q_A, byte[] y_A, byte[] id) {
+		return pair.ate(new SMSPoint2(E2, Q_A), P.multiply(BDCPSUtil.h1(new SMSField4(sms, y_A, 0), id, sms.getN())).add(Ppub)).equals(g);
 	}
 	
 	public byte[] getPublicPoint() {

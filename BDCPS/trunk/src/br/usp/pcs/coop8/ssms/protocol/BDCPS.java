@@ -67,6 +67,8 @@ public interface BDCPS {
 	 * @return true if the key is valid and false if the key is not valid
 	 */
 	public abstract boolean publicKeyValidate(byte[][] publicKey, byte id[]);
+        
+        public boolean checkPrivateKey(byte[] Q_A, byte[] y_A, byte[] id);
 
 	public abstract byte[][] signcrypt(byte[] message, byte[] receiverId, byte[] receiverPublicValue)
 	throws CipherException;
