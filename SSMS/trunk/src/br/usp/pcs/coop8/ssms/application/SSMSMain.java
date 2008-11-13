@@ -89,15 +89,14 @@ public class SSMSMain extends MIDlet implements CommandListener {
         String[] connections = PushRegistry.listConnections(true);
 
         if ((connections == null) || (connections.length == 0)) {
-            // Foi iniciado pelo usuário
-            Controller.startApplication(this);
-
-            switchDisplayable(null, getListaInicial());
+        // Foi iniciado pelo usuário
         } else {
             //Foi iniciado pelo push registry
-
-            Output.println("Iniciando pelo push registry!");
+            Output.println("Iniciado pelo push registry!");
         }
+        Controller.startApplication(this);
+
+        switchDisplayable(null, getListaInicial());
 
 
 
