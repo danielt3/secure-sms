@@ -1,16 +1,33 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ *
+ * Copyright (C) 2008 Eduardo de Souza Cruz, Geovandro Carlos C. F. Pereira
+ *                    and Rodrigo Rodrigues da Silva
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
  */
+
 package br.usp.pcs.coop8.ssms.protocol;
 
-import br.usp.larc.smspairing.SMSCurve;
-import br.usp.larc.smspairing.SMSCurve2;
-import br.usp.larc.smspairing.SMSField4;
-import br.usp.larc.smspairing.SMSPairing;
-import br.usp.larc.smspairing.SMSParams;
-import br.usp.larc.smspairing.SMSPoint;
-import br.usp.larc.smspairing.SMSPoint2;
+import br.usp.larc.pbarreto.smspairing.SMSCurve;
+import br.usp.larc.pbarreto.smspairing.SMSCurve2;
+import br.usp.larc.pbarreto.smspairing.SMSField4;
+import br.usp.larc.pbarreto.smspairing.SMSPairing;
+import br.usp.larc.pbarreto.smspairing.SMSParams;
+import br.usp.larc.pbarreto.smspairing.SMSPoint;
+import br.usp.larc.pbarreto.smspairing.SMSPoint2;
 
 import java.util.Hashtable;
 import pseudojava.BigInteger;
