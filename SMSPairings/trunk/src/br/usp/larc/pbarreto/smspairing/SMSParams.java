@@ -1,4 +1,4 @@
-package br.usp.larc.smspairing;
+package br.usp.larc.pbarreto.smspairing;
 /**
  * SMSParams.java
  *
