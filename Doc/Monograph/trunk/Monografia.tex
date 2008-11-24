@@ -1,0 +1,83 @@
+\documentclass[12pt]{article}
+
+\usepackage{sbc-template}
+\usepackage{amsmath,amssymb}
+\usepackage{txfonts}
+\usepackage{graphicx,url,ifthen}
+\usepackage[latin1]{inputenc}
+\usepackage{textcomp}
+%\usepackage[portuges]{babel}
+\usepackage[brazil]{babel}
+
+\newboolean{Anonymous}
+%\setboolean{Anonymous}{false}
+\setboolean{Anonymous}{false}
+
+\newcommand{\emailx}[1]{\footnotesize\texttt{#1}}
+
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\G}{\mathbb{G}}
+\newcommand{\ID}{\mathsf{ID}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\newcommand{\LComment}[1]{\(\triangleright\) #1}
+
+\newtheorem{definition}{Definition}
+
+\sloppy
+
+\title{Construção de um Sistema de SMS Seguro}
+
+\ifthenelse{\boolean{Anonymous}}
+{%
+\author{(Anonimizado para submissão)\inst{1}}
+\address{(Anonimizado para submissão)}
+} %Anonymous (then)
+{%
+\author{
+Eduardo de Souza Cruz\inst{1}, Geovandro C. F. Pereira\inst{1},\\
+Rodrigo Rodrigues da Silva\inst{1}, Paulo S. L. M. Barreto\inst{1}\thanks{Orientador do trabalho. Bolsista de Produtividade em Pesquisa CNPq, processo 312005/2006-7.}.
+}
+\address{
+    Departamento de Engenharia de Computação e Sistemas Digitais,\\
+    Escola Politécnica, Universidade de São Paulo, Brasil.\\
+    \emailx{\{eduardo.cruz,geovandro.pereira,rodrigo.silva1\}@poli.usp.br}, \emailx{pbarreto@larc.usp.br}
+}
+} %Anonymous (else)
+
+\begin{document}
+
+\pagestyle{empty}
+
+\maketitle
+
+\begin{resumo}
+TODO TODO TODO TODO TODO TODO TODO TODO 
+\end{resumo}
+
+\section{Resumos}
+\section{Introdução}
+\subsection{Cenário}
+\subsection{Objetivos}
+\subsection{Metodologia}
+\subsection{Métricas}
+\section{Discussão}
+\subsection{Preliminares teóricas}% (assunto geral: curvas elípticas, protocolos, conceitos, etc)
+\subsection{Alternativas existentes}% (RSA, coisas mobile)
+\subsection{Revisão literatura}
+\section{Mais coisas aqui no meio... descrever o bdcps, o projeto, etc}
+\section{Modelos}%, justificar o sistema
+\section{Resultados}% (tabelas, etc, os objetivos foram alcançados? Testes, benchmarks)
+\section{Conclusão}
+\subsection{Analisar resultados}
+\subsection{Possíveis desenvolvimentos futuros}% (ordenar artigos)
+\section{Referências}% (falar q gerou artigo e menção honrosa)
+
+\section{Introdução}
+\section{Introdução}
+
+
+\bibliographystyle{sbc}
+\bibliography{Monografia}
+
+\end{document}
