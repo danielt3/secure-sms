@@ -9,10 +9,6 @@
 %\usepackage[portuges]{babel}
 \usepackage[brazil]{babel}
 
-\newboolean{Anonymous}
-%\setboolean{Anonymous}{false}
-\setboolean{Anonymous}{false}
-
 \newcommand{\emailx}[1]{\footnotesize\texttt{#1}}
 
 \newcommand{\F}{\mathbb{F}}
@@ -28,12 +24,6 @@
 
 \title{Construção de um Sistema de SMS Seguro}
 
-\ifthenelse{\boolean{Anonymous}}
-{%
-\author{(Anonimizado para submissão)\inst{1}}
-\address{(Anonimizado para submissão)}
-} %Anonymous (then)
-{%
 \author{
 Eduardo de Souza Cruz\inst{1}, Geovandro C. F. Pereira\inst{1},\\
 Rodrigo Rodrigues da Silva\inst{1}, Paulo S. L. M. Barreto\inst{1}\thanks{Orientador do trabalho. Bolsista de Produtividade em Pesquisa CNPq, processo 312005/2006-7.}.
@@ -43,7 +33,6 @@ Rodrigo Rodrigues da Silva\inst{1}, Paulo S. L. M. Barreto\inst{1}\thanks{Orient
     Escola Politécnica, Universidade de São Paulo, Brasil.\\
     \emailx{\{eduardo.cruz,geovandro.pereira,rodrigo.silva1\}@poli.usp.br}, \emailx{pbarreto@larc.usp.br}
 }
-} %Anonymous (else)
 
 \begin{document}
 
@@ -52,29 +41,86 @@ Rodrigo Rodrigues da Silva\inst{1}, Paulo S. L. M. Barreto\inst{1}\thanks{Orient
 \maketitle
 
 \begin{resumo}
-TODO TODO TODO TODO TODO TODO TODO TODO 
+Este trabalho consiste na especificação e implementação de um sistema que garanta serviços de segurança na troca de mensagens SMS entre aperelhos de telefonia celular. Ao longo da monografia, apresentaremos aspectos da nossa solução, um esquema criptográfico inovador que viabilizou a implementação, métricas, resultados de testes de desempenho, além de considerações sobre o andamento do trabalho.
+%TODO: atualizar isso depois de ter feito tudo
 \end{resumo}
 
-\section{Resumos}
+%\section{Resumos}
+
 \section{Introdução}
-\subsection{Cenário}
-\subsection{Objetivos}
+
+Atualmente não existem soluções universalmente adotadas para garantir segurança em mensagens SMS. Pelo método tradicional, as mensagens trafegam pela rede celular de forma insegura, passando obrigatoriamente por pelo menos um intermediário não 100\% confiável: a operadora do serviço de telefonia. As mensagens podem ficar armazenadas em texto plano no banco de dados da operadora \cite{loon}, de forma que pessoas mal intencionadas infiltradas no sistema podem ser capazes de visualizar, alterar e até enviar mensagens em nome de outra pessoa. Há também outros métodos para interceptar mensagens SMS. \cite{smsanalysis}. %TODO: quais métodos??? Tá mto pobre isso!
+
+O sistema desenvolvido foi designado por "Aplicativo Seguro de SMS", ou, em uma forma abreviada e internacionalizada mais adequada ao mercado, "Secure-SMS", ou ainda "SSMS".  %TODO: manteremos o nome?
+O objetivo do sistema é prover uma camada de segurança a nível de aplicação para mensagens SMS em redes de telefonia móvel. O software é capaz de assinar, cifrar, decifrar e verificar mensagens enviadas por SMS, de forma a garantir a identidade do remetente, e garantir que ela somente poderá ser lida pelo destinatário real, oferencendo assim os serviços de segurança: autenticidade, confidencialidade e integridade. %TODO: revisar isto depois
+
+Apesar de implementado especificamente para ser executado em um telefone celular, garantindo a comunicação pessoal sigilosa, o mesmo esquema pode ser facilmente portado para outras plataformas que têm acesso à comunicação por SMS, como PDAs ou servidores. Desta forma, o esquema pode ser aplicado em áreas que requerem alto nível de segurança da informação que trafega nas redes de telefonia móvel, por exemplo aplicações militares, bancárias, e de comércio eletrônico.
+
+%Como possíveis aplicações de nossa solução, podemos citar a realização de transações bancárias usando mensagens SMS, sistemas de %comunicação que requeiram confidencialidade e integridade (órgãos militares e governamentais, executivos de grandes empresas) ou apenas %usuários comuns em busca de maiores níveis de privacidade.
+
+\subsection{Cenário} %Falar dos limitantes, processamento e tamanho de mensagem pequenos
+
+O ambiente em questão não se mostra muito propício para práticas criptográficas. A largura de banda é muito pequena, visto que em cada mensagem SMS podem ser trafegados apenas 140 bytes binários. %Citar algo?
+Além disto, existem limitações de processamento no dispositivo celular, que podem comprometer a usabilidade de um esquema criptográfico tradicional.
+
+Talvez devido a estas dificuldades, o cenário atual não apresenta uma grande variedade de soluções abrangindo objetivos similares aos de nosso sistema, e não há uma solução universalmente adotada.
+
+\section{Objetivos}
+
+%fazer um sistema tão difícil de quebrar quanto um sistema vigente atualmente, como transações bancárias por https
+O objetivo do trabalho é quebrar o paradigma atual, desafiar as dificuldades existentes, e produzir um sistema que garante segurança no intercâmbio de mensagens SMS entre dispositivos celulares sem afetar a usabilidade do serviço. Além disto, o nível de segurança obtido deve ser equiparável ao nível de segurança de aplicações de segurança vigentes atualmente, como por exemplo uma transação bancária pela Internet pelo protocolo HTTPS.
+
+%fazer um sistema tão difícil de quebrar quanto um sistema vigente atualmente
+
+\subsection{Escopo}
+%Falar aqui exatamente o que o sistema faz e o que ele não faz! Falar de problemas que existem, mas que ficam fora do nosso escopo.
+O que nosso sistema garante é.... %TODO
+
+Problemas como... etc etc etc... não são de nossa responsabilidade... etc etc etc... %TODO
+
 \subsection{Metodologia}
+%Alguém faz ae... Não sei o que escrever aqui... sacrificar talvez?
+
 \subsection{Métricas}
+
+A seguir, definimos as métricas desejadas. % e suas limitações.
+
+\begin{itemize}
+
+\item Tempo de espera: Consiste nos tempos para cifrassinar e vericifrar uma mensagem. Baseando-se em aplicações já existentes e satisfazendo os requisitos de usabilidade de nosso projeto, estimamos que um intervalo de espera para processamento de uma mensagem de no máximo 5 segundos seja tolerável pelo usuário.
+
+\item Tamanho máximo da mensagem: Consiste da soma dos bytes úteis da mensagem com os bytes de controle do algoritmo. Implementações SMS baseadas em \emph{Sun Wireless Messaging API (WMA)} podem dividir uma única mensagem em, no máximo, 3 segmentos. Recomenda-se que as aplicações SMS utilizem mensagens com menos de 399 bytes binários de modo a não comprometer sua portabilidade \cite{ortiz}. Desse modo, estabelecemos um tamanho máximo de 399 bytes para as mensagens transmitidas, sendo este espaço compartilhado entre os dados de controle do algoritmo criptográfico utilizado e a mensagem criptografada em si.
+%TODO: 399 ? É 140, não? Definir direito isso !
+
+\item Tamanho das chaves privada/pública e da assinatura: Devido às limitações de espaço de armazenamento das mensagens, estabeleceu-se que a assinatura de uma mensagem, bem como a chave privada do usuário, não deveriam exceder 200 bits. No entanto, essa restrição não deveria comprometer os requisitos de segurança do sistema.
+
+\end{itemize}
+
+%TODO: aqui ta tudo igual ao paper... alterar, enriquecer!
+Sabendo que um certificado digital típico ocupa entre 2KB e 4KB, nota-se aqui que uma solução baseada em infra-estrutura convencional de chaves públicas inviabilizaria completamente o sistema: antes de se enviar uma mensagem SMS segura para algum usuário, seria necessário receber o certificado desse usuário particionado em 15 a 30 mensagens SMS, além de enviar em resposta outro certificado em mais 15 a 30 mensagens SMS. Esse esforço precisaria ser efetuado novamente para cada novo destinatário a quem determinado usuário desejasse enviar mensagens, ou em cada caso de renovação ou revogação de certificado. Some-se a isto o espaço ocupado por uma única assinatura convencional, tipicamente de 128 bytes por estar baseada no algoritmo RSA com 1024 bits; este \emph{overhead} seria duplicado com o requisito de cifrar e assinar a mensagem, isto é, tomaria 256 bytes do espaço disponível. 
+
+Por outro lado, a manutenção de um diretório confiável de chaves públicas, típico de sistemas de criptografia convencionais, seria impraticável em uma rede de telefonia celular.  Uma solução tecnológica baseada em alternativas à criptografia convencional é, portanto, imprescindível.
+
+Sendo assim, foi considerado o uso de criptografia com assinatura baseada em identidades, de acordo com o conceito proposto inicialmente por Shamir \cite{shamir}. Aprofundando-se na especificação, percebeu-se ainda que a chave pública do usuário poderia ser estabelecida essencialmente a partir de sua identificação única no sistema, ou seja, seu próprio número de celular. Desse modo, a criptografia baseada em identidades com emparelhamentos bilineares parecia atender aos requisitos do nosso aplicativo e foi inicialmente adotada na solução do projeto.
+
 \section{Discussão}
-\subsection{Preliminares teóricas}% (assunto geral: curvas elípticas, protocolos, conceitos, etc)
+\subsection{Preliminares teóricas}% (assunto geral: curvas elípticas, emparelhamento, protocolos, conceitos, etc)
 \subsection{Alternativas existentes}% (RSA, coisas mobile)
-\subsection{Revisão literatura}
-\section{Mais coisas aqui no meio... descrever o bdcps, o projeto, etc}
-\section{Modelos}%, justificar o sistema
+\subsection{Revisão literatura} %????
+\section{MIOLO}
+
+%Mais coisas aqui no meio... descrever o bdcps, o projeto, etc} 
+%Descrever alternativas fracassadas, BLMQ
+%Descrever problemas que tivemos
+%Falar dos problemas com operadoras
+%Modelo de negócio (vale a pena) ?
+
+\section{Modelos}%, justificar o sistema (???)
 \section{Resultados}% (tabelas, etc, os objetivos foram alcançados? Testes, benchmarks)
 \section{Conclusão}
 \subsection{Analisar resultados}
 \subsection{Possíveis desenvolvimentos futuros}% (ordenar artigos)
 \section{Referências}% (falar q gerou artigo e menção honrosa)
-
-\section{Introdução}
-\section{Introdução}
 
 
 \bibliographystyle{sbc}
