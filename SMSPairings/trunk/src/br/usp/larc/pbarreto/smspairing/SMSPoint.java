@@ -106,7 +106,7 @@ public class SMSPoint {
      */
     public SMSPoint(SMSCurve E, BigInteger x, BigInteger y) {
         this.E = E;
-        BigInteger p = E.sms.p; // shorthand
+        BigInteger p = E.sms.getP(); // shorthand
         this.x = x.mod(p);
         this.y = y.mod(p);
         this.z = _1; // normalized
@@ -129,13 +129,13 @@ public class SMSPoint {
             throw new IllegalArgumentException(pointNotOnCurve); // otherwise the curve order would not be prime
         }
         // alpha = x^3 - 3x + b = (x^2 - 3)x + b
-        BigInteger beta = sms.sqrt(x.multiply(x).subtract(_3).multiply(x).add(sms.b).mod(sms.p));
+        BigInteger beta = sms.sqrt(x.multiply(x).subtract(_3).multiply(x).add(sms.b).mod(sms.getP()));
         if (beta == null) {
             throw new IllegalArgumentException(pointNotOnCurve);
         }
         this.E = E;
-        this.x = x.mod(sms.p);
-        this.y = (beta.testBit(0) == yBit) ? beta : sms.p.subtract(beta);
+        this.x = x.mod(sms.getP());
+        this.y = (beta.testBit(0) == yBit) ? beta : sms.getP().subtract(beta);
         this.z = _1; // normalized
         this.m = _0;
     }
@@ -149,7 +149,7 @@ public class SMSPoint {
 	        this.y = _1;
 	        this.z = _0;
         } else {
-			int len = (sms.p.bitLength() + 7)/8;
+			int len = (sms.getP().bitLength() + 7)/8;
         	byte[] buf = new byte[1 + len];
         	buf[0] = 0;
         	System.arraycopy(os, 1, buf, 1, len);
@@ -162,11 +162,11 @@ public class SMSPoint {
 	        	this.y = new BigInteger(buf);
 	        } else {
 		        boolean yBit = (pc & 1) != 0;
-			    BigInteger beta = sms.sqrt(x.multiply(x).subtract(_3).multiply(x).add(sms.b).mod(sms.p));
+			    BigInteger beta = sms.sqrt(x.multiply(x).subtract(_3).multiply(x).add(sms.b).mod(sms.getP()));
 		        if (beta == null) {
 		            throw new IllegalArgumentException(pointNotOnCurve);
 		        }
-		        this.y = (beta.testBit(0) == yBit) ? beta :  sms.p.subtract(beta);
+		        this.y = (beta.testBit(0) == yBit) ? beta :  sms.getP().subtract(beta);
 	        }
 	        this.z = _1; // normalized
         }
@@ -245,7 +245,7 @@ public class SMSPoint {
     	 * x/z^2 = x'/z'^2 <=> x*z'^2 = x'*z^2.
     	 * y/z^3 = y'/z'^3 <=> y*z'^3 = y'*z^3,
     	 */
-        BigInteger p = E.sms.p; // shorthand
+        BigInteger p = E.sms.getP(); // shorthand
         BigInteger
             z2 = z.multiply(z).mod(p),
             z3 = z.multiply(z2).mod(p),
@@ -287,7 +287,7 @@ public class SMSPoint {
         if (z.signum() == 0 || z.compareTo(_1) == 0) {
             return this; // already normalized
         }
-        BigInteger p = E.sms.p; // shorthand
+        BigInteger p = E.sms.getP(); // shorthand
         BigInteger zinv = null;
         try {
         	zinv = z.modInverse(p);
@@ -303,7 +303,7 @@ public class SMSPoint {
      * @return  -this.
      */
     public SMSPoint negate() {
-        return new SMSPoint(E, x, E.sms.p.subtract(y), z);
+        return new SMSPoint(E, x, E.sms.getP().subtract(y), z);
     }
 
     /**
@@ -316,7 +316,7 @@ public class SMSPoint {
         if (z.signum() == 0 || P.isZero()) {
             return z.compareTo(P.z) == 0;
         }
-        BigInteger p = E.sms.p; // shorthand
+        BigInteger p = E.sms.getP(); // shorthand
         BigInteger
             z2 = z.multiply(z).mod(p),
             z3 = z.multiply(z2).mod(p),
@@ -346,7 +346,7 @@ public class SMSPoint {
         if (Q.isZero()) {
             return this;
         }
-        BigInteger p = E.sms.p; // shorthand
+        BigInteger p = E.sms.getP(); // shorthand
         BigInteger t1, t2, t3, t4, t5, t6, t7, t8;
         t1 = x;
         t2 = y;
@@ -407,7 +407,7 @@ public class SMSPoint {
         t1 = x;
         t2 = y;
         t3 = z;
-        BigInteger p = E.sms.p; // shorthand
+        BigInteger p = E.sms.getP(); // shorthand
         while (n-- > 0) {
             if (t2.signum() == 0 || t3.signum() == 0) {
                 return E.O;
@@ -523,7 +523,7 @@ public class SMSPoint {
      * @return  this point converted to a byte array using the algorithm defined in section 4.3.6 of ANSI X9.62
      */
     public byte[] toByteArray(int formFlags) {
-		int len = (E.sms.p.bitLength() + 7)/8;
+		int len = (E.sms.getP().bitLength() + 7)/8;
         byte[] buf;
         int resLen = 1, pc = 0;
         SMSPoint P = this.normalize();

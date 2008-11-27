@@ -163,7 +163,7 @@ public class SMSPoint2 {
 	            throw new IllegalArgumentException(pointNotOnCurve); // otherwise the cryptographic subgroup order would not be prime, or the point would be in a small (weak) subgroup
 	        }
 	        if ((pc & EXPANDED) != 0) {
-				int len = (sms.p.bitLength() + 7)/8;
+				int len = (sms.getP().bitLength() + 7)/8;
 	        	this.y = new SMSField2(sms, os, 1 + 2*len);
 	        } else {
 		        boolean yBit = (pc & 1) != 0;

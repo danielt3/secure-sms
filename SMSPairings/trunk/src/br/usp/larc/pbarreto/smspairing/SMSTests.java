@@ -218,7 +218,7 @@ public class SMSTests {
     public void doTest2(int iterations, SecureRandom rand, boolean verbose) {
         SMSPoint2 w, x, y, z, ecZero;
         BigInteger m, n;
-        int numBits = prototype2.E.sms.p.bitLength();
+        int numBits = prototype2.E.sms.getP().bitLength();
         long totalElapsed = -System.currentTimeMillis();
         for (int i = 0; i < iterations; i++) {
             if (verbose) {
@@ -507,15 +507,15 @@ public class SMSTests {
             System.out.println("Elapsed time: " + (float)elapsed/BM + " ms.");
             //*/
             //*
-	        System.out.println("Benchmarking private RSA-" + 4*sms.p.bitLength());
-	        BigInteger p = BigInteger.probablePrime(2*sms.p.bitLength(), rnd);
-	        BigInteger q = BigInteger.probablePrime(2*sms.p.bitLength(), rnd);
+	        System.out.println("Benchmarking private RSA-" + 4*sms.getP().bitLength());
+	        BigInteger p = BigInteger.probablePrime(2*sms.getP().bitLength(), rnd);
+	        BigInteger q = BigInteger.probablePrime(2*sms.getP().bitLength(), rnd);
 	        BigInteger u = q.modInverse(p);
 	        BigInteger n = p.multiply(q);
 	        BigInteger phi = p.subtract(_1).multiply(q.subtract(_1));
 	        BigInteger e = BigInteger.valueOf(65537L);
 	        BigInteger d = e.modInverse(phi);
-	        BigInteger m = new BigInteger(4*sms.p.bitLength(), rnd).mod(n);
+	        BigInteger m = new BigInteger(4*sms.getP().bitLength(), rnd).mod(n);
 	        elapsed = -System.currentTimeMillis();
 	        for (int t = 0; t < BM; t++) {
 	            //m = m.modPow(d, n);
@@ -854,15 +854,15 @@ public class SMSTests {
         System.out.println("Elapsed time: " + (float)elapsed/BM + " ms.");
 
 		////////////////////////////////////////////////////////////////////
-        System.out.println("Benchmarking private RSA-" + 4*sms.p.bitLength());
-        BigInteger p = BigInteger.probablePrime(2*sms.p.bitLength(), rnd);
-        BigInteger q = BigInteger.probablePrime(2*sms.p.bitLength(), rnd);
+        System.out.println("Benchmarking private RSA-" + 4*sms.getP().bitLength());
+        BigInteger p = BigInteger.probablePrime(2*sms.getP().bitLength(), rnd);
+        BigInteger q = BigInteger.probablePrime(2*sms.getP().bitLength(), rnd);
         BigInteger u = q.modInverse(p);
         BigInteger n = p.multiply(q);
         BigInteger phi = p.subtract(_1).multiply(q.subtract(_1));
         BigInteger e = BigInteger.valueOf(65537L);
         BigInteger d = e.modInverse(phi);
-        BigInteger m = new BigInteger(4*sms.p.bitLength(), rnd).mod(n);
+        BigInteger m = new BigInteger(4*sms.getP().bitLength(), rnd).mod(n);
         elapsed = -System.currentTimeMillis();
         for (int t = 0; t < BM; t++) {
             //m = m.modPow(d, n);
@@ -876,7 +876,7 @@ public class SMSTests {
         System.out.println("Elapsed time: " + (float)elapsed/BM + " ms.");
 
 		////////////////////////////////////////////////////////////////////
-        System.out.println("Benchmarking public RSA-" + 4*sms.p.bitLength());
+        System.out.println("Benchmarking public RSA-" + 4*sms.getP().bitLength());
         elapsed = -System.currentTimeMillis();
         for (int t = 0; t < BM; t++) {
             m = m.modPow(e, n);
@@ -1064,11 +1064,12 @@ public class SMSTests {
     	/*
     	int iterations = 1;// 100;
     	BDCPS(127, iterations);
-    	BDCPS(160, iterations);
-    	//*/
+        */
+    	BDCPS(176, 1);
+    	
     	
     	//BDCPSTest(127);
-    	BDCPSTest(176);
+    	//BDCPSTest(176);
     	//*/
     }
 

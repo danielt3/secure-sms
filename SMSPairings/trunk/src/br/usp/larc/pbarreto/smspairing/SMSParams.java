@@ -52,7 +52,7 @@ public class SMSParams {
     /**
      * Size of the underlying finite field GF(p)
      */
-    BigInteger p;
+    private BigInteger p;
 
     /**
      * Trace of the Frobenius endomorphism
@@ -459,7 +459,7 @@ public class SMSParams {
             sigma = p.subtract(sigma);
             System.out.println("sigma@" + fieldBits + " = " + sigma);
         }
-        sqrtI = new SMSField2(this, sigma, p.subtract(sigma), false); // sqrt(i) = (1-i)*sigma
+        sqrtI = new SMSField2(this, sigma, getP().subtract(sigma), false); // sqrt(i) = (1-i)*sigma
     }
 
     /**
@@ -478,9 +478,9 @@ public class SMSParams {
         if (v.signum() == 0) {
             return _0;
         }
-        BigInteger r = v.modPow(sqrtExponent, p); // r = v^{(p + 1)/4}
+        BigInteger r = v.modPow(sqrtExponent,getP()); // r = v^{(p + 1)/4}
         // test solution:
-        return r.multiply(r).subtract(v).mod(p).signum() == 0 ? r : null;
+        return r.multiply(r).subtract(v).mod(getP()).signum() == 0 ? r : null;
     }
 
 	private void setN(BigInteger n) {
@@ -490,5 +490,14 @@ public class SMSParams {
 	public BigInteger getN() {
 		return n;
 	}
+
+    public
+
+    /**
+     * Size of the underlying finite field GF(p)
+     */
+    BigInteger getP() {
+        return p;
+    }
 
 }

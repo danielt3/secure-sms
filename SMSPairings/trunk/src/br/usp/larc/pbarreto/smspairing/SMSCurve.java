@@ -124,9 +124,9 @@ public class SMSCurve {
             x  = P.x,
             y  = P.y,
             z  = P.z,
-            z2 = z.multiply(z).mod(sms.p),
-            br = sms.b.multiply(z2).subtract(_3.multiply(x)).mod(sms.p);
-        return x.multiply(x).multiply(x).add(br.multiply(z2).multiply(z2)).subtract(y.multiply(y)).mod(sms.p).signum() == 0;
+            z2 = z.multiply(z).mod(sms.getP()),
+            br = sms.b.multiply(z2).subtract(_3.multiply(x)).mod(sms.getP());
+        return x.multiply(x).multiply(x).add(br.multiply(z2).multiply(z2)).subtract(y.multiply(y)).mod(sms.getP()).signum() == 0;
     }
 
     /**
@@ -158,6 +158,6 @@ public class SMSCurve {
     //*/
 
     public String toString() {
-        return "MNT4(F_" + sms.p + "): y^2 = x^3 - 3x + " + sms.b;
+        return "MNT4(F_" + sms.getP() + "): y^2 = x^3 - 3x + " + sms.b;
     }
 }

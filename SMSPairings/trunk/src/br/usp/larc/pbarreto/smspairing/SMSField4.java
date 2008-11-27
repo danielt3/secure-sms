@@ -413,7 +413,7 @@ public class SMSField4 {
 		if (!norm2().isOne()) {
             throw new IllegalArgumentException(elementNotOnTorus);
 		}
-		int len = (sms.p.bitLength() + 7)/8;
+		int len = (sms.getP().bitLength() + 7)/8;
 		//System.out.println("byte length = " + len);
         byte[] buf = new byte[1 + 2*len];
         for (int i = 0; i < buf.length; i++) {

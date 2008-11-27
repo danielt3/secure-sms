@@ -66,8 +66,8 @@ public class SMSField2 {
     SMSField2(SMSParams sms, BigInteger re, BigInteger im, boolean reduce) {
         this.sms = sms;
         if (reduce) {
-            this.re = re.mod(sms.p);
-            this.im = im.mod(sms.p);
+            this.re = re.mod(sms.getP());
+            this.im = im.mod(sms.getP());
         } else {
             this.re = re;
             this.im = im;
@@ -76,14 +76,14 @@ public class SMSField2 {
 
 	public SMSField2(SMSParams sms, byte[] compressed, int offset) {
         this.sms = sms;
-		int len = (sms.p.bitLength() + 7)/8;
+		int len = (sms.getP().bitLength() + 7)/8;
 		byte[] vre = new byte[1 + len];
 		byte[] vim = new byte[1 + len];
 		vre[0] = vim[0] = 0;
 		System.arraycopy(compressed, offset,       vre, 1, len);
 		System.arraycopy(compressed, offset + len, vim, 1, len);
-        this.re = (new BigInteger(vre)).mod(sms.p);
-        this.im = (new BigInteger(vim)).mod(sms.p);
+        this.re = (new BigInteger(vre)).mod(sms.getP());
+        this.im = (new BigInteger(vim)).mod(sms.getP());
 	}
 
     public boolean isZero() {
@@ -108,14 +108,14 @@ public class SMSField2 {
      * -(x + yi)
      */
     public SMSField2 negate() {
-        return new SMSField2(sms, (re.signum() == 0) ? re : sms.p.subtract(re), (im.signum() == 0) ? im : sms.p.subtract(im), false);
+        return new SMSField2(sms, (re.signum() == 0) ? re : sms.getP().subtract(re), (im.signum() == 0) ? im : sms.getP().subtract(im), false);
     }
 
     /**
      * (x + yi)^p = x - yi
      */
     public SMSField2 conjugate() {
-        return new SMSField2(sms, re, (im.signum() == 0) ? im : sms.p.subtract(im), false);
+        return new SMSField2(sms, re, (im.signum() == 0) ? im : sms.getP().subtract(im), false);
     }
 
     /*
@@ -129,20 +129,20 @@ public class SMSField2 {
             throw new IllegalArgumentException(differentFields);
         }
         BigInteger r = re.add(v.re);
-        if (r.compareTo(sms.p) >= 0) {
-            r = r.subtract(sms.p);
+        if (r.compareTo(sms.getP()) >= 0) {
+            r = r.subtract(sms.getP());
         }
         BigInteger i = im.add(v.im);
-        if (i.compareTo(sms.p) >= 0) {
-            i = i.subtract(sms.p);
+        if (i.compareTo(sms.getP()) >= 0) {
+            i = i.subtract(sms.getP());
         }
         return new SMSField2(sms, r, i, false);
     }
 
     public SMSField2 add(BigInteger v) {
         BigInteger s = re.add(v);
-        if (s.compareTo(sms.p) >= 0) {
-            s = s.subtract(sms.p);
+        if (s.compareTo(sms.getP()) >= 0) {
+            s = s.subtract(sms.getP());
         }
         return new SMSField2(sms, s, im, false);
     }
@@ -153,11 +153,11 @@ public class SMSField2 {
         }
         BigInteger r = re.subtract(v.re);
         if (r.signum() < 0) {
-            r = r.add(sms.p);
+            r = r.add(sms.getP());
         }
         BigInteger i = im.subtract(v.im);
         if (i.signum() < 0) {
-            i = i.add(sms.p);
+            i = i.add(sms.getP());
         }
         return new SMSField2(sms, r, i, false);
     }
@@ -165,7 +165,7 @@ public class SMSField2 {
     public SMSField2 subtract(BigInteger v) {
         BigInteger r = re.subtract(v);
         if (r.signum() < 0) {
-            r = r.add(sms.p);
+            r = r.add(sms.getP());
         }
         return new SMSField2(sms, r, im, false);
     }
@@ -175,12 +175,12 @@ public class SMSField2 {
         BigInteger i = im;
         while (k-- > 0) {
             r = r.shiftLeft(1);
-            if (r.compareTo(sms.p) >= 0) {
-                r = r.subtract(sms.p);
+            if (r.compareTo(sms.getP()) >= 0) {
+                r = r.subtract(sms.getP());
             }
             i = i.shiftLeft(1);
-            if (i.compareTo(sms.p) >= 0) {
-                i = i.subtract(sms.p);
+            if (i.compareTo(sms.getP()) >= 0) {
+                i = i.subtract(sms.getP());
             }
         }
         return new SMSField2(sms, r, i, false);
@@ -188,8 +188,8 @@ public class SMSField2 {
 
     public SMSField2 halve() {
         return new SMSField2(sms,
-            (re.testBit(0) ? re.add(sms.p) : re).shiftRight(1),
-            (im.testBit(0) ? im.add(sms.p) : im).shiftRight(1),
+            (re.testBit(0) ? re.add(sms.getP()) : re).shiftRight(1),
+            (im.testBit(0) ? im.add(sms.getP()) : im).shiftRight(1),
             false);
     }
 
@@ -242,7 +242,7 @@ public class SMSField2 {
      * (x + yi)^{-1} = (x - yi)/(x^2 + y^2)
      */
     public SMSField2 inverse() throws ArithmeticException {
-        BigInteger d = re.multiply(re).add(im.multiply(im)).modInverse(sms.p);
+        BigInteger d = re.multiply(re).add(im.multiply(im)).modInverse(sms.getP());
         return new SMSField2(sms, re.multiply(d), im.multiply(d).negate(), true);
     }
 
@@ -250,7 +250,7 @@ public class SMSField2 {
      * (x + yi)i = (-y + ix)
      */
     public SMSField2 multiplyI() {
-        return new SMSField2(sms, (im.signum() == 0) ? im : sms.p.subtract(im), re, false);
+        return new SMSField2(sms, (im.signum() == 0) ? im : sms.getP().subtract(im), re, false);
     }
 
     /**
@@ -259,27 +259,27 @@ public class SMSField2 {
     public SMSField2 multiplyV() {
         BigInteger r = re.subtract(im);
         if (r.signum() < 0) {
-            r = r.add(sms.p);
+            r = r.add(sms.getP());
         }
         BigInteger i = re.add(im);
-        if (i.compareTo(sms.p) >= 0) {
-            i = i.subtract(sms.p);
+        if (i.compareTo(sms.getP()) >= 0) {
+            i = i.subtract(sms.getP());
         }
         return new SMSField2(sms, r, i, false);
     }
 
     public SMSField2 divideV() {
         BigInteger qre = re.add(im);
-        if (qre.compareTo(sms.p) >= 0) {
-            qre = qre.subtract(sms.p);
+        if (qre.compareTo(sms.getP()) >= 0) {
+            qre = qre.subtract(sms.getP());
         }
         BigInteger qim = im.subtract(re);
         if (qim.signum() < 0) {
-            qim = qim.add(sms.p);
+            qim = qim.add(sms.getP());
         }
         return new SMSField2(sms,
-            (qre.testBit(0) ? qre.add(sms.p) : qre).shiftRight(1),
-            (qim.testBit(0) ? qim.add(sms.p) : qim).shiftRight(1),
+            (qre.testBit(0) ? qre.add(sms.getP()) : qre).shiftRight(1),
+            (qim.testBit(0) ? qim.add(sms.getP()) : qim).shiftRight(1),
             false);
     }
 
@@ -342,7 +342,7 @@ public class SMSField2 {
     }
 
 	public byte[] toByteArray() {
-		int len = (sms.p.bitLength() + 7)/8;
+		int len = (sms.getP().bitLength() + 7)/8;
 		//System.out.println("byte length = " + len);
         byte[] buf = new byte[2*len];
         for (int i = 0; i < buf.length; i++) {

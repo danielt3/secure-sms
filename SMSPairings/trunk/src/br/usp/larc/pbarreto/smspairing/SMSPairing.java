@@ -50,7 +50,7 @@ public class SMSPairing {
 
     SMSField4 gl(SMSPoint V, SMSPoint P, SMSPoint A, SMSPoint2 Q) {
         BigInteger n, d;
-        BigInteger p = sms.p;
+        BigInteger p = sms.getP();
         if (V.isZero() || P.isZero() || Q.isZero() || V.opposite(P)) {
             return sms.Fp4_1;
         }
@@ -74,7 +74,7 @@ public class SMSPairing {
         }
         // lambda = n/d
         //n*(Qt[1]/(1+i) - V.x) + d*(V.y - z*Qt[2]/(1+i)^3);
-        SMSField2 re = Q.x.divideV().multiply(Vz3.multiply(n)).add(V.y.multiply(d).subtract(V.x.multiply(V.z).multiply(n)).mod(sms.p));
+        SMSField2 re = Q.x.divideV().multiply(Vz3.multiply(n)).add(V.y.multiply(d).subtract(V.x.multiply(V.z).multiply(n)).mod(sms.getP()));
         SMSField2 im = Q.y.negate().divideV().divideV().multiply(d.multiply(Vz3));
         return new SMSField4(sms, re, im);
     }
