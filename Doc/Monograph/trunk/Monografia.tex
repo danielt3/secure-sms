@@ -13,7 +13,7 @@
 \usepackage{url}
 \usepackage{winfonts}
 \usepackage{txfonts}
-%\usepackage{tabela-simbolos}
+\usepackage{tabela-simbolos}
 
 \fontfamily{arial}\selectfont
 \renewcommand{\rmdefault}{arial}
@@ -31,6 +31,8 @@
 \renewcommand{\bibname}{Refer\^encias} % adaptação para ABNT/EPUSP
 
 %\autorPoli{Eduardo}{Cruz}
+
+%Gambis para definir múltiplos autores
 \autor{\uppercase{Eduardo de Souza Cruz
 	\\Geovandro Carlos Crepaldi Firmino Pereira
 	\\Rodrigo Rodrigues da Silva}}
@@ -89,7 +91,7 @@
 %	\\Pereira, Geovandro Carlos Crepaldi Firmino
 %	\\Silva, Rodrigo Rodrigues}}%
 
-%TODO: porque ocorre 3 erros?
+%TODO: porque ocorre 3 erros? Mas compila...
 %\fichacatalografica % formata a ficha
 
 \paginadedicatoria{}
@@ -106,7 +108,8 @@ Este trabalho consiste na especificação e implementação de um sistema que garant
 
 \begin{abstract}
 %TODO
-This work consists...
+This work consists in the specification and implementation of a system which is able to guarantee security services while exchanging SMS between
+
 \end{abstract}
 
 \tableofcontents
@@ -114,6 +117,18 @@ This work consists...
 \listoffigures
 
 \listoftables
+
+%TODO: \sigla não funciona!!!
+%To fazendo a lista de siglas na mão... consertar depois talvez
+\listadesiglas{
+\begin{center}
+\textbf{SMS} - Short Message Service
+
+%TODO: acrescentar as siglas aqui
+%Existe uma norma, acho que é pra por na ordem de aparição no texto... ou em ordem alfabética.. não sei, TODO: confirmar nas diretrizes
+\end{center}
+}
+
 
 \chapter{Introdução}
 Atualmente não existem soluções universalmente adotadas para garantir segurança em mensagens SMS. Pelo método tradicional, as mensagens trafegam pela rede celular de forma insegura, passando obrigatoriamente por pelo menos um intermediário não 100\% confiável: a operadora do serviço de telefonia. As mensagens podem ficar armazenadas em texto plano no banco de dados da operadora \cite{loon}, de forma que pessoas mal intencionadas infiltradas no sistema podem ser capazes de visualizar, alterar e até enviar mensagens em nome de outra pessoa. Há também outros métodos para interceptar mensagens SMS. \cite{smsanalysis}. %TODO: quais métodos??? Tá mto pobre isso!
