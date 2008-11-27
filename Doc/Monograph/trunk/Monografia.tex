@@ -145,51 +145,108 @@ O que nosso sistema garante é.... %TODO
 
 Problemas como... etc etc etc... não são de nossa responsabilidade... etc etc etc... %TODO
 
-\section{Metodologia}
-%Alguém faz ae... Não sei o que escrever aqui... sacrificar talvez?
-
 \section{Métricas}
 
 A seguir, definimos as métricas desejadas. % e suas limitações.
 
 \begin{itemize}
 
+\item Nível de segurança: Desejamos que o nível de segurança de nosso protocolo seja equiparável ao nível de segurança do RSA usando chaves de 1024 bits, que pode ser calculado como  2 a 1024. %TODO: fix essa gambi, e citar
+
 \item Tempo de espera: Consiste nos tempos para cifrassinar e vericifrar uma mensagem. Baseando-se em aplicações já existentes e satisfazendo os requisitos de usabilidade de nosso projeto, estimamos que um intervalo de espera para processamento de uma mensagem de no máximo 5 segundos seja tolerável pelo usuário.
 
-\item Tamanho máximo da mensagem: Consiste da soma dos bytes úteis da mensagem com os bytes de controle do algoritmo. Implementações SMS baseadas em \emph{Sun Wireless Messaging API (WMA)} podem dividir uma única mensagem em, no máximo, 3 segmentos. Recomenda-se que as aplicações SMS utilizem mensagens com menos de 399 bytes binários de modo a não comprometer sua portabilidade \cite{ortiz}. Desse modo, estabelecemos um tamanho máximo de 399 bytes para as mensagens transmitidas, sendo este espaço compartilhado entre os dados de controle do algoritmo criptográfico utilizado e a mensagem criptografada em si.
-%TODO: 399 ? É 140, não? Definir direito isso !
+\item Tamanho máximo de mensagens do protocolo: Consiste da soma dos bytes úteis da mensagem com os bytes de controle do algoritmo. Implementações SMS baseadas em \emph{Sun Wireless Messaging API (WMA)} podem dividir uma única mensagem em, no máximo, 3 segmentos, totalizando 399 bytes binários \cite{ortiz}. Porém para evitar problemas devido à segmentação, decidimos que as mensagens do nosso protocolo deverão caber em apenas 1 segmento, o que nos dá um tamanho de 140 bytes binários para cada mensagem do protocolo.
 
-\item Tamanho das chaves privada/pública e da assinatura: Devido às limitações de espaço de armazenamento das mensagens, estabeleceu-se que a assinatura de uma mensagem, bem como a chave privada do usuário, não deveriam exceder 200 bits. No entanto, essa restrição não deveria comprometer os requisitos de segurança do sistema.
+\item Tamanho das chaves privada/pública: Devido às limitações de banda, estabeleceu-se que cada o tamanho chave usada não deverá exceder 200 bits. No entanto, essa restrição não deve comprometer o nível de segurança desejado.
+
+\item Tamanho máximo de uma mensagem de texto a ser cifrassinada e enviada: Uma mensagem cifrassinada deverá caber em uma única mensagem do protocolo, cujo tamanho máixmo foi defindo em 140 bytes. Porém nem todos os bytes poderão ser usados para a mensagem, pois existirá um overhead do protocolo, devido à cabeçalhos e dados da assinatura. Estabelecemos então um tamanho máximo de 70 bytes para uma mensagem de texto. Desta forma, ficam reservados outros 70 bytes para o overhead e a assinatura.
+
+\item Tamanho do certificado: Devido às limitações de banda, estabeleceu-se que o tamanho do certificado de uma chave não deverá exceder 512 bits. Desejamos poder transferir o certificado em um único SMS, sem comprometer o espaço necessário para o overhead do protocolo. \footnote{Mais tarde o leitor verá que optamos por um esquema que não usa certificados, ou seja, esta métrica será atendida com 0 bits de tamanho de certificado}
 
 \end{itemize}
+
+\chapter{Discussão}
 
 %TODO: aqui ta tudo igual ao paper... alterar, enriquecer!
 Sabendo que um certificado digital típico ocupa entre 2KB e 4KB, nota-se aqui que uma solução baseada em infra-estrutura convencional de chaves públicas inviabilizaria completamente o sistema: antes de se enviar uma mensagem SMS segura para algum usuário, seria necessário receber o certificado desse usuário particionado em 15 a 30 mensagens SMS, além de enviar em resposta outro certificado em mais 15 a 30 mensagens SMS. Esse esforço precisaria ser efetuado novamente para cada novo destinatário a quem determinado usuário desejasse enviar mensagens, ou em cada caso de renovação ou revogação de certificado. Some-se a isto o espaço ocupado por uma única assinatura convencional, tipicamente de 128 bytes por estar baseada no algoritmo RSA com 1024 bits; este \emph{overhead} seria duplicado com o requisito de cifrar e assinar a mensagem, isto é, tomaria 256 bytes do espaço disponível. 
 
 Por outro lado, a manutenção de um diretório confiável de chaves públicas, típico de sistemas de criptografia convencionais, seria impraticável em uma rede de telefonia celular.  Uma solução tecnológica baseada em alternativas à criptografia convencional é, portanto, imprescindível.
 
-Sendo assim, foi considerado o uso de criptografia com assinatura baseada em identidades, de acordo com o conceito proposto inicialmente por Shamir \cite{shamir}. Aprofundando-se na especificação, percebeu-se ainda que a chave pública do usuário poderia ser estabelecida essencialmente a partir de sua identificação única no sistema, ou seja, seu próprio número de celular. Desse modo, a criptografia baseada em identidades com emparelhamentos bilineares parecia atender aos requisitos do nosso aplicativo e foi inicialmente adotada na solução do projeto.
+Sendo assim, foi considerado o uso de criptografia em curvas elípticas com assinatura baseada em identidades, de acordo com o conceito proposto inicialmente por Shamir \cite{shamir}. Aprofundando-se na especificação, percebeu-se ainda que a chave pública do usuário poderia ser estabelecida essencialmente a partir de sua identificação única no sistema, ou seja, seu próprio número de celular. Desse modo, a criptografia em curvas elípticas baseada em identidades com emparelhamentos bilineares parecia ser capaz de atender aos requisitos do nosso aplicativo.%. e foi inicialmente adotada na solução do projeto.
 
-\chapter{Discussão}
-\section{Preliminares teóricas}% (assunto geral: curvas elípticas, emparelhamento, protocolos, conceitos, etc)
+\chapter{Preliminares teóricas}% (assunto geral: curvas elípticas, emparelhamento, identidadesz protocolos, conceitos, etc)
+
+\section{Curvas Elítpticas}
+%Geovs coloque sua seção aqui...
+\section{Emparelhamento}
+%Dar uma introdução do que é emparalhamento, apresentar os emparelhamentos ATE e ETA
+\section{Criptografia baseada em identidades}
+%Explicar o que é isso para um leitor leigo
 \section{Alternativas existentes}% (RSA, coisas mobile)
+%Não sei o que escrever aqui... sacrificar???
 \section{Revisão literatura} %????
-\chapter{MIOLO}
+%Hein? Que isso? Sacrificar talvez...
 
-%Mais coisas aqui no meio... descrever o bdcps, o projeto, etc} 
-%Descrever alternativas fracassadas, BLMQ
-%Descrever problemas que tivemos
-%Falar dos problemas com operadoras
-%Modelo de negócio (vale a pena) ?
 
-\chapter{Modelos}%, justificar o sistema (???)
+\chapter{Escolha de um esquema criptográfico adequado}
+%Explicar aqui que analisamos os seguintes candidatos.
+\section{BLMQ}
+\subsection{Definições}
+%Definir o algoritmo
+\subsection{Testes de viabilidade}
+%Tabelinha de testes preliminares, mostrar que não satisfazia os requisitos de tempo,
+%falar de tentativas de resolver os problemas, alguns sucessos e alguns fracassos
+\section{BDCPS}
+%Falar aqui que o Barreto inventou o novo algoritmo, que publicou o SBSEG
+\subsection{Definições}
+%Definir o algoritmo
+\subsection{Testes de viabilidade}
+%Tabelinha de testes preliminares, mostrar que ficou bonzão!
+\section{Conclusão} %TODO: mudar o nome dessa subseção, Conclusão é muito ambíguo
+%Falar que escolhemos o BDCPS e trabalharemos com ele daqui pra frente
+
+\chapter{Especificação do sistema}
+
+\section{Requisitos funcionais}
+%Copiar do doc velho, mas adaptando bastantes às mudanças
+\section{Requisitos não-funcionais}
+%Copiar do doc velho, mas adaptando bastantes às mudanças
+\section{Arquitetura}
+%Diag de arquitetura, pequenas considerações, seção bem curta
+\section{Classes}
+%Diag de classes aqui, e descrição das classes
+\section{Casos de uso}
+%Diag de casos de uso, e descrição do fluxo
+\section{Especificação do protocolo}
+%Falar das nossas primitivas, como é feita serialização dos bytes em cada mensagem, etc
+%Deixa que eu faço (Eduardo)
+
+
+\chapter{Implementação}
+
+\section{Metodologia}
+%TODO: Alguém faz ae... Não sei o que escrever aqui... sacrificar talvez?
+\section{Ambiente de desenvolvimento}
+%Netbeans, Wireless ToolKit, 
+\section{Bibliotecas usadas}
+%FLoggy, BouncyCastle, SMSPairings do Barreto
+\section{Problemas encontrados}
+%Falar dos problemas encontrados nesta etapa
+
+
+%TODO: pitanga o que é isso de modelos?
+%\chapter{Modelos}%, justificar o sistema
+%Seria isso modelo de negócio? (vale a pena por na monografia)?
+
 \chapter{Resultados}% (tabelas, etc, os objetivos foram alcançados? Testes, benchmarks)
-\chapter{Conclusão}
-\section{Analisar resultados}
-\section{Possíveis desenvolvimentos futuros}% (ordenar artigos)
+\section{Desempenho}
+%tabelas com os nossos tempos
 
-%Referências já é incluído automáticamente no final
-%\chapter{Referências}% (falar q gerou artigo e menção honrosa)
+\chapter{Conclusão}
+%Falar aqui do WTICG? 
+\section{Análise dos resultados}
+%Falar que os resultados foram muito bons, funcionou bem
+\section{Possíveis desenvolvimentos futuros}% (ordenar artigos) ????
 
 \bibliography{Monografia}
 
