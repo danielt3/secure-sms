@@ -69,7 +69,7 @@ public abstract class BDCPSImpl implements BDCPS{
 
 	protected Logger logger;
 	
-	private static final int LOG_MODE = 5;
+	private static final int LOG_MODE = 0;
 
 
 	/*   #### Protocol Algorithms #### */
@@ -244,32 +244,31 @@ public abstract class BDCPSImpl implements BDCPS{
 		BigInteger u = randomBigInteger();
 		SMSField4  r = y_B.exp(u);
 		
-		logger.debug("\nBegin signcryption:");
-		logger.debug("r before signcrypt: " + r);
-		logger.debug("Message before signcrypt: " + new String(message));
-		logger.debug("Message before signcrypt: " + BDCPSUtil.printByteArray(message));
+		//logger.debug("\nBegin signcryption:");
+		//logger.debug("r before signcrypt: " + r);
+		//logger.debug("Message before signcrypt: " + new String(message));
+		//logger.debug("Message before signcrypt: " + BDCPSUtil.printByteArray(message));
 		
 		byte[] c = new byte[message.length];
 		c = BDCPSUtil.h2(r, message, "ENC");
 		
-		logger.debug("\nTry to get the message back:");
+		//logger.debug("\nTry to get the message back:");
 		byte b[] = new byte[message.length];
 		b = BDCPSUtil.h2(r, c, "DEC");
-		logger.debug("Message before getback: " + new String(b));
-		logger.debug("Message before getback: " + BDCPSUtil.printByteArray(b));
+		//logger.debug("Message before getback: " + new String(b));
+		//logger.debug("Message before getback: " + BDCPSUtil.printByteArray(b));
 		String m_str = new String (message);
 		String b_str = new String (b);		
 		if( b_str.equals(m_str)) logger.debug("Mensagens iguais.");
-		else 
-			logger.debug("Problema no AES");
-		logger.debug("\n");
+		else logger.debug("Problema no AES");
+		//logger.debug("\n");
 		
 		BigInteger h = BDCPSUtil.h3(r, message, y_A, senderId, y_B, receiverId, sms.getN());
 		BigInteger z = u.subtract(x_A.multiply(h)).mod(sms.getN());
 		
-		logger.debug("Ciphertext after signcrypt: " + BDCPSUtil.printByteArray(c));
-		logger.debug("h after signcrypt: " + h.toString());
-		logger.debug("z after signcrypt: " + z.toString());
+		//logger.debug("Ciphertext after signcrypt: " + BDCPSUtil.printByteArray(c));
+		//logger.debug("h after signcrypt: " + h.toString());
+		//logger.debug("z after signcrypt: " + z.toString());
 
 		byte[][] cryptogram = new byte[3][];
 		cryptogram[0] = c;
@@ -301,26 +300,26 @@ public abstract class BDCPSImpl implements BDCPS{
 	throws InvalidMessageException, CipherException {
 		SMSField4 r = y_A.fastSimultaneous(h.multiply(x_A).mod(sms.getN()), z, y_B);
 		
-		logger.debug("\nBegin unsigncryption:");
-		logger.debug("r before unsigncrypt: " + r);
-		logger.debug("Ciphertext before unsigncrypt: " + BDCPSUtil.printByteArray(c));
-		logger.debug("h before unsigncrypt: " + h.toString());
-		logger.debug("z before unsigncrypt: " + z.toString());
+		//logger.debug("\nBegin unsigncryption:");
+		//logger.debug("r before unsigncrypt: " + r);
+		//logger.debug("Ciphertext before unsigncrypt: " + BDCPSUtil.printByteArray(c));
+		//logger.debug("h before unsigncrypt: " + h.toString());
+		//logger.debug("z before unsigncrypt: " + z.toString());
 		
 		byte[] m = BDCPSUtil.h2(r, c, "DEC");
 		BigInteger v = BDCPSUtil.h3(r, m, y_A, ID_A, y_B, ID_B, sms.getN());
 		
-		logger.debug("v after unsigncrypt: " + v.toString());
+		//logger.debug("v after unsigncrypt: " + v.toString());
 		
 		if (v.compareTo(h) != 0) {
 			
-			logger.debug("The failed message is: " + new String(m));
-			logger.debug("The failed message is: " + BDCPSUtil.printByteArray(m));
+			//logger.debug("The failed message is: " + new String(m));
+			//logger.debug("The failed message is: " + BDCPSUtil.printByteArray(m));
 			
 			throw new InvalidMessageException("BDCPS: Invalid message!", new String(m));
 		}
-		logger.debug("Message after unsigncrypt: " + new String(m));
-		logger.debug("Message after unsigncrypt: " + BDCPSUtil.printByteArray(m));
+		//logger.debug("Message after unsigncrypt: " + new String(m));
+		//logger.debug("Message after unsigncrypt: " + BDCPSUtil.printByteArray(m));
 		return m;
 
 	}

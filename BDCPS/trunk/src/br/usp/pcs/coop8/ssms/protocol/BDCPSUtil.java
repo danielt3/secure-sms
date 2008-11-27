@@ -196,7 +196,6 @@ public class BDCPSUtil {
 
 
         ret = new byte[data.length];
-        System.out.println("!!! Meu ret tem: " + ret.length + " bytes =)");
         //cipher.doFinal(data, 0, data.length, ret, 0);
 
         int numberOfBlocks = data.length / cipher2.getBlockSize();
