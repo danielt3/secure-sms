@@ -235,11 +235,11 @@ public class SSMSMain extends MIDlet implements CommandListener {
     public List getListaInicial() {
         if (listaInicial == null) {
             // write pre-init user code here
-            listaInicial = new List("SSMS", Choice.IMPLICIT);
-            listaInicial.append("Primeiro uso", null);
-            listaInicial.append("Autenticar Contato", null);
+            listaInicial = new List("SSMS", Choice.IMPLICIT);            
             listaInicial.append("Enviar torpedo", null);
-            listaInicial.append("Ver mensagens", null);
+            listaInicial.append("Ver mensagens", null);            
+            listaInicial.append("Autenticar Contato", null);
+            listaInicial.append("Primeiro uso", null);
             listaInicial.append("Ver Output", null);
             listaInicial.append("Executar testes", null);
             listaInicial.append("Limpar dados", null);
