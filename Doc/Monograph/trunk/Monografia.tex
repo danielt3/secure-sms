@@ -156,7 +156,12 @@ O objetivo do trabalho é quebrar o paradigma atual, desafiar as dificuldades exi
 
 \section{Escopo}
 %Falar aqui exatamente o que o sistema faz e o que ele não faz! Falar de problemas que existem, mas que ficam fora do nosso escopo.
-O que nosso sistema garante é.... %TODO
+O software a ser desenvolvido será designado por "Sistema de SMS Seguro".
+O objetivo do software é prover uma camada de segurança a nível de aplicação para mensagens SMS em redes de telefonia móvel. O software deverá fornecer alguns serviços básicos de segurança como confidencialidade, integridade e autenticidade das mensagens SMS, permitindo ao usuário assinar, cifrar, decifrar e verificar mensagens enviadas por SMS. As soluções adotadas no projeto envolvem criptografia de chave pública, criptografia baseada em idententidade e também esquemas auto-certificados. Tal adoção deve deve dispensar a existência de um diretório de chaves públicas, uma vez que seria necessário o uso de certificados que ocupam muita banda do abiente restrito utilizado e encarece o processo.
+O software será aplicável em áreas que requeiram segurança da informação que trafega nas redes de telefonia móvel. Alguns exemplos são aplicações militares, bancárias, comunicação pessoal sigilosa e comércio eletrônico. Os principais benefícios do sistema são a sua flexibilidade, podendo ser adaptado às necessidades dos clientes, e leveza, já que sua arquitetura é restrita à camada de aplicação: o software opera sobre a camada de aplicação do modelo OSI, sendo transparente à arquitetura interna da rede móvel. Essas duas qualidades tornam possível sua viabilidade em diversos cenários.
+O Sistema de SMS Seguro não é responsável pela confiabilidadee e disponibilidade de entrega das mensagens independente de sua natureza, essa função é de responsabilidade do fornecedor da aplicação que utiliza o protocolo, no caso de mensagens SMS a responsabilidade de entrega será da operadora telefônica, no caso de serviços de e-mail a responsabilidade de entrega é conferida ao servidor que fornece o serviço, etc.
+Uma outra característica não tratada é a irretratabilidade, ou seja, o sistema não fornece este serviço, porém pode ser feita uma pesquisa de viabilidade futura para tornar possível implemetar o serviço de irretratabilidade.
+
 
 Problemas como... etc etc etc... não são de nossa responsabilidade... etc etc etc... %TODO
 
