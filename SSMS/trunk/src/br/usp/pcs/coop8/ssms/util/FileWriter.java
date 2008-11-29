@@ -33,65 +33,39 @@ import javax.microedition.io.file.FileSystemRegistry;
  */
 public class FileWriter {
 
-    private FileConnection fconn;
     private String filename;
 
     public FileWriter(String filename) {
         this.filename = filename;
     }
 
-    private FileConnection getConnection() {
-        FileConnection fconn = null;
-        try {
-            Enumeration e = FileSystemRegistry.listRoots();
-            String device;
-            if (e.hasMoreElements()) {
-                device = (String) e.nextElement();
-            } else {
-                throw new IOException();
-            }
-            fconn = (FileConnection) Connector.open("file:///" + device + filename);
-            // If no exception is thrown, then the URI is valid, but the file may or may not exist.
-            if (!fconn.exists()) {
-                fconn.create();
-            }  // create the file if it doesn't exist
-
-
-
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-        return fconn;
-    }
-
-    private DataOutputStream getOutputStream() throws IOException {
-        if (fconn == null || !fconn.isOpen()) {
-            fconn = getConnection();
-        }
-        return fconn.openDataOutputStream();
-    }
-
-    public void saveOutput(String content) {
-        final FileWriter _this = this;
+    public void write(final String content) {
         new Thread() {
-
-            private String content;
-
-            public Thread setContent(String content) {
-                this.content = content;
-                return this;
-            }
 
             public void run() {
                 try {
-                    _this.getOutputStream().writeUTF(content);
-                    fconn.close();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+
+                    Enumeration e = FileSystemRegistry.listRoots();
+                    String device;
+                    while (e.hasMoreElements()) {
+
+                        device = (String) e.nextElement();
+
+                        FileConnection fconn = (FileConnection) Connector.open("file:///" + device + filename);
+                        System.out.println("Abriu conexão com: " + "file:///" + device + filename);
+                        // If no exception is thrown, then the URI is valid, but the file may or may not exist.
+                        if (!fconn.exists()) {
+                            fconn.create();
+                        }  // create the file if it doesn't exist
+                        fconn.openDataOutputStream().write(content.getBytes(), 0, content.getBytes().length);
+                        fconn.close();
+                    }
+
+
+                } catch (IOException ioe) {
+                    ioe.printStackTrace();
                 }
             }
-        }.setContent(content).start();
-
-
+        }.start();
     }
 }

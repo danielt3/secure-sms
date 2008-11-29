@@ -34,10 +34,8 @@ import br.usp.pcs.coop8.ssms.protocol.BDCPSClient;
 import br.usp.pcs.coop8.ssms.protocol.BDCPSParameters;
 import br.usp.pcs.coop8.ssms.protocol.exception.CipherException;
 import br.usp.pcs.coop8.ssms.protocol.exception.InvalidMessageException;
-import br.usp.pcs.coop8.ssms.util.FileWriter;
 import br.usp.pcs.coop8.ssms.util.Output;
 import br.usp.pcs.coop8.ssms.util.Util;
-import java.io.IOException;
 import org.bouncycastle.crypto.Digest;
 import org.bouncycastle.crypto.digests.SHA1Digest;
 import pseudojava.BigInteger;
@@ -51,12 +49,12 @@ public class IntegrationTests {
 
     protected static final BigInteger _0 = BigInteger.valueOf(0L),  _1 = BigInteger.valueOf(1L),  _2 = BigInteger.valueOf(2L),  _3 = BigInteger.valueOf(3L),  _4 = BigInteger.valueOf(4L),  _5 = BigInteger.valueOf(5L),  _6 = BigInteger.valueOf(6L);
 
-    public static void testWriteFile() {
+    //public static void testWriteFile() {
 
-        FileWriter fw = new FileWriter("texte.txt");
-        fw.saveOutput("oioi\n");
+    //    FileWriter fw = new FileWriter("testefeliz.txt");
+    //    fw.write("hihi\n");
 
-    }
+    //}
 
     public static void iteractiveTest() {
         int[] validK = {80, 96, 104, 112, 117, 127,

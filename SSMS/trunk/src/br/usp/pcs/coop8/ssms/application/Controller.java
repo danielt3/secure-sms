@@ -18,7 +18,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  */
-
 package br.usp.pcs.coop8.ssms.application;
 
 import br.usp.pcs.coop8.ssms.tests.IntegrationTests;
@@ -34,6 +33,7 @@ import br.usp.pcs.coop8.ssms.protocol.BDCPSClient;
 import br.usp.pcs.coop8.ssms.protocol.BDCPSParameters;
 import br.usp.pcs.coop8.ssms.protocol.exception.CipherException;
 import br.usp.pcs.coop8.ssms.protocol.exception.InvalidMessageException;
+import br.usp.pcs.coop8.ssms.util.FileWriter;
 import br.usp.pcs.coop8.ssms.util.Output;
 import net.sourceforge.floggy.persistence.Filter;
 import net.sourceforge.floggy.persistence.FloggyException;
@@ -126,7 +126,7 @@ public abstract class Controller {
         } catch (FloggyException ex) {
             ex.printStackTrace();
         }
-        
+
         SignupMessage reqMessage = new SignupMessage(yA);
 
         SmsSender.send(myData.getKgbPhone(), reqMessage.getMessageBytes());
@@ -150,7 +150,7 @@ public abstract class Controller {
             sha.reset();
             sha.update(myPrivData.getIdA().getBytes(), 0, myPrivData.getIdA().getBytes().length);
             sha.doFinal(hashDoId, 0);
-            
+
             sha.reset();
             sha.update(myPrivData.getKgbPhone().getBytes(), 0, myPrivData.getKgbPhone().getBytes().length);
             sha.doFinal(hashIdKgb, 0);
@@ -162,32 +162,31 @@ public abstract class Controller {
         bdcps.setPublicValue(myPrivData.getYA());
         byte[] myQa;
         try {
-        myQa =  bdcps.unsigncrypt(new byte[][]{myPrivData.getEncryptedQA_c(),myPrivData.getEncryptedQA_h(),myPrivData.getEncryptedQA_z()}, hashIdKgb, BDCPSParameters.getInstance(Configuration.K).yKgbBytes);
+            myQa = bdcps.unsigncrypt(new byte[][]{myPrivData.getEncryptedQA_c(), myPrivData.getEncryptedQA_h(), myPrivData.getEncryptedQA_z()}, hashIdKgb, BDCPSParameters.getInstance(Configuration.K).yKgbBytes);
         } catch (InvalidMessageException ex) {
             ex.printStackTrace();
             Output.println("Erro, assinatura da KGB é inválida, QA é invalido.");
             //TODO: avisar usuário
             return;
-        }
-        catch (CipherException ex) {
+        } catch (CipherException ex) {
             ex.printStackTrace();
             Output.println("Erro, assinatura da KGB é inválida, QA é invalido.");
             //TODO: avisar 
             return;
         }
-        
+
         if (!bdcps.checkPrivateKey(myQa, myPrivData.getYA(), hashDoId)) {
             Output.println("Erro, recebido QA inválido, não passou no checkPrivateKey. Ignorado.");
             //validar o QA com a fórmula, e avisar usuário caso esteja tudo errado.
             return;
         }
-        
+
         //TUDO OK
         myPrivData.setQA(myQa);
         myPrivData.setEncryptedQA_c(null);
         myPrivData.setEncryptedQA_h(null);
         myPrivData.setEncryptedQA_z(null);
-        
+
         bdcps.setPrivateKey(myPrivData.getQA());
         bdcps.setPublicKey();
         byte[][] pubKey = bdcps.getPublicKey();
@@ -391,16 +390,14 @@ public abstract class Controller {
     }
 
     public static void runTestSuite() {
-        
+
         Output.println("#Begin benchmarks");
-        
-        //Output.println("==Mockup==");
-        //IntegrationTests.mockUpBenchmark();
-        
-        //Output.println("==Implementation==");
-        //IntegrationTests.implBenchmark();
-        //IntegrationTests.iteractiveTest();
-        IntegrationTests.testWriteFile();
+        IntegrationTests.iteractiveTest();
         Output.println("#End benchmarks");
+
+        FileWriter fw = new FileWriter("ssms_output.txt");
+        //fw.write("GAMBI HIHIHI");
+        fw.write(Output.getOutput());
+
     }
 }
