@@ -320,7 +320,7 @@ Por exemplo, seja p um numero primo, e $Fp$ = {0,1,2,...,p-1} denota o conjunto 
 Agora, se $G$ é um grupo finito multiplicativo de ordem $n$ e $g \in G$, então o menor inteiro positivo $t$ tal que $gt = 1$ é chamado de ordem de g; esse t sempre existe e é divisor de n. O conjunto $‹g› = {gi : 0 \leq i \leq t-1}$ de todas as potências de $g$ é ele próprio um grupo sobre a mesma operação como $G$, e é chamado um subgrupo cíclico de $G$ gerado por $G$. Declarações análogas são verdadeiras se $G$ é escrito aditivamente. Assim, a ordem de g   G é o menor divisor positivo $t$ de $n$ tal que $tg = 0$, e $‹g› = {ig : 0 \leq i \leq t-1}$. Aqui, tg denota o elemento obtido por adicionar t cópias de $g$. Se G tem um elemento $g$ de ordem $n$, então $G$ é dito ser um grupo cíclico e $g$ é um gerador de G. Por exemplo, com o os parâmetros do DL ($p$,$q$, $g$) definidos anteriormente, o grupo multiplicativo ($F*p$, \bullet) é um grupo cíclico de ordem p-1. Ademais, $‹g›$ é um subgrupo cíclico de ordem $q$.
 
  
-Grupos em Curvas Elípticas
+\subsection{Grupos em Curvas Elípticas}
 
 Seja p um número primo, e $Fp$ o campo dos inteiros módulo $p$. Uma curva elíptica $E$ sobre $Fp$ é definida por uma equação da forma 
 \begin{equation}
@@ -350,6 +350,25 @@ Agora, há um método bem conhecido para somar 2 pontos numa curva elíptica $P: (x
 \end{figure}
 
 
+A regra de adição requer algumas operações aritméticas (adição, subtração, multiplicação e inversão) in fp com as coordenadas $x1, y1, x2, y2$. Com esta regra de adição, o conjunto dos pontos $E$ ($Fp$) forma um grupo abeliano (aditivo) com $\infty$ servindo como elemento neutro. Subgrupos cíclicos destes grupos sobre curvas elípticas podem ser agora usados para implementar sistemas de logaritmos discretos.
+
+\subsection{Geração de chaves em curva elíptica}
+
+Seja $E$ uma curva elíptica definida sobre o campo finito $Fp$. Seja $P$ um ponto em $E(Fp)$, e suponha que $P$ tenha ordem prima $n$. Então o subgrupo cíclico de $E(Fp)$ gerado por $P$ é 
+
+$‹P› = { \infnt, P, 2P, 3P, …, (n-1)P }.$
+
+O primo $p$, a equação da curva elíptica $E$, e o ponto $P$ e sua ordem $n$, são os parâmetros públicos do domínio. Uma chave privada é um inteiro d que é selecionado uniformemente de forma aleatória no intervalo $[1,n-1]$, e a chave pública correspondente é $Q = dP$.
+O problema de determinar d dados os parâmetros do domínio e Q é o problema do logaritmo discreto em curvas elípticas (ECDLP).
+
+\subsection{Encriptação em curva elíptica}
+
+Uma mensagem m é primeiramente representada como um ponto $M$, e então encriptada somando-se ela a $kQ$, onde $k$ é um inteiro aleatoriamente selecionado, e $Q$ é a chave pública do receptor. O emissor transmite os pontos $C1 = kP$ e $C2 = M + kQ$ para o receptor que usa sua chave privada $d$ para calcular $dC1 = d(kP) = k(dP) = kQ$, e, em seguida, recupera $M = C2 - kQ$. Um agressor que deseja recuperar $M$ precisa calcular $kQ$. Esta tarefa de computar $kQ$ a partir dos parâmetros do domínio, $Q$, e $C1 = kP$, é um problema análogo ao problema de Diffie-Hellman em curvas elípticas.
+
+
+
+
+
 \section{Emparelhamentos Bilineares}
 %Dar uma introdução do que é emparalhamento, apresentar os emparelhamentos ATE e ETA
 \section{Criptografia baseada em identidades}
@@ -361,6 +380,22 @@ Agora, há um método bem conhecido para somar 2 pontos numa curva elíptica $P: (x
 
 
 \chapter{Escolha de um esquema criptográfico adequado}
+
+\subsection{Porque Criptografia baseada em curvas elípticas?}
+
+Há vários critérios que precisam ser considerados ao selecionar-se uma família de esquemas de chave pública para uma determinada aplicação.
+
+Os princípios são:
+\begin{itemize}
+\item Funcionalidade. A família de chave pública fornece as habilidades desejadas?
+\item Segurança. O que garante que os protocolos são seguros?
+\item Eficiência. Para o nível de segurança desejado, os protocolos fornecem os objetivos de eficiência.
+\end{itemize}
+Outros fatores que podem influenciar uma decisão incluem a existência de padrões de melhores práticas desenvolvidos por organizações de padronização confiáveis, a disponibilidade de produtos criptográficos comerciais, coberturas de patentes, e extensão das aplicações existentes.
+As famílias do RSA, do logaritmo discreto e das curvas elípticas introduziram na criptografia de chave pública todas as funcionalidades básicas esperadas - encriptação, assinaturas e troca de chaves.
+Durante os anos, pesquisadores desenvolveram técnicas para modelar e provar a segurança dos protocolos RSA, logaritmo discreto e curvas elípticas sob hipóteses razoáveis. A questão fundamental da segurança que permanece é a dificuldade do problema matemático subjacente que é necessário para a segurança de todos os protocolos em uma família de chave pública - o problema da fatoração inteira para sistemas RSA, o problema do logaritmo discreto para os sistemas baseados em logaritmos discretos e o problema de logaritmo discreto em curvas elípticas em sistemas baseados em curvas elípticas. A dificuldade percebida desses problemas impacta diretamente na eficiência uma vez que ela dita os tamanhos do domínio e dos parâmetros das chaves. Isso, por outro lado, afeta a eficiência das operações aritméticas subjacentes.
+
+
 %Explicar aqui que analisamos os seguintes candidatos.
 \section{BLMQ}
 
