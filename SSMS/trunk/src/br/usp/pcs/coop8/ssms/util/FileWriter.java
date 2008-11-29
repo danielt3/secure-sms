@@ -20,19 +20,12 @@
  */
 package br.usp.pcs.coop8.ssms.util;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.util.Enumeration;
-import javax.microedition.io.Connector;
-import javax.microedition.io.file.FileConnection;
-import javax.microedition.io.file.FileSystemRegistry;
-
 /**
  *
  * @author rodrigo
  */
 public class FileWriter {
-
+/*
     private String filename;
 
     public FileWriter(String filename) {
@@ -67,5 +60,5 @@ public class FileWriter {
                 }
             }
         }.start();
-    }
+    }*/
 }

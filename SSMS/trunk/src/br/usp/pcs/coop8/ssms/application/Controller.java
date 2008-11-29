@@ -395,9 +395,9 @@ public abstract class Controller {
         IntegrationTests.iteractiveTest();
         Output.println("#End benchmarks");
 
-        FileWriter fw = new FileWriter("ssms_output.txt");
+        //FileWriter fw = new FileWriter("ssms_output.txt");
         //fw.write("GAMBI HIHIHI");
-        fw.write(Output.getOutput());
+       // fw.write(Output.getOutput());
 
     }
 }
