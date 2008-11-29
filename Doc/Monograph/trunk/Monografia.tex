@@ -619,12 +619,12 @@ A partir do byte 8, ocorre o armazenamento dinâmico dos parâmetros. É reservado 
 	\item Parâmetro 3: Parâmetro $z$, parte do criptograma.	
 \end{itemize}
 
-\begin{picture}(-10,0)
+\begin{figure}[h]
 	\centering
 		\includegraphics{figuras/hereisyourqamessage.PNG}
 	\caption{HereIsYourQAMessage}	
 	\label{fig:hereisyourqamessage}
-\end{picture}
+\end{figure}
 
 \subsection{AuthenticationMessage}
 Representa a mensagem por onde um usuário envia sua chave pública $y_A$ para um outro usuário. Os parâmetros $h_A$ e $t_A$ também são enviados, pois serão usados pelo outro usuário para validar a chave pública $y_A$ (funcionam quase como um certificado para o $y_A$).
