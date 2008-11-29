@@ -160,11 +160,11 @@ Na figura \ref{fig:Canal_Inseguro}, as entidades A (Alice) e B (Bob) estão se co
 \end{figure}
 
 Por exemplo, A e B poderiam ser 2 pessoas comunicando-se sobre uma rede de telefonia celular, e E está tentando interceptar a comunicação. 
-Ou, ~A poderia ser um web browser de um indivíduo A que está em processo de compra de um produto de uma loja online ~B representada por seu site B. Neste cenário, o canal de comunicação é a Internet. Um agressor E poderia tentar ler o tráfego entre A e B, portanto saber a informação sobre o cartão de crédito de A, ou poderia tentar personificar A ou B na transação. 
-Como um terceiro exemplo, considere a situação onde A está enviando uma mensagem via email para B sobre a internet. Um agressor E poderia tentar ler a mensagem, modificar pedaços selecionados, ou personificar A enviando mensagens dela mesma para B. Finalmente, considere o cenário onde A é um smart card que está em processo de autenticar seu possuidor ~A em um computador mainframe B em uma sala protegida do banco. Aqui, E poderia tentar monitorar as comunicações para obter informações sobre a conta de ~A, ou poderia tentar personificar ~A para sacar fundos da conta de ~A. Deveria ser evidente destes exemplos que uma entidade se comunicando não é necessariamente um humano, mas pode ser um computador, smart card, ou um módulo de software agindo no lugar de um indivíduo ou uma organização tal como uma loja ou um banco.
 
+Ou, $\sim A$ poderia ser um web browser de um indivíduo A que está em processo de compra de um produto de uma loja online $\sim B$ representada por seu site B. Neste cenário, o canal de comunicações é a internet. Um agressor E poderia tentar ler o tráfego entre A e B, portanto saber a informação sobre o cartão de crédito de A, ou poderia tentar personificar A ou B na transação. 
+Como um terceiro exemplo, considere a situação onde A está enviando uma mensagem via email para B sobre a internet. Um agressor E poderia tentar ler a mensagem, modificar pedaços selecionados, ou personificar A enviando mensagens dela mesma para B. Finalmente, considere o cenário onde A é um smart card que está em processo de autenticar seu possuidor $\sim A$ em um computador mainframe B em uma sala protegida do banco. Aqui, E poderia tentar monitorar as comunicações para obter informações sobre a conta de $\sim A$ , ou poderia tentar personificar $\sim A$ para sacar fundos da conta de $\sim A$. Deveria ser evidente destes exemplos que uma entidade se comunicando não é necessariamente um humano, mas pode ser um computador, smart card, ou um módulo de software agindo no lugar de um indivíduo ou uma organização tal como uma loja ou um banco.
 
-O ambiente em questão não se mostra muito propício para práticas criptográficas. A largura de banda é muito pequena, visto que em cada mensagem SMS podem ser trafegados apenas 140 bytes binários. %Citar algo?
+O ambiente em questão não se mostra muito propício para práticas criptográficas. A largura de banda é muito pequena, visto que em cada mensagem SMS podem ser trafegados apenas 140 bytes binários \cite{ortiz}.
 Além disto, existem limitações de processamento no dispositivo celular, que podem comprometer a usabilidade de um esquema criptográfico tradicional.
 
 %TODO: Tirar esse "talvez"! Citar aqui exemplos de soluções existentes e comparar com cenário no início do ano
@@ -213,6 +213,7 @@ A seguir, definimos as métricas desejadas. % e suas limitações.
 \chapter{Discussão}
 
 %TODO: aqui ta tudo igual ao paper... alterar, enriquecer!
+
 Sabendo que um certificado digital típico ocupa entre 2KB e 4KB, nota-se aqui que uma solução baseada em infra-estrutura convencional de chaves públicas inviabilizaria completamente o sistema: antes de se enviar uma mensagem SMS segura para algum usuário, seria necessário receber o certificado desse usuário particionado em 15 a 30 mensagens SMS, além de enviar em resposta outro certificado em mais 15 a 30 mensagens SMS. Esse esforço precisaria ser efetuado novamente para cada novo destinatário a quem determinado usuário desejasse enviar mensagens, ou em cada caso de renovação ou revogação de certificado. Some-se a isto o espaço ocupado por uma única assinatura convencional, tipicamente de 128 bytes por estar baseada no algoritmo RSA com 1024 bits; este \emph{overhead} seria duplicado com o requisito de cifrar e assinar a mensagem, isto é, tomaria 256 bytes do espaço disponível. 
 
 Por outro lado, a manutenção de um diretório confiável de chaves públicas, típico de sistemas de criptografia convencionais, seria impraticável em uma rede de telefonia celular.  Uma solução tecnológica baseada em alternativas à criptografia convencional é, portanto, imprescindível.
@@ -221,6 +222,73 @@ Sendo assim, foi considerado o uso de criptografia em curvas elípticas com assin
 
 \chapter{Preliminares teóricas}% (assunto geral: curvas elípticas, emparelhamento, identidadesz protocolos, conceitos, etc)
 
+\section{Serviços de Segurança}
+
+Alguns dos principais serviços de segurança da informação estão listados abaixo:
+
+\begin{itemize}
+\item Confidencialidade: manter secretos os dados de todos a não ser aqueles autorizados a vê-los - mensagens enviadas por A para B não deveriam ser legíveis para .
+\item Integridade dos dados: assegurar que os dados não foram alterados por entidades não autorizadas significa - B deveria ser capaz de detectar quando dados enviados por A foram modificados por E.
+\item Autenticação da origem dos dados: confirmar a fonte dos dados - B deveria ser capaz de verificar que dados propositalmente enviados por A de fato foram originados por A.
+\item Autenticação da entidade: confirmar a identidade da entidade: B deveria se convencer da identidade da outra entidade em comunicação.
+\item Irretratabilidade: prevenir uma entidade de negar comprometimentos ou atos anteriores - Quando B recebe uma mensagem propositalmente de A, não apenas B está convencido de que a mensagem se originou em A, mas B pode convencer uma terceira parte disso; portanto A não pode negar ter enviado a mensagem para B.
+Algumas aplicações podem ter outros objetivos de segurança tais como anonimato das entidades em comunicação ou controle de acesso (a restrição de acessar recursos).
+\end{itemize}
+
+
+\section{Criptografia de Chave Simétrica}
+
+\subsection{Introdução}
+
+Os sistemas criptográficos podem ser amplamente divididos em dois tipos. Em esquemas de chave simétrica, as entidades em comunicação compartilham uma informação, usada como chave, que é ao mesmo tempo secreta e autêntica. Conseqüentemente, eles podem usar um esquema de encriptação simétrica tal como o Data Encryption Standard (DES), RC4, ou o Advanced Encryption Standard (AES) para integrar confidencialidade. 
+
+Eles também podem usar um algoritmo de código de autenticação de mensagens (MAC) tal como o HMAC para reunir integridade e autenticação da origem dos dados.
+Por exemplo, se confidencialidade fosse desejada e a chave secreta compartilhada entre A e B fosse k, então A encriptaria uma mensagem m, em texto claro, usando uma função de encriptação ENC e a chave k e transmitiria a cifra resultante c - ENCk (m) para B. Ao receber c, B usaria a função de decriptação DEC e a mesma chave k para recuperar m = DECk (c). 
+
+
+\subsection{Administração e distribuição de chaves}
+
+A principal vantagem da criptografia de chave simétrica é a alta eficiência, contudo, há significantes desvantagens destes sistemas. Uma delas é o conhecido problema da distribuição de chave - a necessidade de um canal que seja ambos, secreto e autenticado, para a distribuição das chaves. Em algumas aplicações, esta distribuição pode ser convenientemente feita por usar um canal fisicamente seguro tal como um emissário de confiança. Outra maneira é usar os serviços de uma terceira parte confiável on-line que inicialmente estabelece chaves secretas com todas as entidades na rede e conseqüentemente usa essas chaves para distribuir as informações de chaves para as entidades em comunicação quando requerido \footnote{Este modo de usar uma Terceira parte centralizada para distribuir chaves para algoritmos de chave simétrica às partes conforme elas necessitarem é usado pelo protocolo de autenticação da rede Kerberos para aplicações cliente/servidor.}. Soluções como esta podem ser bem apropriadas para ambientes onde uma autoridade central aceitável e confiável, mas é claramente impraticável em aplicações tal como e-mail na internet.
+
+Uma segunda desvantagem é o problema de administração de chaves. - em uma rede de N entidades cada entidade pode ter que manter diferentes informações de chaves com cada uma das N-1 entidades. Logo, seriam necessárias N(N-1)/2 chaves privadas em toda a rede o que inviabiliza a administração quando N se torna grande. Este problema pode ser aliviado usando serviços de uma terceira parte on-line que distribui as chaves conforme sãs requeridas, assim reduzindo a necessidade das entidades de armazenar múltiplas chaves seguramente. Novamente, contudo, tais soluções não são práticas em alguns cenários. Finalmente, uma vez que a informação sobre as chaves é compartilhada entre duas (ou mais) entidades, técnicas de chave simétrica não podem ser usadas para implementar esquemas de assinatura digital (DSS) elegantes que forneçam serviços de irretratabilidade. Isto porque é impossível distinguir entre as ações tomadas por diferentes detentores de uma chave secreta. \footnote{Esquemas de assinaturas digitais podem ser implementados usando técnicas de chave simétrica; contudo, estes esquemas geralmente impraticáveis conforme requerido seu uso de uma terceira parte confiável on-line ou novas informações de chaves para cada assinatura.}
+
+\section{Criptografia de chave pública}
+
+\subsection{Introdução}
+A noção de criptografia de chave pública, foi introduzida em 1975 por Diffie, Hellman e Merkle para resolver as deficiências da criptografia de chaves simétricas mencionadas anteriormente. Em contrate aos esquemas de chave simétrica, os esquemas de chave pública requerem apenas que as entidades em comunicação troquem informações de chaves que são autenticas (mas não secretas). Cada entidade seleciona um único par (e,d) consistindo de uma chave pública e, e uma chave privada relacionada d que a entidade mantém secreta). As chaves têm a propriedade de que é computacionalmente impraticável determinar a chave privada apenas de conhecimento da chave pública.
+
+\subsection{Confidencialidade}
+
+Se a entidade A deseja enviar uma mensagem confidencial m para uma entidade B, ela obtém uma cópia autêntica da chave pública de B eB, e usa a função de encriptação ENC de uma esquema de chave pública para computar a cifra c = ENCeB (m). A então transmite c para B, que usa a função de decriptação DEC e sua chave privada dB para recuperar a mensagem clara: m = DECdB (c). A presunção é que um agressor com posse apenas de eB (mas não de dB) não consegue decriptar c. Observe que não há nenhuma necessidade de discrição de eB. É essencial apenas que A obtenha uma cópia autentica de eB - por outro lado A encriptaria m usando a chave pública eE de alguma entidade E tentando personificar B, e m seria recuperável por E.
+
+\subsection{Irretratabilidade}
+
+Esquemas de assinatura digital podem ser desenvolvidos para autenticação da origem e integridade dos dados, e para facilitar o fornecimento de serviços de irretratabilidade. Uma entidade A usaria o algoritmo de geração de assinatura SIGN de um esquema de assinatura digital e sua chave privada dA para computar a assinatura da mensagem: s = SIGNdA (m). Ao receber m e s, uma entidade B que tem uma cópia autentica da chave pública de A eA usa um algoritmo de assinatura de verificação para confirmar que s foi de fato gerado a partir de m e dA. Uma vez que dA é presumivelmente conhecido por A, B está assegurado de que a mensagem foi realmente originada por A. Ademais, uma vez que a verificação requer apenas quantidades não secretas m e eA, a assinatura s para m pode também ser verificada por uma terceira parte que poderia estabelecer contestações se A negar ter assinado a mensagem m. Diferente das assinaturas escritas à mão, a assinatura s de A depende da mensagem m sendo assinada, prevenindo um forjador de simplesmente acrescentar s a uma mensagem $\sim m$ linha e afirmar que A assinou $\sim m$. Mesmo embora havendo nenhuma necessidade de segredo com relação à chave pública eA, é essencial que os verificadores devessem usar uma cópia autêntica de eA quando verificar assinaturas personificadamente geradas por A.
+
+Deste modo, a criptografia de chave pública fornece soluções elegantes para os três problemas com criptografia de chave simétrica, chamados distribuição de chaves, administração de chaves e suporte à irretratabilidade. Deve-se notar que embora necessidade de um canal secreto para distribuição de chaves foi eliminado, implementar uma infra-estrutura de chave pública (PKI) para distribui e administrar chaves públicas pode ser um desafio formidável na prática. Também, operações em chave pública são normalmente significantemente mais lentas do que seus respectivos na criptografia de chave simétrica. Portanto, sistemas híbridos que beneficiam desde a eficiência dos algoritmos de chave simétrica e a funcionalidade dos algoritmos de chave pública são freqüentemente usados.
+
+Em um esquema de chave pública, um par de chaves é selecionado para que o problema de calcular a chave privada a partir da chave pública é equivalente para resolver um problema computacional que é considerado intratável. Os problemas teóricos numéricos cuja intratabilidade constrói a base para a segurança dos esquemas comumente usados são:
+
+\begin{itemize}
+\item O problema da fatoração de inteiros, cuja dificuldade é essencial para a segurança da encriptação RSA e esquemas de assinatura.
+\item O problema do logaritmo discreto, cuja dificuldade é essencial para a segurança da encriptação de chave pública ElGamal e esquemas de assinatura e suas variantes tais como o Digital Signature Algorithm (DSA).
+\item O problema do logaritmo discreto em curvas elípticas, cuja dificuldade é essencial para a segurança de todos os esquemas baseados em curvas elípticas.
+\end{itemize}
+
+\section{Logaritmos Discretos}
+
+\subsection{Problemas Baseados em Logaritmos Discretos}
+
+O primeiro sistema baseado em logaritmo discreto foi o protocolo de troca de chaves proposto por Diffie e Hellman em 1976. Em 1984, ElGamal descreveu a encriptação de chave pública baseada em DL e esquemas de assinatura. Desde então, muitas variantes destes esquemas foram propostas. Logo em seguida apresentamos o esquema de encriptação básico de chave pública ElGamal e o Digital Signature Algorithm (DSA).
+
+
+\subsection{Geração de chaves com Logaritmos Discretos}
+
+Em sistemas de logaritmos discretos, um par de chaves está associado com um conjunto de parâmetros públicos do domínio ($p$,$q$, $g$). Aqui, $p$ é um primo, $q$ é um divisor primo de $p-1$, e $g \in [1,p-1]$ tem ordem $q$ (i.e., $t=q$ é o menor inteiro positivo satisfazendo $gt \equiv 1(mod p)$.
+Uma chave privada é um inteiro x que é selecionado uniformemente de modo aleatório no intervalo $[1,q-1]$ (esta operação é denotada $x \in [1,q-1]$, e a chave pública correspondente é $y=g^{x}mod p$. O problema de determinar $x$ dados os parâmetros do domínio ($p$,$q$, $g$) e $y$ é o problema do logaritmo discreto (DLP).
+
+
+\section{Histórico das curvas elípticas}
 O estudo das curvas elípticas, por matemáticos, data da metade do século XIX. Como conseqüência, encontramos hoje uma vasta literatura sobre o assunto. Em 1984, Hendrik Lenstra descreve um engenhoso algoritmo para fatorar inteiros que recai nas propriedades das curvas elípticas. Esta descoberta motivou os pesquisadores a investigar novas aplicações em criptografia sobre curvas elípticas e teoria dos números computacional.
 
 A criptografia de chave pública foi concebida em 1976 por Whitfield Diffie e Martin Hellman. Sua primeira construção prática se seguiu em 1977 quando Ron Rivest, Adi Shamir e Len Adleman propuseram o protocolo agora tão conhecido RSA cuja segurança é baseada na intratabilidade do problema da fatoração de inteiros. A criptografia baseada em curvas elípticas (ECC) foi descoberta em 1985 por Neal Koblitz e Victor Miller.
@@ -233,7 +301,55 @@ Desde então, grande quantidade de pesquisas começou a ser publicada na segurança
 
 
 \section{Curvas Elítpticas}
-%Geovs coloque sua seção aqui...
+
+Os sistemas baseados em logaritmos discretos apresentados anteriormente podem ser descritos na configuração de um grupo cíclico finito. A definição de grupos segue abaixo.
+
+Grupos
+
+Um grupo abeliano ($G$,$*$) consiste de um conjunto G com uma operação binária * : $G x G \rightarrow G$ satisfazendo as seguintes propriedades:
+	(Associatividade) $a * (b * c)$ = $(a * b) * c$ para todos os $a,b, c \in G$
+	(Existência de uma identidade) Existe um elemento $e \in G$ tal que $a*e = e*a = a$ para todo $a \in G$.
+	(Existência de inversos) Para cada $a \in G$, existe um elemento $b \in G$, chamado inverso de $a$, tal que $a * b = b * a = e$.
+	(Comutatividade) $a * b = b * a$ para todos $a$,b \in G.
+
+
+A operação do grupo é geralmente chamada de adição (+) ou multiplicação (-). Em primeira instância, o grupo é chamado de grupo aditivo, o elemento (aditivo) identidade é normalmente denotado por 0, e o inverso (aditivo) d e a é denotado por -a. Em uma segunda instância, o grupo é chamado de grupo multiplicativo, o elemento (multiplicativo) identidade é denotado por 1, e o inverso (multiplicativo) de a é denotado por a-1 .
+O grupo é finito se G é um conjunto finito, no caso em que o número de elementos em G é chamado a ordem de G.
+Por exemplo, seja p um numero primo, e $Fp$ = {0,1,2,...,p-1} denota o conjunto dos inteiros módulo $p$. Então (Fp,+), onde a operação + é definida com a operação de adição de inteiros módulo p, é um grupo finito aditivo de ordem p com elemento identidade (aditivo) 0. Além isso, ($F*p$,$\bullet$), onde F*p denota os elementos diferentes de zero em Fp e a operação $\bullet$ é definida como a multiplicação de inteiros módulo $p$, é um grupo finito multiplicativo de ordem $p-1$ com elemento identidade (multiplicativo) 1. A tripla ($Fp$, $+$ , $\bullet$) é um campo finito, denotado mais sucintamente por $Fp$.
+
+Agora, se $G$ é um grupo finito multiplicativo de ordem $n$ e $g \in G$, então o menor inteiro positivo $t$ tal que $gt = 1$ é chamado de ordem de g; esse t sempre existe e é divisor de n. O conjunto $‹g› = {gi : 0 \leq i \leq t-1}$ de todas as potências de $g$ é ele próprio um grupo sobre a mesma operação como $G$, e é chamado um subgrupo cíclico de $G$ gerado por $G$. Declarações análogas são verdadeiras se $G$ é escrito aditivamente. Assim, a ordem de g   G é o menor divisor positivo $t$ de $n$ tal que $tg = 0$, e $‹g› = {ig : 0 \leq i \leq t-1}$. Aqui, tg denota o elemento obtido por adicionar t cópias de $g$. Se G tem um elemento $g$ de ordem $n$, então $G$ é dito ser um grupo cíclico e $g$ é um gerador de G. Por exemplo, com o os parâmetros do DL ($p$,$q$, $g$) definidos anteriormente, o grupo multiplicativo ($F*p$, \bullet) é um grupo cíclico de ordem p-1. Ademais, $‹g›$ é um subgrupo cíclico de ordem $q$.
+
+ 
+Grupos em Curvas Elípticas
+
+Seja p um número primo, e $Fp$ o campo dos inteiros módulo $p$. Uma curva elíptica $E$ sobre $Fp$ é definida por uma equação da forma 
+\begin{equation}
+\label{eq:defcurvaeliptica}
+y^2= x^3+ ax+b
+\end{equation}
+onde $a$, $b$   $Fp$ satisfaz $4a^{3}+ 27b^{2}=0 (mod p)$. Um par ($x$, $y$), onde $x$, $y$    $Fp$, é um ponto na curva se ($x$, $y$) satisfaz a equação \ref{eq:defcurvaeliptica}. O ponto no infinito, denotado por $\infty$, também é considerado estar contido na curva. O conjunto de todos os pontos sobre $E$ é denotado pro $E(Fp)$. Por exemplo, se $E$ é uma curva elíptica sobre $F7$ com definida pela equação:
+
+\begin{equation}
+\label{eq:defcurvaeliptica2}
+$y^2= x^3+ 2x+4$
+\end{equation}
+
+ Então, os pontos sobre $E$ são:
+
+$E(F7) = { ?, (0,2), (0,5), (1,0), (2,3), (2,4), (3,3), (3,4), (6,1), (6,6) }$.
+
+Agora, há um método bem conhecido para somar 2 pontos numa curva elíptica $P: (x1, y1)$ e $Q: (x2, y2)$ para produzir um terceiro ponto na curvar $R: (x3, y3)$. Veja a figura seguinte:
+
+
+
+\begin{figure}[ht]
+	\centering
+		\includegraphics{figuras/SomaEliptica.PNG}
+	\caption{Soma em Curva Elíptica}
+	\label{fig:somaeliptica}
+\end{figure}
+
+
 \section{Emparelhamentos Bilineares}
 %Dar uma introdução do que é emparalhamento, apresentar os emparelhamentos ATE e ETA
 \section{Criptografia baseada em identidades}
