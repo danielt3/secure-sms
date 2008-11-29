@@ -22,9 +22,9 @@
 package br.usp.pcs.coop8.ssms.messaging;
 
 import br.usp.pcs.coop8.ssms.application.Configuration;
-import br.usp.pcs.coop8.ssms.application.KgbSsms;
+import br.usp.pcs.coop8.ssms.application.KeyGenerationBureau;
 import br.usp.pcs.coop8.ssms.data.Contact;
-import br.usp.pcs.coop8.ssms.data.MyPrivateData;
+import br.usp.pcs.coop8.ssms.data.PrivateData;
 import br.usp.pcs.coop8.ssms.protocol.BDCPSClient;
 import br.usp.pcs.coop8.ssms.protocol.BDCPSParameters;
 import br.usp.pcs.coop8.ssms.util.Output;
@@ -141,7 +141,7 @@ public class SmsListener
                                 telRemetente = binMsg.getAddress().substring(7, 17);
                             }
 
-                            MessageSsms msg = MessageSsms.getMessage(binMsg.getPayloadData());
+                            SecureMessage msg = SecureMessage.getMessage(binMsg.getPayloadData());
 
                             if (msg != null) {
                                 msg.setSender(telRemetente);
@@ -151,12 +151,12 @@ public class SmsListener
                             if (msg == null) {
                                 //Mensagem desconhecida recebida
                                 Output.println("Mensagem desconhecida ignorada.");
-                            } else if (msg instanceof AuthenticationMessage) {
-                                handleAuthenticationMessageReceived((AuthenticationMessage) msg);
-                            } else if (msg instanceof HereIsYourQaMessage) {
-                                handleHereIsYourQaMessageReceived((HereIsYourQaMessage) msg);
-                            } else if (msg instanceof RequestMyQaMessage) {
-                                handleRequestMyQaMessageReceived((RequestMyQaMessage) msg);
+                            } else if (msg instanceof ValidationMessage) {
+                                handleAuthenticationMessageReceived((ValidationMessage) msg);
+                            } else if (msg instanceof SignupResponse) {
+                                handleHereIsYourQaMessageReceived((SignupResponse) msg);
+                            } else if (msg instanceof SignupMessage) {
+                                handleRequestMyQaMessageReceived((SignupMessage) msg);
                             } else if (msg instanceof SigncryptedMessage) {
                                 handleSignCryptedMessageReceived((SigncryptedMessage) msg);
                             }
@@ -172,7 +172,7 @@ public class SmsListener
         threadListener.start();
     }
 
-    private void handleAuthenticationMessageReceived(AuthenticationMessage msg) {
+    private void handleAuthenticationMessageReceived(ValidationMessage msg) {
         try {
 
             final String senderPhone = msg.getSender();
@@ -180,7 +180,7 @@ public class SmsListener
 
             PersistableManager perMan = PersistableManager.getInstance();
 
-            ObjectSet results = perMan.find(Contact.getThisClass(), new Filter() {
+            ObjectSet results = perMan.find(Contact.class, new Filter() {
 
                 public boolean matches(Persistable arg0) {
                     return ((Contact) arg0).getPhone().equals(senderPhone);
@@ -205,7 +205,7 @@ public class SmsListener
             } else {
                 //Ainda não conheciamos os parâmetros públicos.. vamos validá-los.
 
-                MyPrivateData myData = MyPrivateData.getInstance();
+                PrivateData myData = PrivateData.getInstance();
                 byte[] hashMyId = new byte[20];
                 byte[] hashIdB = new byte[20];
                 SHA1Digest sha = new SHA1Digest();
@@ -251,9 +251,9 @@ public class SmsListener
 
     }
 
-    private void handleHereIsYourQaMessageReceived(HereIsYourQaMessage msg) {
+    private void handleHereIsYourQaMessageReceived(SignupResponse msg) {
 
-        MyPrivateData myPrivData = MyPrivateData.getInstance();
+        PrivateData myPrivData = PrivateData.getInstance();
 
 
         if (!msg.getSender().equals(myPrivData.getKgbPhone())) {
@@ -283,13 +283,13 @@ public class SmsListener
 
     }
 
-    private void handleRequestMyQaMessageReceived(RequestMyQaMessage msg) {
+    private void handleRequestMyQaMessageReceived(SignupMessage msg) {
 
         final String senderPhone = msg.getSender();
 
         //Aqui vou me passar por KGB
         Output.println("Sou KGB, recebido yA: " + Util.byteArrayToDebugableString(msg.getYA()));
-        KgbSsms.returnQaMessage((RequestMyQaMessage) msg, senderPhone);
+        KeyGenerationBureau.returnQaMessage((SignupMessage) msg, senderPhone);
     }
 
     private void handleSignCryptedMessageReceived(SigncryptedMessage msg) {

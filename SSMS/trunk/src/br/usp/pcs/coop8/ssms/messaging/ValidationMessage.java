@@ -27,45 +27,42 @@ import br.usp.pcs.coop8.ssms.util.Util;
  *
  * @author Administrador
  */
-public class HereIsYourQaMessage extends MessageSsms {
+public class ValidationMessage extends SecureMessage {
 
-    private byte[] qA;
-    private byte[] h;
-    private byte[] z;
+    private byte[] yA;
+    private byte[] hA;
+    private byte[] tA;
 
-    protected HereIsYourQaMessage() {
+    protected ValidationMessage() {
     }
 
-    /**
-     * 
-     */
-    public HereIsYourQaMessage(byte[] qA, byte[] h, byte[] z) {
-        this.qA = qA;
-        this.h = h;
-        this.z = z;
-        this.messageBytes = serialize(MessageSsms.HERE_IS_YOUR_QA, new byte[][]{qA, h, z});
+    public ValidationMessage(byte[] yA, byte[] hA, byte[] tA) {
+        this.yA = yA;
+        this.hA = hA;
+        this.tA = tA;
+        this.messageBytes = serialize(SecureMessage.AUTHENTICATE_ME, new byte[][]{yA, hA, tA});
     }
 
-    public byte[] getQA() {
-        return this.qA;
+    public byte[] getYA() {
+        return yA;
     }
 
-    public byte[] getH() {
-        return h;
+    public byte[] getHA() {
+        return hA;
     }
 
-    public byte[] getZ() {
-        return z;
+    public byte[] getTA() {
+        return tA;
     }
 
     protected void deserialize(byte[] msgBytes) {
         super.deserialize(msgBytes);
-        qA = new byte[Util.byteToInt(messageBytes[4])];
-        h = new byte[Util.byteToInt(messageBytes[5])];
-        z = new byte[Util.byteToInt(messageBytes[6])];
+        yA = new byte[Util.byteToInt(messageBytes[4])];
+        hA = new byte[Util.byteToInt(messageBytes[5])];
+        tA = new byte[Util.byteToInt(messageBytes[6])];
 
-        System.arraycopy(msgBytes, 7, qA, 0, qA.length);
-        System.arraycopy(msgBytes, 7 + qA.length, h, 0, h.length);
-        System.arraycopy(msgBytes, 7 + qA.length + h.length, z, 0, z.length);
+        System.arraycopy(msgBytes, 7, yA, 0, yA.length);
+        System.arraycopy(msgBytes, 7 + yA.length, hA, 0, hA.length);
+        System.arraycopy(msgBytes, 7 + yA.length + hA.length, tA, 0, tA.length);
     }
 }

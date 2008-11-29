@@ -21,32 +21,26 @@
 
 package br.usp.pcs.coop8.ssms.application;
 
+import br.usp.pcs.coop8.ssms.tests.IntegrationTests;
 import br.usp.pcs.coop8.ssms.data.Contact;
-import br.usp.pcs.coop8.ssms.data.MyPrivateData;
-import br.usp.pcs.coop8.ssms.messaging.AuthenticationMessage;
-import br.usp.pcs.coop8.ssms.messaging.RequestMyQaMessage;
+import br.usp.pcs.coop8.ssms.data.PrivateData;
+import br.usp.pcs.coop8.ssms.messaging.ValidationMessage;
+import br.usp.pcs.coop8.ssms.messaging.SignupMessage;
 import br.usp.pcs.coop8.ssms.messaging.SigncryptedMessage;
 import br.usp.pcs.coop8.ssms.messaging.SmsListener;
+import br.usp.pcs.coop8.ssms.messaging.SmsSender;
 import br.usp.pcs.coop8.ssms.protocol.BDCPS;
-import br.usp.pcs.coop8.ssms.protocol.BDCPSAuthority;
 import br.usp.pcs.coop8.ssms.protocol.BDCPSClient;
 import br.usp.pcs.coop8.ssms.protocol.BDCPSParameters;
 import br.usp.pcs.coop8.ssms.protocol.exception.CipherException;
 import br.usp.pcs.coop8.ssms.protocol.exception.InvalidMessageException;
 import br.usp.pcs.coop8.ssms.util.Output;
-import br.usp.pcs.coop8.ssms.util.Util;
-import javax.microedition.io.Connector;
-import javax.wireless.messaging.BinaryMessage;
-import javax.wireless.messaging.MessageConnection;
-import javax.wireless.messaging.TextMessage;
 import net.sourceforge.floggy.persistence.Filter;
 import net.sourceforge.floggy.persistence.FloggyException;
 import net.sourceforge.floggy.persistence.ObjectSet;
 import net.sourceforge.floggy.persistence.Persistable;
 import net.sourceforge.floggy.persistence.PersistableManager;
-import org.bouncycastle.crypto.Digest;
 import org.bouncycastle.crypto.digests.SHA1Digest;
-import pseudojava.BigInteger;
 
 /**
  * Executa funcionalidades a partir do menu
@@ -69,7 +63,7 @@ public abstract class Controller {
         } catch (FloggyException ex) {
             ex.printStackTrace();
         }
-        MyPrivateData.clearInstance();
+        PrivateData.clearInstance();
     }
 
     /**
@@ -79,8 +73,8 @@ public abstract class Controller {
 
         Controller.ssmsApp = ssmsApp;
 
-        Controller.receberSms();
-        MyPrivateData.getInstance();
+        Controller.receiveSMS();
+        PrivateData.getInstance();
     }
 
     /**
@@ -94,10 +88,9 @@ public abstract class Controller {
         byte[] hashDoId = new byte[20];
         byte[] hashDoTelKgb = new byte[20];
 
-        MyPrivateData myData = MyPrivateData.getInstance();
+        PrivateData myData = PrivateData.getInstance();
 
         {
-
             SHA1Digest sha = new SHA1Digest();
             sha.reset();
             sha.update(xA.getBytes(), 0, xA.getBytes().length);
@@ -112,20 +105,14 @@ public abstract class Controller {
             sha.doFinal(hashDoTelKgb, 0);
         }
 
-
         BDCPSClient bdcps = new BDCPSClient(Configuration.K, BDCPSParameters.getInstance(Configuration.K).PPubBytes, hashDoId);
         bdcps.setSecretValue(hashDoXa);
         bdcps.setPublicValue();
 
         byte[] yA = bdcps.getPublicValue();
 
-
-
-
-
         myData.setIdA(id);
         myData.setYA(yA);
-
 
         //Estes só serão preenchidos quando chegar o QA
         myData.setHA(null);
@@ -139,27 +126,15 @@ public abstract class Controller {
         } catch (FloggyException ex) {
             ex.printStackTrace();
         }
+        
+        SignupMessage reqMessage = new SignupMessage(yA);
 
-        // Encriptar o yA:
-        //byte[][] cryptogram;
-        //try {
-        //    cryptogram = bdcps.signcrypt(yA, hashDoTelKgb, BDCPSParameters.getInstance(Configuration.K).yKgbBytes);
-        //} catch (CipherException ex) {
-        //    ex.printStackTrace();
-        //    Output.println("Exception encriptando yA: " + ex.getMessage());
-        //    return;
-        //}
-
-        RequestMyQaMessage reqMessage = new RequestMyQaMessage(yA);//cryptogram[0], cryptogram[1], cryptogram[2]);
-
-        enviarSmsBinario(myData.getKgbPhone(), reqMessage.getMessageBytes());
-
-
+        SmsSender.send(myData.getKgbPhone(), reqMessage.getMessageBytes());
     }
 
     public static void finalizeFirstConfig(String xA) {
 
-        MyPrivateData myPrivData = MyPrivateData.getInstance();
+        PrivateData myPrivData = PrivateData.getInstance();
 
         byte[] hashDoXa = new byte[20];
         byte[] hashDoId = new byte[20];
@@ -237,7 +212,7 @@ public abstract class Controller {
             PersistableManager perMan = PersistableManager.getInstance();
 
 
-            ObjectSet results = perMan.find(Contact.getThisClass(), new Filter() {
+            ObjectSet results = perMan.find(Contact.class, new Filter() {
 
                 public boolean matches(Persistable arg0) {
                     return ((Contact) arg0).getPhone().equals(phone);
@@ -254,9 +229,9 @@ public abstract class Controller {
             }
 
             //Envia agora a mensagem para o contato
-            MyPrivateData myPrivData = MyPrivateData.getInstance();
-            AuthenticationMessage msg = new AuthenticationMessage(myPrivData.getYA(), myPrivData.getHA(), myPrivData.getTA());
-            enviarSmsBinario(phone, msg.getMessageBytes());
+            PrivateData myPrivData = PrivateData.getInstance();
+            ValidationMessage msg = new ValidationMessage(myPrivData.getYA(), myPrivData.getHA(), myPrivData.getTA());
+            SmsSender.send(phone, msg.getMessageBytes());
 
             //Salva o contato
             perMan.save(contact);
@@ -270,37 +245,16 @@ public abstract class Controller {
     /**
      * Cria e ativa um novo listener
      */
-    public static void receberSms() {
+    public static void receiveSMS() {
         if (smsListener == null) {
             smsListener = new SmsListener();
             smsListener.startListening();
         }
     }
 
-    public static void enviarSms(String phone, String texto, int porta) {
+    public static void sendSigncryptedMessage(String message, String password) {
 
-        try {
-            String addr = "sms://" + phone + ":" + porta;
-            MessageConnection conn = (MessageConnection) Connector.open(addr);
-            TextMessage msg =
-                    (TextMessage) conn.newMessage(MessageConnection.TEXT_MESSAGE);
-
-
-            msg.setPayloadText(texto);
-
-            conn.send(msg);
-        } catch (IllegalArgumentException iae) {
-        //do something
-
-        } catch (Exception e) {
-        //do something
-        }
-
-    }
-
-    public static void sendSigncryptedMessage(String message, String xA) {
-
-        MyPrivateData myPrivData = MyPrivateData.getInstance();
+        PrivateData myPrivData = PrivateData.getInstance();
 
         byte[] hashDoXa = new byte[20];
         byte[] hashDoIdA = new byte[20];
@@ -310,7 +264,7 @@ public abstract class Controller {
 
             SHA1Digest sha = new SHA1Digest();
             sha.reset();
-            sha.update(xA.getBytes(), 0, xA.getBytes().length);
+            sha.update(password.getBytes(), 0, password.getBytes().length);
             sha.doFinal(hashDoXa, 0);
 
             sha.reset();
@@ -334,7 +288,7 @@ public abstract class Controller {
             byte[][] cryptogram = bdcps.signcrypt(message.getBytes(), hashDoIdB, selectedContact.getYA());
             SigncryptedMessage msg = new SigncryptedMessage(cryptogram[0], cryptogram[1], cryptogram[2]);
 
-            enviarSmsBinario(selectedContact.getPhone(), msg.getMessageBytes());
+            SmsSender.send(selectedContact.getPhone(), msg.getMessageBytes());
 
         } catch (CipherException ex) {
             ex.printStackTrace();
@@ -342,9 +296,9 @@ public abstract class Controller {
         }
     }
 
-    public static String getUnsigncryptedText(String xA) throws CipherException {
+    public static String getUnsigncryptedText(String password) throws CipherException {
 
-        MyPrivateData myPrivData = MyPrivateData.getInstance();
+        PrivateData myPrivData = PrivateData.getInstance();
 
         byte[] hashDoXa = new byte[20];
         byte[] hashDoIdA = new byte[20];
@@ -354,7 +308,7 @@ public abstract class Controller {
 
             SHA1Digest sha = new SHA1Digest();
             sha.reset();
-            sha.update(xA.getBytes(), 0, xA.getBytes().length);
+            sha.update(password.getBytes(), 0, password.getBytes().length);
             sha.doFinal(hashDoXa, 0);
 
             sha.reset();
@@ -385,7 +339,7 @@ public abstract class Controller {
         try {
 
             result =
-                    perMan.find(Contact.getThisClass(), new Filter() {
+                    perMan.find(Contact.class, new Filter() {
 
                 public boolean matches(Persistable arg0) {
                     return ((Contact) arg0).getPhone().equals(selectedMessage.getSender());
@@ -420,39 +374,6 @@ public abstract class Controller {
 
     }
 
-    public static void enviarSmsBinarioMesmaThread(String phone, byte[] data) {
-        enviarSmsBinario(phone, data, Configuration.SMS_PORT);
-    }
-
-    public static void enviarSmsBinario(final String phone, final byte[] data) {
-        new Thread() {
-
-            public void run() {
-                enviarSmsBinario(phone, data, Configuration.SMS_PORT);
-            }
-        }.start();
-
-    }
-
-    private static void enviarSmsBinario(String phone, byte[] data, int port) {
-
-        try {
-            String addr = "sms://" + phone + ":" + port;
-            MessageConnection conn = (MessageConnection) Connector.open(addr);
-            BinaryMessage msg = (BinaryMessage) conn.newMessage(MessageConnection.BINARY_MESSAGE);
-
-            msg.setPayloadData(data);
-
-            conn.send(msg);
-        } catch (IllegalArgumentException iae) {
-        //do something
-
-        } catch (Exception e) {
-        //do something
-        }
-
-    }
-
     public static void setSelectedContact(Contact contact) {
         Controller.selectedContact = contact;
     }
@@ -480,11 +401,5 @@ public abstract class Controller {
         IntegrationTests.implBenchmark();
         
         Output.println("#End benchmarks");
-
-
-        
-
-
-
     }
 }

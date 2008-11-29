@@ -26,19 +26,19 @@ import br.usp.pcs.coop8.ssms.util.Util;
 /**
  * Representa a mensagem de primeiro uso. a
  */
-public class RequestMyQaMessage extends MessageSsms {
+public class SignupMessage extends SecureMessage {
 
     private byte[] yA;
     //private byte[] h;
     //private byte[] z;
-    protected RequestMyQaMessage() {
+    protected SignupMessage() {
     }
 
-    public RequestMyQaMessage(byte[] yA) {
+    public SignupMessage(byte[] yA) {
         this.yA = yA;
         //this.h = h;
         //this.z = z;
-        this.messageBytes = serialize(MessageSsms.GIMME_QA, new byte[][]{yA //        , h, z
+        this.messageBytes = serialize(SecureMessage.GIMME_QA, new byte[][]{yA //        , h, z
         });
     }
 

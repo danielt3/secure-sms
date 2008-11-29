@@ -81,13 +81,4 @@ public class Contact implements Persistable {
     public void setTA(byte[] tA) {
         this.tA = tA;
     }
-
-    public static Class getThisClass() {
-        try {
-            return Class.forName("br.usp.pcs.coop8.ssms.data.Contact");
-        } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
-            return null;
-        }
-    }
 }

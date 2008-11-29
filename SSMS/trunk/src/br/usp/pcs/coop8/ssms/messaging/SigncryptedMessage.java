@@ -29,7 +29,7 @@ import net.sourceforge.floggy.persistence.Persistable;
  *
  * @author Administrador
  */
-public class SigncryptedMessage extends MessageSsms implements Persistable {
+public class SigncryptedMessage extends SecureMessage implements Persistable {
 
     private byte[] c;
     private byte[] h;
@@ -73,7 +73,7 @@ public class SigncryptedMessage extends MessageSsms implements Persistable {
         this.c = c;
         this.h = h;
         this.z = z;
-        this.messageBytes = serialize(MessageSsms.SIGNCRYPTED_MESSAGE, new byte[][]{c, h, z});
+        this.messageBytes = serialize(SecureMessage.SIGNCRYPTED_MESSAGE, new byte[][]{c, h, z});
     }
 
     protected void deserialize(byte[] msgBytes) {

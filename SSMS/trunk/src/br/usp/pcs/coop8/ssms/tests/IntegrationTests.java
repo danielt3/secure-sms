@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.usp.pcs.coop8.ssms.application;
+package br.usp.pcs.coop8.ssms.tests;
 
+import br.usp.pcs.coop8.ssms.application.*;
 import br.usp.larc.pbarreto.smspairing.SMSCurve;
 import br.usp.larc.pbarreto.smspairing.SMSCurve2;
 import br.usp.larc.pbarreto.smspairing.SMSField4;
@@ -11,7 +12,6 @@ import br.usp.larc.pbarreto.smspairing.SMSPairing;
 import br.usp.larc.pbarreto.smspairing.SMSParams;
 import br.usp.larc.pbarreto.smspairing.SMSPoint;
 import br.usp.larc.pbarreto.smspairing.SMSPoint2;
-import br.usp.larc.pbarreto.smspairing.SMSTests;
 import br.usp.pcs.coop8.ssms.protocol.BDCPS;
 import br.usp.pcs.coop8.ssms.protocol.BDCPSAuthority;
 import br.usp.pcs.coop8.ssms.protocol.BDCPSClient;
@@ -40,7 +40,11 @@ public class IntegrationTests {
         _5 = BigInteger.valueOf(5L),
         _6 = BigInteger.valueOf(6L);
 
-    protected static void mockUpBenchmark() {
+    public static void stressTest(){
+        
+    }
+    
+    public static void mockUpBenchmark() {
         int i = 176, BM = 1;
         byte[] randSeed = new byte[20];
         (new SecureRandom()).nextBytes(randSeed);
@@ -196,7 +200,7 @@ public class IntegrationTests {
         Output.println("");
     }
 
-    protected static void implBenchmark() {
+    public static void implBenchmark() {
 
         // Declaring
         Digest sha = null;

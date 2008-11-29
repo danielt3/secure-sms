@@ -29,7 +29,7 @@ import net.sourceforge.floggy.persistence.PersistableManager;
 /**
  * Representa os parâmetros
  */
-public class MyPrivateData implements Persistable {
+public class PrivateData implements Persistable {
 
     private byte[] qA;
     private String idA;
@@ -40,10 +40,10 @@ public class MyPrivateData implements Persistable {
     private byte[] encryptedQA_h;
     private byte[] encryptedQA_z;
     private String kgbPhone;
-    private static MyPrivateData myDataInstance = null;
+    private static PrivateData myDataInstance = null;
     
 
-    public MyPrivateData() {
+    public PrivateData() {
 
     }
 
@@ -55,20 +55,20 @@ public class MyPrivateData implements Persistable {
      * Retorna a instância persistente
      * @return
      */
-    public static MyPrivateData getInstance() {
+    public static PrivateData getInstance() {
         if (myDataInstance == null) {
             try {
                 //Verifica se tem no Floggy
                 PersistableManager perMan = PersistableManager.getInstance();
 
-                ObjectSet results = perMan.find(MyPrivateData.getThisClass(), null, null);
+                ObjectSet results = perMan.find(PrivateData.class, null, null);
 
                 if (results == null || results.size() == 0) {
                     //Retorna uma instância com os campos nulos
-                    myDataInstance = new MyPrivateData();
+                    myDataInstance = new PrivateData();
                     perMan.save(myDataInstance);
                 } else {
-                    myDataInstance = (MyPrivateData) results.get(0);
+                    myDataInstance = (PrivateData) results.get(0);
                 }
 
             } catch (FloggyException ex) {
@@ -154,14 +154,5 @@ public class MyPrivateData implements Persistable {
 
     public void setKgbPhone(String kgbPhone) {
         this.kgbPhone = kgbPhone;
-    }
-
-    public static Class getThisClass() {
-        try {
-            return Class.forName("br.usp.pcs.coop8.ssms.data.MyPrivateData");
-        } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
-            return null;
-        }
     }
 }

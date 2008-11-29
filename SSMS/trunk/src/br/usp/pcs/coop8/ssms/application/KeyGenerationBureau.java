@@ -21,10 +21,11 @@
 
 package br.usp.pcs.coop8.ssms.application;
 
-import br.usp.pcs.coop8.ssms.data.MyPrivateData;
-import br.usp.pcs.coop8.ssms.messaging.HereIsYourQaMessage;
-import br.usp.pcs.coop8.ssms.messaging.MessageSsms;
-import br.usp.pcs.coop8.ssms.messaging.RequestMyQaMessage;
+import br.usp.pcs.coop8.ssms.data.PrivateData;
+import br.usp.pcs.coop8.ssms.messaging.SignupResponse;
+import br.usp.pcs.coop8.ssms.messaging.SecureMessage;
+import br.usp.pcs.coop8.ssms.messaging.SignupMessage;
+import br.usp.pcs.coop8.ssms.messaging.SmsSender;
 import br.usp.pcs.coop8.ssms.protocol.BDCPSAuthority;
 import br.usp.pcs.coop8.ssms.protocol.BDCPSParameters;
 import br.usp.pcs.coop8.ssms.protocol.exception.CipherException;
@@ -38,7 +39,7 @@ import pseudojava.BigInteger;
  * 
  * @author Administrador
  */
-public class KgbSsms {
+public class KeyGenerationBureau {
 
     /**
      * Um número de 500 bits ultra-secreto.
@@ -53,20 +54,22 @@ public class KgbSsms {
         return _s500.mod(BDCPSParameters.getInstance(Configuration.K).N).toByteArray();
     }
 
-    public static void returnQaMessage(RequestMyQaMessage rmqam, String id) {
+    public static void returnQaMessage(SignupMessage rmqam, String id) {
 
 
         byte[] hashIdA = new byte[20];
         byte[] hashKgbId = new byte[20];
+        
+        {
+            SHA1Digest sha = new SHA1Digest();
+            sha.reset();
+            sha.update(id.getBytes(), 0, id.getBytes().length);
+            sha.doFinal(hashIdA, 0);
 
-        SHA1Digest sha = new SHA1Digest();
-        sha.reset();
-        sha.update(id.getBytes(), 0, id.getBytes().length);
-        sha.doFinal(hashIdA, 0);
-
-        sha.reset();
-        sha.update(MyPrivateData.getInstance().getIdA().getBytes(), 0, MyPrivateData.getInstance().getIdA().getBytes().length);
-        sha.doFinal(hashKgbId, 0);
+            sha.reset();
+            sha.update(PrivateData.getInstance().getIdA().getBytes(), 0, PrivateData.getInstance().getIdA().getBytes().length);
+            sha.doFinal(hashKgbId, 0);
+        }
 
         byte[] yA = rmqam.getYA();
 
@@ -91,9 +94,9 @@ public class KgbSsms {
         }
 
 
-        MessageSsms msg = new HereIsYourQaMessage(cryptogram[0], cryptogram[1], cryptogram[2]);
+        SecureMessage msg = new SignupResponse(cryptogram[0], cryptogram[1], cryptogram[2]);
 
-        Controller.enviarSmsBinarioMesmaThread(id, msg.getMessageBytes());
+        SmsSender.sendSingleThread(id, msg.getMessageBytes());
 
 
     }

@@ -29,7 +29,7 @@ import java.util.Date;
  *
  * @author Administrador
  */
-public abstract class MessageSsms {
+public abstract class SecureMessage {
 
     //Primitivas:
     public static final byte GIMME_QA = 0x00;
@@ -45,20 +45,20 @@ public abstract class MessageSsms {
      * Método de fábrica, identifica que tipo de mensagem é baseado na primitiva
      * e retorna a instância adequada da mensagem
      */
-    public static MessageSsms getMessage(byte[] msgBytes) {
+    public static SecureMessage getMessage(byte[] msgBytes) {
 
-        MessageSsms ret;
+        SecureMessage ret;
         switch (msgBytes[1]) {
             case GIMME_QA:
-                ret = new RequestMyQaMessage();
+                ret = new SignupMessage();
                 ret.deserialize(msgBytes);
                 break;
             case HERE_IS_YOUR_QA:
-                ret = new HereIsYourQaMessage();
+                ret = new SignupResponse();
                 ret.deserialize(msgBytes);
                 break;
             case AUTHENTICATE_ME:
-                ret = new AuthenticationMessage();
+                ret = new ValidationMessage();
                 ret.deserialize(msgBytes);
                 break;
             case SIGNCRYPTED_MESSAGE:
