@@ -129,8 +129,8 @@ This work consists in the specification and implementation of a system which is 
 %To fazendo a lista de siglas na mão... consertar depois talvez
 \listadesiglas{
 \begin{center}
-\textbf{SMS} - Short Message Service
-
+\textbf{SMS} - Short Message Service\\
+\textbf{ECC} - Elliptic Curve Cryptography
 %TODO: acrescentar as siglas aqui
 %Existe uma norma, acho que é pra por na ordem de aparição no texto... ou em ordem alfabética.. não sei, TODO: confirmar nas diretrizes
 \end{center}
@@ -148,6 +148,21 @@ Apesar de implementado especificamente para ser executado em um telefone celular
 %Como possíveis aplicações de nossa solução, podemos citar a realização de transações bancárias usando mensagens SMS, sistemas de %comunicação que requeiram confidencialidade e integridade (órgãos militares e governamentais, executivos de grandes empresas) ou apenas %usuários comuns em busca de maiores níveis de privacidade.
 
 \section{Cenário} %Falar dos limitantes, processamento e tamanho de mensagem pequenos
+
+Na figura \ref{fig:Canal_Inseguro}, as entidades A (Alice) e B (Bob) estão se comunicando sobre um canal inseguro. Assumimos que todas as comunicações têm a presença de um agressor E (Eve) cujo objetivo é explorar falhas nos serviços de segurança sendo fornecidos por A e B.
+
+
+\begin{figure}[h]
+	\centering
+		\includegraphics{figuras/Canal_Inseguro.jpg}
+	\caption{Canal inseguro}
+	\label{fig:Canal_Inseguro}
+\end{figure}
+
+Por exemplo, A e B poderiam ser 2 pessoas comunicando-se sobre uma rede de telefonia celular, e E está tentando interceptar a comunicação. 
+Ou, ~A poderia ser um web browser de um indivíduo A que está em processo de compra de um produto de uma loja online ~B representada por seu site B. Neste cenário, o canal de comunicações é a internet. Um agressor E poderia tentar ler o tráfego entre A e B, portanto saber a informação sobre o cartão de crédito de A, ou poderia tentar personificar A ou B na transação. 
+Como um terceiro exemplo, considere a situação onde A está enviando uma mensagem via email para B sobre a internet. Um agressor E poderia tentar ler a mensagem, modificar pedaços selecionados, ou personificar A enviando mensagens dela mesma para B. Finalmente, considere o cenário onde A é um smart card que está em processo de autenticar seu possuidor ~A em um computador mainframe B em uma sala protegida do banco. Aqui, E poderia tentar monitorar as comunicações para obter informações sobre a conta de ~A, ou poderia tentar personificar ~A para sacar fundos da conta de ~A. Deveria ser evidente destes exemplos que uma entidade se comunicando não é necessariamente um humano, mas pode ser um computador, smart card, ou um módulo de software agindo no lugar de um indivíduo ou uma organização tal como uma loja ou um banco.
+
 
 O ambiente em questão não se mostra muito propício para práticas criptográficas. A largura de banda é muito pequena, visto que em cada mensagem SMS podem ser trafegados apenas 140 bytes binários. %Citar algo?
 Além disto, existem limitações de processamento no dispositivo celular, que podem comprometer a usabilidade de um esquema criptográfico tradicional.
@@ -204,6 +219,17 @@ Por outro lado, a manutenção de um diretório confiável de chaves públicas, típic
 Sendo assim, foi considerado o uso de criptografia em curvas elípticas com assinatura baseada em identidades, de acordo com o conceito proposto inicialmente por Shamir \cite{shamir}. Aprofundando-se na especificação, percebeu-se ainda que a chave pública do usuário poderia ser estabelecida essencialmente a partir de sua identificação única no sistema, ou seja, seu próprio número de celular. Desse modo, a criptografia em curvas elípticas baseada em identidades com emparelhamentos bilineares parecia ser capaz de atender aos requisitos do nosso aplicativo.%. e foi inicialmente adotada na solução do projeto.
 
 \chapter{Preliminares teóricas}% (assunto geral: curvas elípticas, emparelhamento, identidadesz protocolos, conceitos, etc)
+
+O estudo das curvas elípticas, por matemáticos, data da metade do século XIX. Como conseqüência, encontramos hoje uma vasta literatura sobre o assunto. Em 1984, Hendrik Lenstra descreve um engenhoso algoritmo para fatorar inteiros que recai nas propriedades das curvas elípticas. Esta descoberta motivou os pesquisadores a investigar novas aplicações em criptografia sobre curvas elípticas e teoria dos números computacional.
+
+A criptografia de chave pública foi concebida em 1976 por Whitfield Diffie e Martin Hellman. Sua primeira construção prática se seguiu em 1977 quando Ron Rivest, Adi Shamir e Len Adleman propuseram o protocolo agora tão conhecido RSA cuja segurança é baseada na intratabilidade do problema da fatoração de inteiros. A criptografia baseada em curvas elípticas (ECC) foi descoberta em 1985 por Neal Koblitz e Victor Miller.
+
+ Os protocolos de ECC são mecanismos de criptografia de chave pública e fornecem as mesmas funcionalidades que o esquema proposto no RSA. Contudo, sua segurança é baseada na dificuldade de um diferente problema, o problema do logaritmo discreto em curvas elípticas (ECDLP), que é um pouco mais difícil de se resolver. Atualmente, os melhores algoritmos para resolver o ECDLP levam tempo completamente exponencial, enquanto que para o problema da fatoração de inteiros do RSA, o tempo é sub-exponencial. Isso significa que o nível de segurança desejado pode ser obtido com chaves significativamente menores que as usadas no RSA. Por exemplo, o nível de segurança determinado por uma chave de 160 bits em sistemas ECC é equivalente para o obtido usando-se RSA com chaves de 1024 bits. 
+As vantagens obtidas com tamanhos de chaves menores são velocidade e uso eficiente de energia, largura de banda e armazenamento.
+
+Desde então, grande quantidade de pesquisas começou a ser publicada na segurança e implementação eficiente em ECC. No fim dos anos 90, sistemas sobre curvas elípticas começaram a receber aceitação comercial quando organizações de padrões respeitadas especificaram protocolos sobre curvas elípticas, e empresas privadas incluíram estes protocolos nos seus produtos de segurança. Hoje, ECC é considerado o estado-da-arte em criptografia de chave pública.
+
+
 
 \section{Curvas Elítpticas}
 %Geovs coloque sua seção aqui...
@@ -567,7 +593,7 @@ A partir do byte 6, ocorre o armazenamento dinâmico dos parâmetros. É reservado 
 	\item Parâmetro 1: O $y_A$.
 \end{itemize}
 
-\begin{figure}
+\begin{figure}[ht]
 	\centering
 		\includegraphics{figuras/requestmyqamessage.PNG}
 	\caption{RequestMyQAMessage}
@@ -593,12 +619,12 @@ A partir do byte 8, ocorre o armazenamento dinâmico dos parâmetros. É reservado 
 	\item Parâmetro 3: Parâmetro $z$, parte do criptograma.	
 \end{itemize}
 
-\begin{figure}
+\begin{picture}(-10,0)
 	\centering
 		\includegraphics{figuras/hereisyourqamessage.PNG}
-	\caption{HereIsYourQAMessage}
+	\caption{HereIsYourQAMessage}	
 	\label{fig:hereisyourqamessage}
-\end{figure}
+\end{picture}
 
 \subsection{AuthenticationMessage}
 Representa a mensagem por onde um usuário envia sua chave pública $y_A$ para um outro usuário. Os parâmetros $h_A$ e $t_A$ também são enviados, pois serão usados pelo outro usuário para validar a chave pública $y_A$ (funcionam quase como um certificado para o $y_A$).
@@ -619,7 +645,7 @@ A partir do byte 8, ocorre o armazenamento dinâmico dos parâmetros. É reservado 
 	\item Parâmetro 3: Parâmetro $T_A$.
 \end{itemize}
 
-\begin{figure}
+\begin{figure}[h]
 	\centering
 		\includegraphics{figuras/authenticationmessage.PNG}
 	\caption{AuthenticationMessage}
@@ -646,7 +672,7 @@ A partir do byte 8, ocorre o armazenamento dinâmico dos parâmetros. É reservado 
 	\item Parâmetro 3: Parâmetro $z$, parte do criptograma.	
 \end{itemize}
 
-\begin{figure}
+\begin{figure}[h]
 	\centering
 		\includegraphics{figuras/signcryptedmessage.PNG}
 	\caption{SignCryptedMessage}
