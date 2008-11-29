@@ -416,6 +416,135 @@ Dado que o tempo de uso do RSA de 1024 bits está no fim, uma nova versão será ne
 \section{Casos de uso}
 %Diag de casos de uso, e descrição do fluxo
 
+\begin{enumerate} 
+\item Cadastrar-se no sistema
+	 \begin{enumerate} 
+	 \item Descrição: Novo usuário deseja usar o sistema pela primeira vez e precisa efetuar as configurações necessárias para poder receber sua chave privada.
+   \item Evento Iniciador: Usuário seleciona a opção de primeiro uso do sistema
+	 \item Atores: Usuário, KGB.
+	 \item Pré-condição: Sistema de SMS seguro apresentando sua tela inicial.
+	 \item Seqüência de Eventos: 
+	 \begin{enumerate}
+			\item Usuário seleciona o botão de primeiro uso.
+			\item Sistema pede a entrada de uma nova senha privada do usuário.
+			\item Usuário cadastra uma nova senha no sistema e confirma.
+			\item Sistema exibe notificação de envio de mensagem de controle para a KGB.
+			\item Usuário confirma o envio e sistema transmite a mensagem.
+			\item Ao receber a mensagem, a KGB gera a chave privada do usuário e retorna uma mensagem segura contendo a chave gerada.
+			\item O sistema do usuário recebe a mensagem da KGB contendo sua chave privada.
+			\item Sistema pede novamente a senha do usuário e extrai a chave privada do usuário
+			\item O sistema verifica se a chave privada recebida é válida.
+			\item O sistema armazena a nova chave no celular.
+		\end{enumerate}
+		\item Pós-Condição: Sistema volta para a tela inicial e usuário está apto a autenticar novos contatos para trocar mensagens.
+		\item Extensões: 
+		\begin{enumerate}
+		\item Caso haja algum problema na geração ou na mensagem que contém a chave privada do usuário ou ainda se outra entidade tentou se passar por KGB então o sistema exibe mensagem de chave inválida ao usuário.
+		\end{enumerate}
+\end{enumerate}
+		
+\item Autenticar novo contato
+		\begin{enumerate}
+		\item Descrição: Quando um usuário quiser trocar mensagem com um contato que ainda não foi autenticado pelo Sistema de SMS Seguro deverá requisitar sua autenticação.
+		\item Evento Iniciador: Usuário deseja autenticar um novo contato para enviá-lo uma mensagem.
+		\item Atores: Usuário que quer se comunicar, usuário recebedor da mensagem.
+		\item Pré-condição: Sistema exibe tela inicial.
+		\item Seqüência de Eventos: 
+		\begin{enumerate}
+			\item Usuário seleciona a opção de autenticar novo contato.
+			\item Usuário insere o número do telefone do novo contato e seleciona ok.
+			\item Sistema exibe notificação de envio de SMS para o contato informado.
+			\item Usuário confirma o envio da mensagem SMS.
+			\item Sistema envia requisição de autenticação para o novo contato.
+		\end{enumerate}
+    \item Pós-Condição: Sistema volta para a tela inicial.
+		\item Extensões: 
+		\begin{enumerate}
+			\item Sistema exibe notificação de erro no envio da mensagem caso o serviço de envio esteja indisponível. (Passo v).
+		\end{enumerate}
+		\end{enumerate}
+	
+\item Enviar Mensagem
+  	\begin{enumerate}
+  	\item Descrição: Usuário deseja compor e enviar uma nova mensagem SMS para outro usuário.
+  	\item Evento Iniciador: Usuário seleciona botão de envio de nova mensagem.
+  	\item Atores: Usuário emissor da mensagem.
+  	\item Pré-condição: Sistema de SMS seguro apresentando sua tela inicial.
+  	\item Seqüência de Eventos: 
+  	\begin{enumerate}
+  	\item Usuário emissor da mensagem seleciona botão de envio de mensagem. 
+		\item Sistema exige que o usuário indique o destinatário da mensagem.
+		\item Usuário seleciona o destino da lista de contatos exibida.
+		\item Usuário compõe a mensagem a ser enviada
+		\item	Usuário confirma o envio da mensagem para o destinatário escolhido.
+		\item Sistema exibe notificação de envio da mensagem.
+		\end{enumerate}
+	  \item Pós-Condição: A notificação de mensagem enviada é exibida e o sistema retorna à tela inicial.
+		\item Extensões: 
+		\begin{enumerate}
+		\item Sistema exibe notificação de erro no envio da mensagem caso o serviço de envio esteja indisponível. (Passo v).
+		\end{enumerate}
+		\item Inclusões
+		\begin{enumerate}
+		\item Sistema busca todos os contatos da lista de contatos do celular para exibi-los.
+		\item	Caso de uso 4.
+		\end{enumerate}
+		\end{enumerate}
+
+\item Recepção de Mensagem
+	\begin{enumerate}
+	\item Descrição: Quando uma nova mensagem chega no celular o sistema deve captá-la e fazer seu tratamento.
+	\item Evento Iniciador: Chega uma nova mensagem do Sistema de SMS Seguro no celular de um usuário.
+	\item Atores: Sistema operacional.
+	\item Pré-condição: Celular do usuário ligado.
+	\item Seqüência de Eventos:
+	\begin{enumerate}
+	\item Celular recebe a nova mensagem e a coloca na fila.
+	\item	Sistema operacional do celular capta a mensagem e requisita ao usuário que inicialize a aplicação caso ela não esteja em execução.
+	\item	O sistema identifica a primitiva da mensagem e trata de forma correspondente.
+	\end{enumerate}
+	\item Pós-Condição: a mensagem está processada e o sistema está exibindo a tela inicial.
+	\item Extensões: 
+	\begin{enumerate}
+	\item	Sistema trata mensagem cifrada e assinada. (Passo iii)
+	\item	Sistema trata mensagem de autenticação de usuário.(Passo iii)
+	\item	Sistema trata mensagem de pedido da chave privada. (Passo iii)
+	\item	Sistema trata mensagem de entrega de chave privada. (Passo iii)
+	\end{enumerate}
+\end{enumerate}
+
+\item Encriptação/Assinatura de Mensagem
+		\begin{enumerate}
+		\item Descrição: Usuário escreveu uma mensagem para alguém e deseja cifrá-la e assiná-la.
+		\item Evento Iniciador: Usuário requisita envio de mensagem cifrada e assinada ao sistema.
+		\item Atores: Usuário que deseja enviar uma mensagem segura.
+		\item Pré-condição: Usuário está com a mensagem pronta na tela de envio.
+		\item Seqüência de Eventos:
+		\begin{enumerate}
+		\item	Usuário seleciona a opção de enviar a mensagem.
+		\item	Sistema cifra e assina a mensagem e exibe tela de confirmação de envio.
+		\item	Usuário confirma o envio e sistema transmite a mensagem segura.
+		\end{enumerate}
+		\item Pós-Condição: Sistema volta para a tela inicial.
+		\end{enumerate}
+
+\item Verificar Mensagem
+  	\begin{enumerate}
+  	\item Descrição: Usuário deseja visualizar uma mensagem na sua caixa de entrada.
+		\item Evento Iniciador: Usuário abre a caixa de entrada do sistema.
+		\item Atores: Usuário.
+		\item Pré-condição: Sistema de SMS seguro apresentando mensagens recebidas na caixa de entrada.
+		Seqüência de Eventos: 
+		\begin{enumerate}
+		\item	Usuário escolhe a mensagem que deseja visualizar e seleciona ok.
+		\item	Sistema verifica e decifra a mensagem.
+		\item	Sistema exibe a mensagem clara para que o usuário possa lê-la.
+		\end{enumerate}
+		\item Pós-Condição: Sistema exibindo mensagem clara para o usuário.
+		\end{enumerate}
+\end{enumerate}
+
+
 \section{Especificação do protocolo}
 
 %Falar das nossas primitivas, como é feita serialização dos bytes em cada mensagem, etc
