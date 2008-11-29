@@ -304,20 +304,20 @@ Desde então, grande quantidade de pesquisas começou a ser publicada na segurança
 
 Os sistemas baseados em logaritmos discretos apresentados anteriormente podem ser descritos na configuração de um grupo cíclico finito. A definição de grupos segue abaixo.
 
-Grupos
+\subsection{Grupos}
 
 Um grupo abeliano ($G$,$*$) consiste de um conjunto G com uma operação binária * : $G x G \rightarrow G$ satisfazendo as seguintes propriedades:
 	(Associatividade) $a * (b * c)$ = $(a * b) * c$ para todos os $a,b, c \in G$
 	(Existência de uma identidade) Existe um elemento $e \in G$ tal que $a*e = e*a = a$ para todo $a \in G$.
 	(Existência de inversos) Para cada $a \in G$, existe um elemento $b \in G$, chamado inverso de $a$, tal que $a * b = b * a = e$.
-	(Comutatividade) $a * b = b * a$ para todos $a$,b \in G.
+	(Comutatividade) $a * b = b * a$ para todos $a$, $b \in G$.
 
 
 A operação do grupo é geralmente chamada de adição (+) ou multiplicação (-). Em primeira instância, o grupo é chamado de grupo aditivo, o elemento (aditivo) identidade é normalmente denotado por 0, e o inverso (aditivo) d e a é denotado por -a. Em uma segunda instância, o grupo é chamado de grupo multiplicativo, o elemento (multiplicativo) identidade é denotado por 1, e o inverso (multiplicativo) de a é denotado por a-1 .
 O grupo é finito se G é um conjunto finito, no caso em que o número de elementos em G é chamado a ordem de G.
 Por exemplo, seja p um numero primo, e $Fp$ = {0,1,2,...,p-1} denota o conjunto dos inteiros módulo $p$. Então (Fp,+), onde a operação + é definida com a operação de adição de inteiros módulo p, é um grupo finito aditivo de ordem p com elemento identidade (aditivo) 0. Além isso, ($F*p$,$\bullet$), onde F*p denota os elementos diferentes de zero em Fp e a operação $\bullet$ é definida como a multiplicação de inteiros módulo $p$, é um grupo finito multiplicativo de ordem $p-1$ com elemento identidade (multiplicativo) 1. A tripla ($Fp$, $+$ , $\bullet$) é um campo finito, denotado mais sucintamente por $Fp$.
 
-Agora, se $G$ é um grupo finito multiplicativo de ordem $n$ e $g \in G$, então o menor inteiro positivo $t$ tal que $gt = 1$ é chamado de ordem de g; esse t sempre existe e é divisor de n. O conjunto $‹g› = {gi : 0 \leq i \leq t-1}$ de todas as potências de $g$ é ele próprio um grupo sobre a mesma operação como $G$, e é chamado um subgrupo cíclico de $G$ gerado por $G$. Declarações análogas são verdadeiras se $G$ é escrito aditivamente. Assim, a ordem de g   G é o menor divisor positivo $t$ de $n$ tal que $tg = 0$, e $‹g› = {ig : 0 \leq i \leq t-1}$. Aqui, tg denota o elemento obtido por adicionar t cópias de $g$. Se G tem um elemento $g$ de ordem $n$, então $G$ é dito ser um grupo cíclico e $g$ é um gerador de G. Por exemplo, com o os parâmetros do DL ($p$,$q$, $g$) definidos anteriormente, o grupo multiplicativo ($F*p$, \bullet) é um grupo cíclico de ordem p-1. Ademais, $‹g›$ é um subgrupo cíclico de ordem $q$.
+Agora, se $G$ é um grupo finito multiplicativo de ordem $n$ e $g \in G$, então o menor inteiro positivo $t$ tal que $gt = 1$ é chamado de ordem de g; esse t sempre existe e é divisor de n. O conjunto $<g> = {gi : 0 \leq i \leq t-1}$ de todas as potências de $g$ é ele próprio um grupo sobre a mesma operação como $G$, e é chamado um subgrupo cíclico de $G$ gerado por $G$. Declarações análogas são verdadeiras se $G$ é escrito aditivamente. Assim, a ordem de g   G é o menor divisor positivo $t$ de $n$ tal que $tg = 0$, e $<g> = {ig : 0 \leq i \leq t-1}$. Aqui, tg denota o elemento obtido por adicionar t cópias de $g$. Se G tem um elemento $g$ de ordem $n$, então $G$ é dito ser um grupo cíclico e $g$ é um gerador de G. Por exemplo, com o os parâmetros do DL ($p$,$q$, $g$) definidos anteriormente, o grupo multiplicativo $(F*p, \bullet)$ é um grupo cíclico de ordem p-1. Ademais, $<g>$ é um subgrupo cíclico de ordem $q$.
 
  
 \subsection{Grupos em Curvas Elípticas}
@@ -331,12 +331,12 @@ onde $a$, $b$   $Fp$ satisfaz $4a^{3}+ 27b^{2}=0 (mod p)$. Um par ($x$, $y$), on
 
 \begin{equation}
 \label{eq:defcurvaeliptica2}
-$y^2= x^3+ 2x+4$
+y^2= x^3+ 2x+4
 \end{equation}
 
  Então, os pontos sobre $E$ são:
 
-$E(F7) = { ?, (0,2), (0,5), (1,0), (2,3), (2,4), (3,3), (3,4), (6,1), (6,6) }$.
+$E(F7) = { \infty, (0,2), (0,5), (1,0), (2,3), (2,4), (3,3), (3,4), (6,1), (6,6) }$.
 
 Agora, há um método bem conhecido para somar 2 pontos numa curva elíptica $P: (x1, y1)$ e $Q: (x2, y2)$ para produzir um terceiro ponto na curvar $R: (x3, y3)$. Veja a figura seguinte:
 
@@ -356,7 +356,7 @@ A regra de adição requer algumas operações aritméticas (adição, subtração, multi
 
 Seja $E$ uma curva elíptica definida sobre o campo finito $Fp$. Seja $P$ um ponto em $E(Fp)$, e suponha que $P$ tenha ordem prima $n$. Então o subgrupo cíclico de $E(Fp)$ gerado por $P$ é 
 
-$‹P› = { \infnt, P, 2P, 3P, …, (n-1)P }.$
+$<P> = { \infty, P, 2P, 3P, ..., (n-1)P }.$
 
 O primo $p$, a equação da curva elíptica $E$, e o ponto $P$ e sua ordem $n$, são os parâmetros públicos do domínio. Uma chave privada é um inteiro d que é selecionado uniformemente de forma aleatória no intervalo $[1,n-1]$, e a chave pública correspondente é $Q = dP$.
 O problema de determinar d dados os parâmetros do domínio e Q é o problema do logaritmo discreto em curvas elípticas (ECDLP).
