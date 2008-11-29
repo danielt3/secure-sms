@@ -390,16 +390,17 @@ public abstract class Controller {
         return Controller.selectedMessage;
     }
 
-    public static void testinho() {
+    public static void runTestSuite() {
         
         Output.println("#Begin benchmarks");
         
-        Output.println("==Mockup==");
-        IntegrationTests.mockUpBenchmark();
+        //Output.println("==Mockup==");
+        //IntegrationTests.mockUpBenchmark();
         
-        Output.println("==Implementation==");
-        IntegrationTests.implBenchmark();
-        
+        //Output.println("==Implementation==");
+        //IntegrationTests.implBenchmark();
+        //IntegrationTests.iteractiveTest();
+        IntegrationTests.testWriteFile();
         Output.println("#End benchmarks");
     }
 }
