@@ -48,7 +48,7 @@
 \newcommand{\ID}{\mathsf{ID}}
 \newcommand{\Z}{\mathbb{Z}}
 	
-\titulo{Aplicativo Seguro de SMS}
+\titulo{Aplicativo de SMS Seguro}
 
 \orientador{Prof. Dr. Paulo Sérgio Licciardi Messeder Barreto}
 
@@ -160,13 +160,14 @@ Na figura \ref{fig:Canal_Inseguro}, as entidades A (Alice) e B (Bob) estão se co
 \end{figure}
 
 Por exemplo, A e B poderiam ser 2 pessoas comunicando-se sobre uma rede de telefonia celular, e E está tentando interceptar a comunicação. 
-Ou, ~A poderia ser um web browser de um indivíduo A que está em processo de compra de um produto de uma loja online ~B representada por seu site B. Neste cenário, o canal de comunicações é a internet. Um agressor E poderia tentar ler o tráfego entre A e B, portanto saber a informação sobre o cartão de crédito de A, ou poderia tentar personificar A ou B na transação. 
+Ou, ~A poderia ser um web browser de um indivíduo A que está em processo de compra de um produto de uma loja online ~B representada por seu site B. Neste cenário, o canal de comunicação é a Internet. Um agressor E poderia tentar ler o tráfego entre A e B, portanto saber a informação sobre o cartão de crédito de A, ou poderia tentar personificar A ou B na transação. 
 Como um terceiro exemplo, considere a situação onde A está enviando uma mensagem via email para B sobre a internet. Um agressor E poderia tentar ler a mensagem, modificar pedaços selecionados, ou personificar A enviando mensagens dela mesma para B. Finalmente, considere o cenário onde A é um smart card que está em processo de autenticar seu possuidor ~A em um computador mainframe B em uma sala protegida do banco. Aqui, E poderia tentar monitorar as comunicações para obter informações sobre a conta de ~A, ou poderia tentar personificar ~A para sacar fundos da conta de ~A. Deveria ser evidente destes exemplos que uma entidade se comunicando não é necessariamente um humano, mas pode ser um computador, smart card, ou um módulo de software agindo no lugar de um indivíduo ou uma organização tal como uma loja ou um banco.
 
 
 O ambiente em questão não se mostra muito propício para práticas criptográficas. A largura de banda é muito pequena, visto que em cada mensagem SMS podem ser trafegados apenas 140 bytes binários. %Citar algo?
 Além disto, existem limitações de processamento no dispositivo celular, que podem comprometer a usabilidade de um esquema criptográfico tradicional.
 
+%TODO: Tirar esse "talvez"! Citar aqui exemplos de soluções existentes e comparar com cenário no início do ano
 Talvez devido a estas dificuldades, o cenário atual não apresenta uma grande variedade de soluções abrangindo objetivos similares aos de nosso sistema, e não há uma solução universalmente adotada.
 
 \chapter{Objetivos}
