@@ -52,7 +52,7 @@
 \newcommand{\ID}{\mathsf{ID}}
 \newcommand{\Z}{\mathbb{Z}}
 	
-\titulo{Aplicativo de SMS Seguro}
+\titulo{Sistema de SMS Seguro}
 
 \orientador{Prof. Dr. Paulo Sérgio Licciardi Messeder Barreto}
 
@@ -94,7 +94,7 @@
 % (deve ficar no verso da página de rosto)
 %
 \renewcommand{\PoliFichaCatalograficaData}{% TODO: consertar
-  1. Criptografia. 2. Assunto \#2. 3. Assunto \#3.
+  1. Criptografia. 2. Dispositivos móveis \#2. 3. Curvas Elípticas \#3.
   I. Universidade de São Paulo. Escola Politécnica.
   \PoliDepartamentoData. II. t.}
 
@@ -134,11 +134,19 @@ This work consists in the specification and implementation of a system which is 
 \listadesiglas{
 \begin{center}
 \emph{\textbf{SMS} - Short Message Service}\\
+\emph{\textbf{SMSC} - Short Message Service Center}\\
+\emph{\textbf{GSM} - Global System for Mobile Comunnication}\\
 \emph{\textbf{ECC} - Elliptic Curve Cryptography}\\
 \emph{\textbf{WTK} - Wireless Toolkit}\\
 \emph{\textbf{MIDP} - Mobile Information Device Profile}\\
 \emph{\textbf{CLDC} - Connected Limited Device Configuration}\\
-\emph{\textbf{KGB} - Key Generation Bureau}
+\emph{\textbf{DES} - Data Encryption Standard}
+\emph{\textbf{AES} - Advanced Encryption Standard}
+\emph{\textbf{DSA} - Digital Signature Algorithm}
+\emph{\textbf{MAC} - Message Authentication Code}
+\emph{\textbf{DSS} - Digital Signature System}
+\emph{\textbf{ECC} - Ellyptic Curve Cryptography}
+
 %TODO: acrescentar as siglas aqui
 %Existe uma norma, acho que é pra por na ordem de aparição no texto... ou em ordem alfabética.. não sei, TODO: confirmar nas diretrizes
 \end{center}
@@ -147,24 +155,26 @@ This work consists in the specification and implementation of a system which is 
 
 \chapter{Introdução}
 
-O Serviço de Mensagens Curtas ("Short Message Service", ou SMS) é um serviço oferecido por operadoras de telefonia celular para que seus usuários troquem mensagens curtas de texto com outros usuários da rede ou com serviços da Internet. Atualmente, cerca de XXX pessoas utilizam o SMS no mundo e XXX mensagens são trocadas anualmente.
+O Serviço de Mensagens Curtas (\emph{Short Message Service}, ou SMS) é um serviço oferecido por operadoras de telefonia celular para que seus usuários troquem mensagens curtas de texto com outros usuários da rede ou com serviços da Internet. Atualmente, cerca de XXX pessoas utilizam o SMS no mundo e XXX mensagens são trocadas anualmente.
 
-A rede GSM (Global System for Mobile Comunnication), sobre a qual as mensagens SMS trafegam, usa o mecanismo "store-and-forward", que é similar ao serviço SMTP de correio eletrônico. Em vez de servidores de email, são usados centros de SMS (SMSC) que armazenam as mensagens SMS antes de serem enviadas para o fornecedor de serviços (operadora) ou para outro SMSC.
+A rede GSM (Global System for Mobile Comunnication), sobre a qual as mensagens SMS trafegam, usa o mecanismo \emph{store-and-forward}, que é similar ao serviço SMTP de correio eletrônico. Em vez de servidores de email, são usados centros de SMS (SMSC) que armazenam as mensagens SMS antes de serem enviadas para o fornecedor de serviços (operadora) ou para outro SMSC.
 
 Embora as conexões entre um SMSC e os nós da rede GSM sejam protegidas por túneis VPN, as mensagens SMS ficam armazenadas em texto claro no SMSC. Isto significa que os operadores ou um atacante que invada o sistema podem visualizar e alterar o conteúdo de todas as mensagens SMS que estão armazenadas no SMSC, além de enviar mensagens em nome de outrem\cite{loon}.
 
-Além de comprometer a privacidade dos usuários, essa vulnerabilidade da rede GSM limita usos da tecnologia SMS além da comunicação interpessoal, como a realização de transações bancárias, sistemas de comunicação que requeiram confidencialidade e integridade (órgãos militares e governamentais, comunicação corporativa) ou ainda serviços de monitoração remota de dados sensíveis\cite{smsanalisys}.
+Além de comprometer a privacidade dos usuários, essa vulnerabilidade da rede GSM limita usos da tecnologia SMS além da comunicação interpessoal, como a realização de transações bancárias, sistemas de comunicação que requeiram confidencialidade e integridade (órgãos militares e governamentais, comunicação corporativa) ou ainda serviços de monitoração remota de dados sensíveis\cite{smsanalysis}.
 
 Desse modo, nos motivamos a projetar e implementar um sistema que oferecesse serviços de segurança à plataforma SMS de maneira transparente, isto é, sem que fossem necessárias mudanças na rede atual e, por outro lado, fosse viável em dispositivos móveis, dada suas limitações de banda, processamento e energia.
 
 \section{Cenário} %Falar dos limitantes, processamento e tamanho de mensagem pequenos
 
-Atualmente não existem soluções universalmente adotadas para garantir segurança em mensagens SMS. Desse modo, na maioria das transações as mensagens trafegam pela rede celular de forma insegura, passando obrigatoriamente por pelo menos um intermediário não 100\% confiável: a operadora do serviço de telefonia.
+\subsection{Alternativas existentes}
+Atualmente não existem soluções universalmente adotadas para garantir segurança em mensagens SMS. Na maioria das transações as mensagens trafegam pela rede celular de forma insegura, passando obrigatoriamente por pelo menos um intermediário não 100\% confiável: a operadora do serviço de telefonia.
 
-No início de nossa pesquisa, as alternativas de sistemas de segurança pra SMS encontradas através dos mecanismos de busca na Internet eram escassas. No decorrer do ano, diversas alternativas foram surgindo. Listamos aqui algumas delas e resumimos suas principais características. 
+No início de nossa pesquisa, as alternativas de sistemas de segurança pra SMS disponíveis eram escassas. No decorrer do ano, diversas novas soluções foram surgindo. Listamos aqui algumas delas e resumimos suas principais características. 
 
 %TODO listar soluções atuais pelo geov´s
 
+\subsection{Ambiente}
 Na figura \ref{fig:Canal_Inseguro}, as entidades A (Alice) e B (Bob) estão se comunicando sobre um canal inseguro. Assumimos que todas as comunicações têm a presença de um agressor E (Eve) cujo objetivo é explorar falhas nos serviços de segurança sendo fornecidos por A e B.
 
 
@@ -201,21 +211,20 @@ Posteriormente, realizamos o estudo de esquemas de criptografia de modo a buscar
 Por último, realizamos a implementação do sistema conforme sua especificação e realizamos testes de modo a confrontar os dados obtidos em um ambiente real com as previsões feitas na fase anterior.
 
 \section{Organização}
-O restante desta monografia organiza-se como se segue. No capítulo bla vla af
-%TODO
+O restante desta monografia organiza-se como se segue. No capítulo 2 apresentamos algumas preliminares teóricas necessárias ao desenvolvimento de nossa pesquisa e essenciais ao entendimento deste trabalho. O capítulo 3 aprofunda a discussão do tema, delineando o escopo do sistema e definindo métricas de avaliação das soluções estudadas. Os capítulos 3 a 5 apresentam a análise de requisitos e dos casos de uso do sistema e justificam as decisões de projeto e implementação tomadas com base nessa análise. Em seguida, apresentamos os resultados obtidos e finalmente concluímos o trabalho.
 
 \chapter{Preliminares teóricas}% (assunto geral: curvas elípticas, emparelhamento, identidadesz protocolos, conceitos, etc)
 
 \section{Serviços de Segurança}
 
-Alguns dos principais serviços de segurança da informação estão listados abaixo:
+Listamos abaixo alguns dos principais serviços de segurança da informação:
 
 \begin{itemize}
-\item Confidencialidade: manter secretos os dados de todos a não ser aqueles autorizados a vê-los - mensagens enviadas por A para B não deveriam ser legíveis para .
-\item Integridade dos dados: assegurar que os dados não foram alterados por entidades não autorizadas significa - B deveria ser capaz de detectar quando dados enviados por A foram modificados por E.
-\item Autenticação da origem dos dados: confirmar a fonte dos dados - B deveria ser capaz de verificar que dados propositalmente enviados por A de fato foram originados por A.
-\item Autenticação da entidade: confirmar a identidade da entidade: B deveria se convencer da identidade da outra entidade em comunicação.
-\item Irretratabilidade: prevenir uma entidade de negar comprometimentos ou atos anteriores - Quando B recebe uma mensagem propositalmente de A, não apenas B está convencido de que a mensagem se originou em A, mas B pode convencer uma terceira parte disso; portanto A não pode negar ter enviado a mensagem para B.
+\item Confidencialidade: manter secretos os dados de todos a não ser àqueles autorizados a acessá-los - mensagens enviadas por $A$ para $B$ não deveem ser legíveis por $E$ .
+\item Integridade: assegurar que os dados não sejam alterados por entidades não autorizadas - $B$ deve ser capaz de detectar quando dados enviados por $A$ tenham sido modificados acidentalmente ou deliberadamente por um atacante $E$.
+\item Autenticidade dos dados: confirmar a fonte dos dados - $B$ deve ser capaz de verificar que dados supostamente enviados por $A$ de fato foram originados por $A$.
+\item Autenticidade da entidade: confirmar a identidade de determinada entidade: $B$ deve poder convencer-se da veracidade da identidade de $A$.
+\item Irretratabilidade: prevenir uma entidade de negar comprometimentos ou atos anteriores - quando $B$ recebe uma mensagem supostamente de $A$, não apenas $B$ está convencido de que a mensagem se originou em $A$, mas $B$ pode convencer uma terceira parte disso; portanto $A$ não pode negar ter enviado a mensagem para $B$.
 Algumas aplicações podem ter outros objetivos de segurança tais como anonimato das entidades em comunicação ou controle de acesso (a restrição de acessar recursos).
 \end{itemize}
 
@@ -224,46 +233,47 @@ Algumas aplicações podem ter outros objetivos de segurança tais como anonimato d
 
 \subsection{Introdução}
 
-Os sistemas criptográficos podem ser amplamente divididos em dois tipos. Em esquemas de chave simétrica, as entidades em comunicação compartilham uma informação, usada como chave, que é ao mesmo tempo secreta e autêntica. Conseqüentemente, eles podem usar um esquema de encriptação simétrica tal como o Data Encryption Standard (DES), RC4, ou o Advanced Encryption Standard (AES) para integrar confidencialidade. 
+Os sistemas criptográficos podem ser amplamente divididos em dois tipos. Em esquemas de chave simétrica, as entidades em comunicação compartilham uma informação, usada como chave, que é ao mesmo tempo secreta e autêntica. Conseqüentemente, eles podem usar um esquema de encriptação simétrica tal como o \emph{Data Encryption Standard (DES)}, \emph{RC4}, ou o \emph{Advanced Encryption Standard (AES)} para prover o serviço de confidencialidade. 
 
-Eles também podem usar um algoritmo de código de autenticação de mensagens (MAC) tal como o HMAC para reunir integridade e autenticação da origem dos dados.
-Por exemplo, se confidencialidade fosse desejada e a chave secreta compartilhada entre A e B fosse k, então A encriptaria uma mensagem m, em texto claro, usando uma função de encriptação ENC e a chave k e transmitiria a cifra resultante c - ENCk (m) para B. Ao receber c, B usaria a função de decriptação DEC e a mesma chave k para recuperar m = DECk (c). 
+Eles também podem usar um algoritmo de código de autenticação de mensagens, tal como o \emph{HMAC}, para reunir os serviços de integridade e autenticação da origem dos dados.
+
+Por exemplo, se confidencialidade fosse desejada e a chave secreta compartilhada entre $A$ e $B$ fosse $k$, então $A$ encriptaria uma mensagem $m$, em texto claro, usando uma função de encriptação $ENC$ e a chave $k$ e transmitiria a cifra resultante $c - ENC_{k}(m)$ para $B$. Ao receber $c$, $B$ usaria a função de decriptação $DEC$ e a mesma chave $k$ para recuperar $m = DEC_{k}(c)$. 
 
 
 \subsection{Administração e distribuição de chaves}
 
-A principal vantagem da criptografia de chave simétrica é a alta eficiência, contudo, há significantes desvantagens destes sistemas. Uma delas é o conhecido problema da distribuição de chave - a necessidade de um canal que seja ambos, secreto e autenticado, para a distribuição das chaves. Em algumas aplicações, esta distribuição pode ser convenientemente feita por usar um canal fisicamente seguro tal como um emissário de confiança. Outra maneira é usar os serviços de uma terceira parte confiável on-line que inicialmente estabelece chaves secretas com todas as entidades na rede e conseqüentemente usa essas chaves para distribuir as informações de chaves para as entidades em comunicação quando requerido \footnote{Este modo de usar uma Terceira parte centralizada para distribuir chaves para algoritmos de chave simétrica às partes conforme elas necessitarem é usado pelo protocolo de autenticação da rede Kerberos para aplicações cliente/servidor.}. Soluções como esta podem ser bem apropriadas para ambientes onde uma autoridade central aceitável e confiável, mas é claramente impraticável em aplicações tal como e-mail na internet.
+A principal vantagem da criptografia de chave simétrica é a alta eficiência. Contudo, há significantes desvantagens nestes sistemas. Uma delas é o conhecido problema da distribuição de chaves - a necessidade de um canal que seja secreto e autenticado para a distribuição das chaves. Em algumas aplicações, esta distribuição pode ser convenientemente feita por usar um canal fisicamente seguro, tal como um emissário de confiança. Outra maneira é usar os serviços de uma terceira parte confiável \emph{on-line} que inicialmente estabelece chaves secretas com todas as entidades na rede. Essa entidade usa essas chaves para distribuir as informações de chaves para as entidades em comunicação quando requerido\footnote{Este modo de usar uma terceira parte centralizada para distribuir chaves para algoritmos de chave simétrica às partes conforme elas necessitarem é usado pelo protocolo de autenticação da rede \emph{Kerberos} para aplicações cliente/servidor.}. Soluções como esta podem ser bem apropriadas para ambientes onde há uma autoridade central aceitável e confiável, mas é claramente impraticável em aplicações tal como \emph{e-mail} na \emph{Internet}.
 
-Uma segunda desvantagem é o problema de administração de chaves. - em uma rede de N entidades cada entidade pode ter que manter diferentes informações de chaves com cada uma das N-1 entidades. Logo, seriam necessárias N(N-1)/2 chaves privadas em toda a rede o que inviabiliza a administração quando N se torna grande. Este problema pode ser aliviado usando serviços de uma terceira parte on-line que distribui as chaves conforme sãs requeridas, assim reduzindo a necessidade das entidades de armazenar múltiplas chaves seguramente. Novamente, contudo, tais soluções não são práticas em alguns cenários. Finalmente, uma vez que a informação sobre as chaves é compartilhada entre duas (ou mais) entidades, técnicas de chave simétrica não podem ser usadas para implementar esquemas de assinatura digital (DSS) elegantes que forneçam serviços de irretratabilidade. Isto porque é impossível distinguir entre as ações tomadas por diferentes detentores de uma chave secreta. \footnote{Esquemas de assinaturas digitais podem ser implementados usando técnicas de chave simétrica; contudo, estes esquemas geralmente são geralmente impraticáveis quando for requerido o uso de uma terceira parte confiável on-line ou de novas chaves para cada assinatura.}
+Uma segunda desvantagem é o problema de administração de chaves. Em uma rede de $N$ entidades, cada entidade pode ter que manter diferentes informações de chaves com cada uma das $N-1$ entidades. Logo, seriam necessárias $N(N-1)/2$ chaves privadas em toda a rede, o que inviabiliza a administração ao passo que $N$ se torna grande. Este problema pode ser aliviado usando serviços de uma terceira parte \emph{on-line} que distribui as chaves conforme sãs requeridas, assim reduzindo a necessidade das entidades de armazenar múltiplas chaves seguramente. Novamente, contudo, tais soluções não são práticas em alguns cenários. Finalmente, uma vez que a informação sobre as chaves é compartilhada entre duas (ou mais) entidades, técnicas de chave simétrica não podem ser usadas para implementar esquemas de assinatura digital (DSS) elegantes que forneçam serviços de irretratabilidade. Isto porque é impossível distinguir entre as ações tomadas por diferentes detentores de uma chave secreta\footnote{Esquemas de assinaturas digitais podem ser implementados usando técnicas de chave simétrica; contudo, estes esquemas geralmente são geralmente impraticáveis quando for requerido o uso de uma terceira parte confiável on-line ou de novas chaves para cada assinatura.}.
 
 \section{Criptografia de chave pública}
 
 \subsection{Introdução}
-A noção de criptografia de chave pública, foi introduzida em 1975 por Diffie, Hellman e Merkle para resolver as deficiências da criptografia de chaves simétricas mencionadas anteriormente. Em contrate aos esquemas de chave simétrica, os esquemas de chave pública requerem apenas que as entidades em comunicação troquem informações de chaves que são autenticas (mas não secretas). Cada entidade seleciona um único par (e,d) consistindo de uma chave pública e, e uma chave privada relacionada d que a entidade mantém secreta). As chaves têm a propriedade de que é computacionalmente impraticável determinar a chave privada apenas de conhecimento da chave pública.
+A noção de criptografia de chave pública foi introduzida por Diffie e Hellman\cite{diffie-hellamn} e Merkle\cite{merkle} para resolver as deficiências da criptografia de chaves simétricas mencionadas anteriormente. Em contraste aos esquemas de chave simétrica, os esquemas de chave pública requerem apenas que as entidades em comunicação troquem informações de chaves que são autenticas (mas não secretas). Cada entidade seleciona um único par $(e,d)$ consistindo de uma chave pública $e$, e uma chave privada relacionada $d$ que a entidade mantém secreta). As chaves têm a propriedade de que é computacionalmente impraticável determinar a chave privada apenas de conhecimento da chave pública.
 
 \subsection{Confidencialidade}
 
-Se a entidade A deseja enviar uma mensagem confidencial m para uma entidade B, ela obtém uma cópia autêntica da chave pública de B eB, e usa a função de encriptação ENC de uma esquema de chave pública para computar a cifra c = ENCeB (m). A então transmite c para B, que usa a função de decriptação DEC e sua chave privada dB para recuperar a mensagem clara: m = DECdB (c). A presunção é que um agressor com posse apenas de eB (mas não de dB) não consegue decriptar c. Observe que não há nenhuma necessidade de discrição de eB. É essencial apenas que A obtenha uma cópia autentica de eB - por outro lado A encriptaria m usando a chave pública eE de alguma entidade E tentando personificar B, e m seria recuperável por E.
+Se a entidade $A$ deseja enviar uma mensagem confidencial $m$ para uma entidade $B$, ela obtém uma cópia autêntica da chave pública de $B$ $e_{B}$, e usa a função de encriptação $ENC$ de uma esquema de chave pública para computar a cifra $c = ENC_{e_{B}}(m)$. $A$ então transmite $c$ para $B$, que usa a função de decriptação $DEC$ e sua chave privada $d_{B}$ para recuperar a mensagem clara: $m = DEC_{d_{B}}(c)$. A presunção é que um agressor com posse apenas de $e_{B}$ (mas não de $d_{B}$) não consegue decriptar $c$. Observe-se que não há nenhuma necessidade de discrição de $e_{B}$. É essencial apenas que $A$ obtenha uma cópia autentica de $e_{B}$ - por outro lado $A$ encriptaria m usando a chave pública $e_{E}$ de alguma entidade $E$ tentando personificar $B$, e $m$ seria recuperável por $E$.
 
 \subsection{Irretratabilidade}
 
-Esquemas de assinatura digital podem ser desenvolvidos para autenticação da origem e integridade dos dados, e para facilitar o fornecimento de serviços de irretratabilidade. Uma entidade A usaria o algoritmo de geração de assinatura SIGN de um esquema de assinatura digital e sua chave privada dA para computar a assinatura da mensagem: s = SIGNdA (m). Ao receber m e s, uma entidade B que tem uma cópia autentica da chave pública de A eA usa um algoritmo de assinatura de verificação para confirmar que s foi de fato gerado a partir de m e dA. Uma vez que dA é presumivelmente conhecido por A, B está assegurado de que a mensagem foi realmente originada por A. Ademais, uma vez que a verificação requer apenas quantidades não secretas m e eA, a assinatura s para m pode também ser verificada por uma terceira parte que poderia estabelecer contestações se A negar ter assinado a mensagem m. Diferente das assinaturas escritas à mão, a assinatura s de A depende da mensagem m sendo assinada, prevenindo um forjador de simplesmente acrescentar s a uma mensagem $\sim m$ linha e afirmar que A assinou $\sim m$. Mesmo embora havendo nenhuma necessidade de segredo com relação à chave pública eA, é essencial que os verificadores devessem usar uma cópia autêntica de eA quando verificar assinaturas personificadamente geradas por A.
+Esquemas de assinatura digital podem ser desenvolvidos para autenticação da origem e integridade dos dados, e para facilitar o fornecimento de serviços de irretratabilidade. Uma entidade $A$ usaria o algoritmo de geração de assinatura $SIGN$ de um esquema de assinatura digital e sua chave privada $d_{A}$ para computar a assinatura da mensagem: $s = SIGN_{d_{A}}(m)$. Ao receber $m$ e $s$, uma entidade $B$ que tem uma cópia autentica da chave pública de $A$ $e_{A}$ usa um algoritmo de assinatura de verificação para confirmar que $s$ foi de fato gerado a partir de $m$ e $d_{A}$. Uma vez que $d_{A}$ é presumivelmente conhecido por $A$, $B$ está seguro de que a mensagem foi realmente originada por $A$. Ademais, uma vez que a verificação requer apenas quantidades não secretas $m$ e $e_{A}$, a assinatura $s$ para $m$ pode também ser verificada por uma terceira parte que poderia estabelecer contestações se $A$ negar ter assinado a mensagem $m$. Diferente das assinaturas escritas à mão, a assinatura $s$ de $A$ depende da mensagem $m$ sendo assinada, prevenindo um forjador de simplesmente acrescentar $s$ a uma mensagem $\sim m$ linha e afirmar que $A$ assinou $\sim m$. Mesmo embora não haja nenhuma necessidade de segredo com relação à chave pública $e_{A}$, é essencial que os verificadores usem uma cópia autêntica de $e_{A}$ quando verificarem assinaturas personificadamente geradas por $A$.
 
-Deste modo, a criptografia de chave pública fornece soluções elegantes para os três problemas com criptografia de chave simétrica, chamados distribuição de chaves, administração de chaves e suporte à irretratabilidade. Deve-se notar que embora necessidade de um canal secreto para distribuição de chaves foi eliminado, implementar uma infra-estrutura de chave pública (PKI) para distribui e administrar chaves públicas pode ser um desafio formidável na prática. Também, operações em chave pública são normalmente significantemente mais lentas do que seus respectivos na criptografia de chave simétrica. Portanto, sistemas híbridos que beneficiam desde a eficiência dos algoritmos de chave simétrica e a funcionalidade dos algoritmos de chave pública são freqüentemente usados.
+Deste modo, a criptografia de chave pública fornece soluções elegantes para os três problemas com criptografia de chave simétrica: distribuição de chaves, administração de chaves e suporte à irretratabilidade. Deve-se notar que embora necessidade de um canal secreto para distribuição de chaves tenha sido eliminado, implementar uma infra-estrutura de chave pública (\emph{Public Key Infrastructure}, ou PKI) para distribuir e administrar chaves públicas pode ser um desafio formidável na prática. Também, operações em chave pública em geral são significativamente mais lentas do que seus respectivos na criptografia de chave simétrica. Portanto, sistemas híbridos que se beneficiam da eficiência dos algoritmos de chave simétrica e da funcionalidade dos algoritmos de chave pública são freqüentemente usados.
 
-Em um esquema de chave pública, um par de chaves é selecionado para que o problema de calcular a chave privada a partir da chave pública é equivalente para resolver um problema computacional que é considerado intratável. Os problemas teóricos numéricos cuja intratabilidade constrói a base para a segurança dos esquemas comumente usados são:
+Em um esquema de chave pública, um par de chaves é selecionado para que o problema de calcular a chave privada a partir da chave pública seja equivalente a resolver um problema computacional considerado intratável. Os problemas teóricos numéricos cuja intratabilidade constrói a base para a segurança dos esquemas comumente usados são:
 
 \begin{itemize}
-\item O problema da fatoração de inteiros, cuja dificuldade é essencial para a segurança da encriptação RSA e esquemas de assinatura.
-\item O problema do logaritmo discreto, cuja dificuldade é essencial para a segurança da encriptação de chave pública ElGamal e esquemas de assinatura e suas variantes tais como o Digital Signature Algorithm (DSA).
-\item O problema do logaritmo discreto em curvas elípticas, cuja dificuldade é essencial para a segurança de todos os esquemas baseados em curvas elípticas.
+\item O problema da \textbf{fatoração de inteiros}, cuja dificuldade é essencial para a segurança da encriptação \emph{RSA} e esquemas de assinatura.
+\item O problema do \textbf{logaritmo discreto}, cuja dificuldade é essencial para a segurança da encriptação de chave pública \emph{ElGamal} e esquemas de assinatura e suas variantes tais como o \emph{Digital Signature Algorithm} (DSA).
+\item O problema do \textbf{logaritmo discreto em curvas elípticas}, cuja dificuldade é essencial para a segurança de todos os esquemas baseados em curvas elípticas.
 \end{itemize}
 
 \section{Logaritmos Discretos}
 
 \subsection{Problemas Baseados em Logaritmos Discretos}
 
-O primeiro sistema baseado em logaritmo discreto foi o protocolo de troca de chaves proposto por Diffie e Hellman em 1976. Em 1984, ElGamal descreveu a encriptação de chave pública baseada em DL e esquemas de assinatura. Desde então, muitas variantes destes esquemas foram propostas. Logo em seguida apresentamos o esquema de encriptação básico de chave pública ElGamal e o Digital Signature Algorithm (DSA).
+O primeiro sistema baseado em logaritmo discreto foi o protocolo de troca de chaves proposto por Diffie e Hellman em 1976\cite{diffie-hellman}. Em 1984, ElGamal descreveu a encriptação de chave pública baseada no problema do logaritmo discreto e esquemas de assinatura\cite{elgamal}. Desde então, muitas variantes destes esquemas foram propostas.
 
 
 \subsection{Geração de chaves com Logaritmos Discretos}
@@ -275,11 +285,11 @@ Uma chave privada é um inteiro x que é selecionado uniformemente de modo aleatór
 \section{Curvas Elípticas}
 
 \subsection{Histórico}
-O estudo das curvas elípticas, por matemáticos, data da metade do século XIX. Como conseqüência, encontramos hoje uma vasta literatura sobre o assunto. Em 1984, Hendrik Lenstra descreve um engenhoso algoritmo para fatorar inteiros que recai nas propriedades das curvas elípticas. Esta descoberta motivou os pesquisadores a investigar novas aplicações em criptografia sobre curvas elípticas e teoria dos números computacional.
+O estudo das curvas elípticas por matemáticos data da metade do século XIX. Como conseqüência, encontramos hoje uma vasta literatura sobre o assunto. Em 1984, Hendrik Lenstra descreve um engenhoso algoritmo para fatorar inteiros que recai nas propriedades das curvas elípticas. Esta descoberta motivou os pesquisadores a investigar novas aplicações em criptografia sobre curvas elípticas e teoria computacional dos números.
 
-A criptografia de chave pública foi concebida em 1976 por Whitfield Diffie e Martin Hellman. Sua primeira construção prática se seguiu em 1977 quando Ron Rivest, Adi Shamir e Len Adleman propuseram o protocolo agora tão conhecido RSA cuja segurança é baseada na intratabilidade do problema da fatoração de inteiros. A criptografia baseada em curvas elípticas (ECC) foi descoberta em 1985 por Neal Koblitz e Victor Miller.
+A criptografia de chave pública foi concebida em 1976, mas sua primeira construção prática se seguiu em 1977 quando Ron Rivest, Adi Shamir e Len Adleman propuseram o protocolo agora tão conhecido RSA\cite{rsa} cuja segurança é baseada na intratabilidade do problema da fatoração inteira. A criptografia baseada em curvas elípticas (ECC) foi descoberta em 1985 por Neal Koblitz e Victor Miller.
 
- Os protocolos de ECC são mecanismos de criptografia de chave pública e fornecem as mesmas funcionalidades que o esquema proposto no RSA. Contudo, sua segurança é baseada na dificuldade de um diferente problema, o problema do logaritmo discreto em curvas elípticas (ECDLP), que é um pouco mais difícil de se resolver. Atualmente, os melhores algoritmos para resolver o ECDLP levam tempo completamente exponencial, enquanto que para o problema da fatoração de inteiros do RSA, o tempo é sub-exponencial. Isso significa que o nível de segurança desejado pode ser obtido com chaves significativamente menores que as usadas no RSA. Por exemplo, o nível de segurança determinado por uma chave de 160 bits em sistemas ECC é equivalente para o obtido usando-se RSA com chaves de 1024 bits. 
+Os protocolos de ECC são mecanismos de criptografia de chave pública e fornecem as mesmas funcionalidades que o esquema proposto no RSA. Contudo, sua segurança é baseada na dificuldade de um diferente problema, o problema do logaritmo discreto em curvas elípticas (ECDLP), que é um pouco mais difícil de se resolver. Atualmente, os melhores algoritmos para resolver o ECDLP levam tempo completamente exponencial, enquanto que para o problema da fatoração de inteiros do RSA, o tempo é sub-exponencial. Isso significa que o nível de segurança desejado pode ser obtido com chaves significativamente menores que as usadas no RSA. Por exemplo, o nível de segurança determinado por uma chave de 160 bits em sistemas ECC é equivalente para o obtido usando-se RSA com chaves de 1024 bits. 
 As vantagens obtidas com tamanhos de chaves menores são velocidade e uso eficiente de energia, largura de banda e armazenamento.
 
 Desde então, grande quantidade de pesquisas começou a ser publicada na segurança e implementação eficiente em ECC. No fim dos anos 90, sistemas sobre curvas elípticas começaram a receber aceitação comercial quando organizações de padrões respeitadas especificaram protocolos sobre curvas elípticas, e empresas privadas incluíram estes protocolos nos seus produtos de segurança. Hoje, ECC é considerado o estado-da-arte em criptografia de chave pública.
@@ -990,12 +1000,12 @@ A implementação foi feita na linguagem Java, plataforma J2ME MIDP-1.0 CLDC-1.1.
 %\section{Metodologia}
 %sacrifiquei essa seção
 \section{Ambiente de desenvolvimento}
-Para o desenvolvimento do código, foi usado o \emph{IDE Netbeans 6.0.1}, integrado com o \emph{Sun Java (TM) Wireless Toolkit 2.5.2 for CLDC (WTK)}. Usamos o emulador do WTK para auxiliar o processo de desenvolvimento. Também foi usado o Subversion para controle de versão e coordenação do trabalho em equipe, hospedado no servidor do GoogleCode.
+Para o desenvolvimento do código, foi usado o \emph{IDE Netbeans 6.0.1}, integrado com o \emph{Sun Java (TM) Wireless Toolkit 2.5.2 for CLDC (WTK)}. Usamos o emulador do \emph{WTK} para auxiliar o processo de desenvolvimento. Também foi usado o Subversion para controle de versão e coordenação do trabalho em equipe, hospedado no servidor do GoogleCode.
 %Netbeans, Wireless ToolKit, 
 \section{Bibliotecas usadas}
 %Floggy, BouncyCastle, SMSPairings do Barreto
 \subsection{SMSPairings}
-A biblioteca SMSPairings foi fornecida por nosso orientador. Contém classes que implementam curvas elípticas e emparelhamentos bilinieares, de uma forma otimizada para a ordem de grandeza de nossas chaves.
+A biblioteca SMSPairings foi fornecida por nosso orientador. Contém classes que implementam curvas elípticas e emparelhamentos bilineares, de uma forma otimizada para a ordem de grandeza de nossas chaves.
 %TODO: falar mais
 \subsection{BouncyCastle}
 %TODO: citar o cite do bouncycastle?
@@ -1120,5 +1130,8 @@ Além disto, o nível de segurança desejado também foi alcançado. Com uma chave de
 		\includegraphics{figuras/teste_emulador.PNG}
 	\caption{Variação do tempo das operações enquanto varia-se o tamanho da chave no emulador do WTK 2.5.2}	\label{fig:teste_emulador}
 \end{sidewaysfigure}
+
+
+\chapter{Diagramas de classe detalhados}\label{app:classe_detalhados}
 
 \end{document}
