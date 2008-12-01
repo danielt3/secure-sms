@@ -696,6 +696,7 @@ Nas seções abaixo detalharemos cada caso de uso do sistema, representados sucint
  
 \subsection{Cifrassinatura de mensagem}
 \textbf{Introdução/Propósito} O sistema deverá fornecer serviço de confidencialidade através da funcionalidade de cifrassinatura das mensagens SMS, ou seja, as mensagens, para trafegar na rede GSM deverão estar encriptadas e assinadas.
+
 \textbf{Estímulo/Resposta} O estímulo neste caso provém do usuário ao requisitar o serviço de cifrassinatura e a resposta do sistema é realizar o serviço enviando a mensagem cifrassinada.
 
 \subsection{Vericifração de mensagem}
@@ -793,7 +794,9 @@ O esquema proposto por \cite{bdcps} integra esquemas preexistentes como as assin
 
 \subsection{Vantagens do esquema}
 %TODO: Falar mais vantagens além desta...
-Dentre as operações realizadas nos diversos algoritmos, a que apresenta maior custo computacional é a operação de emparelhamento. Observa-se que os algoritmos de \emph{Signcrypt} e \emph{Unsigncrypt} não executam nenhum emparelhamento.  Estes são os algoritmos que serão usados mais vezes, já que são usados toda vez que deseja-se enviar ou ler uma mensagem cifrassinada. Os emparelhamentos são executados apenas nos algoritmos de validação e verificação das chaves públicas. No entanto, seu custo é amortizado pois esses algoritmos são executados apenas uma vez para cada canal seguro estabelecido para um par de usuários, isto é, apenas na primeira interação. Estabelece-se, aqui, um esquema de assinaturas auto-certificado, isto é, não é necessária a interação com uma autoridade de confiança para que um par de usuários estabeleça um canal seguro. A interação com a autoridade de confiança é necessária apenas quando um usuário gera o seu par de chaves.
+Dentre as operações realizadas nos diversos algoritmos, a que apresenta maior custo computacional é a operação de emparelhamento. Observa-se que os algoritmos de \emph{Signcrypt} e \emph{Unsigncrypt} não executam nenhum emparelhamento.  Estes são os algoritmos que serão usados mais vezes, já que são usados toda vez que deseja-se enviar ou ler uma mensagem cifrassinada. Os emparelhamentos são executados apenas nos algoritmos de validação e verificação das chaves públicas. No entanto, seu custo é amortizado pois esses algoritmos são executados apenas uma vez para cada canal seguro estabelecido para um par de usuários, isto é, apenas na primeira interação. 
+
+Estabelece-se, aqui, um esquema de assinaturas auto-certificado, isto é, não é necessária a interação com uma autoridade de confiança para que um par de usuários estabeleça um canal seguro. A interação com a autoridade de confiança é necessária apenas quando um usuário gera o seu par de chaves.
 
 \subsection{Testes de viabilidade}
 %Tabelinha de testes preliminares, mostrar que ficou bonzão!
