@@ -298,18 +298,18 @@ Os sistemas baseados em logaritmos discretos apresentados anteriormente podem se
 
 \subsection{Grupos}
 
-Um grupo abeliano ($G$,$*$) consiste de um conjunto G com uma operação binária * : $G x G \rightarrow G$ satisfazendo as seguintes propriedades:
-	(Associatividade) $a * (b * c)$ = $(a * b) * c$ para todos os $a,b, c \in G$
-	(Existência de uma identidade) Existe um elemento $e \in G$ tal que $a*e = e*a = a$ para todo $a \in G$.
-	(Existência de inversos) Para cada $a \in G$, existe um elemento $b \in G$, chamado inverso de $a$, tal que $a * b = b * a = e$.
-	(Comutatividade) $a * b = b * a$ para todos $a$, $b \in G$.
+Um grupo abeliano ($G$,$*$) consiste de um conjunto $\G$ com uma operação binária $* : \G \times \G \rightarrow \G$ satisfazendo as seguintes propriedades:
+	(Associatividade) $a * (b * c) = (a * b) * c$ para todos os $a,b, c \in \G$
+	(Existência de uma identidade) Existe um elemento $e \in \G$ tal que $a*e = e*a = a$ para todo $a \in \G$.
+	(Existência de inversos) Para cada $a \in \G$, existe um elemento $b \in \G$, chamado inverso de $a$, tal que $a * b = b * a = e$.
+	(Comutatividade) $a * b = b * a$ para todos $a$, $b \in \G$.
 
 
-A operação do grupo é geralmente chamada de adição (+) ou multiplicação (-). Em primeira instância, o grupo é chamado de grupo aditivo, o elemento (aditivo) identidade é normalmente denotado por 0, e o inverso (aditivo) d e a é denotado por -a. Em uma segunda instância, o grupo é chamado de grupo multiplicativo, o elemento (multiplicativo) identidade é denotado por 1, e o inverso (multiplicativo) de a é denotado por a-1 .
-O grupo é finito se G é um conjunto finito, no caso em que o número de elementos em G é chamado a ordem de G.
-Por exemplo, seja p um numero primo, e $Fp$ = {0,1,2,...,p-1} denota o conjunto dos inteiros módulo $p$. Então (Fp,+), onde a operação + é definida com a operação de adição de inteiros módulo p, é um grupo finito aditivo de ordem p com elemento identidade (aditivo) 0. Além isso, ($F*p$,$\bullet$), onde F*p denota os elementos diferentes de zero em Fp e a operação $\bullet$ é definida como a multiplicação de inteiros módulo $p$, é um grupo finito multiplicativo de ordem $p-1$ com elemento identidade (multiplicativo) 1. A tripla ($Fp$, $+$ , $\bullet$) é um campo finito, denotado mais sucintamente por $Fp$.
+A operação do grupo é geralmente chamada de adição ($+$) ou multiplicação ($-$). Em primeira instância, o grupo é chamado de grupo aditivo, o elemento (aditivo) identidade é normalmente denotado por $0$, e o inverso (aditivo) $d$ e $a$ é denotado por $-a$. Em uma segunda instância, o grupo é chamado de grupo multiplicativo, o elemento (multiplicativo) identidade é denotado por $1$ e o inverso (multiplicativo) de $a$ é denotado por a-1 .
+O grupo é finito se $\G$ é um conjunto finito, no caso em que o número de elementos em $_G$ é chamado a ordem de G.
+Por exemplo, seja p um numero primo, e $F_{p} = {0,1,2,...,p-1}$ denota o conjunto dos inteiros módulo $p$. Então $(F_{p},+)$, onde a operação $+$ é definida com a operação de adição de inteiros módulo $p$, é um grupo finito aditivo de ordem $p$ com elemento identidade (aditivo) $0$. Além isso, $(F*p,\bullet)$, onde $F*p$ denota os elementos diferentes de zero em $Fp$ e a operação $\bullet$ é definida como a multiplicação de inteiros módulo $p$, é um grupo finito multiplicativo de ordem $p-1$ com elemento identidade (multiplicativo) $1$. A tripla $(Fp, + , \bullet)$ é um campo finito, denotado mais sucintamente por $Fp$.
 
-Agora, se $G$ é um grupo finito multiplicativo de ordem $n$ e $g \in G$, então o menor inteiro positivo $t$ tal que $gt = 1$ é chamado de ordem de g; esse t sempre existe e é divisor de n. O conjunto $<g> = {gi : 0 \leq i \leq t-1}$ de todas as potências de $g$ é ele próprio um grupo sobre a mesma operação como $G$, e é chamado um subgrupo cíclico de $G$ gerado por $G$. Declarações análogas são verdadeiras se $G$ é escrito aditivamente. Assim, a ordem de g   G é o menor divisor positivo $t$ de $n$ tal que $tg = 0$, e $<g> = {ig : 0 \leq i \leq t-1}$. Aqui, tg denota o elemento obtido por adicionar t cópias de $g$. Se G tem um elemento $g$ de ordem $n$, então $G$ é dito ser um grupo cíclico e $g$ é um gerador de G. Por exemplo, com o os parâmetros do DL ($p$,$q$, $g$) definidos anteriormente, o grupo multiplicativo $(F*p, \bullet)$ é um grupo cíclico de ordem p-1. Ademais, $<g>$ é um subgrupo cíclico de ordem $q$.
+Agora, se $\G$ é um grupo finito multiplicativo de ordem $n$ e $g \in \G$, então o menor inteiro positivo $t$ tal que $gt = 1$ é chamado de ordem de $g$; esse $t$ sempre existe e é divisor de $n$. O conjunto $<g> = {gi : 0 \leq i \leq t-1}$ de todas as potências de $g$ é ele próprio um grupo sobre a mesma operação como $G$, e é chamado um subgrupo cíclico de $\G$ gerado por $\G$. Declarações análogas são verdadeiras se $\G$ é escrito aditivamente. Assim, a ordem de g   G é o menor divisor positivo $t$ de $n$ tal que $tg = 0$, e $<g> = {ig : 0 \leq i \leq t-1}$. Aqui, tg denota o elemento obtido por adicionar t cópias de $g$. Se G tem um elemento $g$ de ordem $n$, então $G$ é dito ser um grupo cíclico e $g$ é um gerador de G. Por exemplo, com o os parâmetros do DL ($p$,$q$, $g$) definidos anteriormente, o grupo multiplicativo $(F*p, \bullet)$ é um grupo cíclico de ordem p-1. Ademais, $<g>$ é um subgrupo cíclico de ordem $q$.
 
  
 \subsection{Grupos em Curvas Elípticas}
