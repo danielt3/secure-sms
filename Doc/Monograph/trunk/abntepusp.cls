@@ -1732,13 +1732,30 @@ Para mais informacoes, leia o manual da classe.\MessageBreak%
 %  \hypersetup{pdftitle=\ABNTtitulodata,pdfauthor=\ABNTautordata}
   \begin{center} 
     \espaco{1.2}
-    {\autorformat \ABNTautordata} \\[8cm] 
+    {\autorformat \ABNTautordata} \\[6cm] 
+    {\tituloformat \ABNTuppercasetitulodata}
+
+    % local e data
+    \vspace*{\stretch{1}}
+    \begin{espacosimples} 
+      {\localformat\ABNTlocaldata}\\
+      {\dataformat\ABNTdatadata}
+    \end{espacosimples}
+    \if@openright\cleardoublepage\else\clearpage\fi%
+  \end{center} 
+}% end of \capa
+
+\newcommand{\falsafolhaderosto}{%
+%  \hypersetup{pdftitle=\ABNTtitulodata,pdfauthor=\ABNTautordata}
+  \begin{center} 
+    \espaco{1.2}
+    {\autorformat \ABNTautordata} \\[6cm] 
     {\tituloformat \ABNTuppercasetitulodata}
 
     % comentário
-    \vspace{2cm}
-    \hspace{.45\textwidth} % posicionando a minipage 
-    \begin{minipage}{.52\textwidth} 
+    \vspace{1.6cm}
+    \hspace{.35\textwidth} % posicionando a minipage 
+    \begin{minipage}{.62\textwidth} 
       \begin{espacoumemeio} 
         \begin{sloppypar}
           {\comentarioformat
@@ -1762,13 +1779,13 @@ Para mais informacoes, leia o manual da classe.\MessageBreak%
 \newcommand{\folhaderosto}{%
   \begin{center} 
     \espaco{1.2}
-    {\autorformat \ABNTautordata} \\[8cm] 
+    {\autorformat \ABNTautordata} \\[6cm] 
     {\tituloformat \ABNTuppercasetitulodata}
 
     % comentário
-    \vspace{2cm}
-    \hspace{.45\textwidth} % posicionando a minipage 
-    \begin{minipage}{.52\textwidth} 
+    \vspace{1.6cm}
+    \hspace{.35\textwidth} % posicionando a minipage 
+    \begin{minipage}{.62\textwidth} 
       \begin{espacoumemeio} 
         \begin{sloppypar}
           { \comentarioformat
