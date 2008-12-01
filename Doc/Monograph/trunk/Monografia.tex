@@ -696,9 +696,9 @@ O software deverá ser portável para a plataforma Java SE (Standard Edition) tend
 \subsection{Segurança}
 O software deve garantir que o destinatário da mensagem e apenas ele, além do remetente, tenha acesso ao seu conteúdo em tempo viável. O software também deve garantir a integridade da mensagem em relação a corrupções maliciosas ou acidentais durante o tráfego.
 
-\chapter{Escolha de um esquema criptográfico adequado}
+\chapter{Escolha do um esquema criptográfico}
 
-\section{Por quê usar criptografia em curvas elípticas?}
+\section{Por que criptografia em curvas elípticas?}
 
 Há vários critérios que precisam ser considerados ao selecionar-se uma família de esquemas de chave pública para uma determinada aplicação.
 
@@ -723,24 +723,17 @@ Em paralelo, um aumento equivalente no nível de segurança de criptografia em cur
 %Explicar aqui que analisamos os seguintes candidatos:
 \section{BLMQ}
 
-A primeira tentativa de solução adotava o esquema de cifrassinatura baseada em identidades BLMQ ~\cite{barreto-libert-mccullagh-quisquater}. Trata-se de um algoritmo de criptografia baseada em identidades.
-%TODO: o que mais? enriquecer!
+A primeira tentativa de solução adotava o esquema de cifrassinatura baseada em identidades BLMQ ~\cite{barreto-libert-mccullagh-quisquater}. Trata-se de um esquema de criptografia baseada em identidades.
 
-O esquema foi escolhido por, aparentemente, atender aos requisitos estabelecidos inicialmente. O BLMQ era notadamente mais eficiente que esquemas de criptografia baseada em identidades anteriores, como o de Boneh-Franklin \cite{boneh-franklin}, o que poderia tornar o uso desse tipo de criptografia viável em ambientes produtivos. Além disso, uma assinatura de 160 bits garantiria um nível de segurança de aproximadamente 80 bits equivalente ao do RSA de 1024 bits \cite{rsalabs}.
+O esquema foi escolhido por, aparentemente, atender aos requisitos estabelecidos. O BLMQ era notadamente mais eficiente que esquemas de criptografia baseada em identidades anteriores, como o de Boneh-Franklin \cite{boneh-franklin}, o que poderia tornar, pela primeira vez, o uso desse tipo de criptografia viável em ambientes móveis como a telefonia celular. Além disso, o uso de uma assinatura de 160 bits garantiria um nível de segurança equivalente ao do RSA de 1024 bits \cite{rsalabs}, maximizando o espaço útil da mensagem.
 
-%TODO: escrever muito mais! enriquecer! Não tá falando nada do BLMQ aqui...
-
-%\subsection{Definições}
-%Vale a pena definir o algoritmo? O leitor vai jogar a monografia no chão
-%quando descobrir que nada disso será usado no sistema... Acho melhor não
 \subsection{Testes de viabilidade}
 
-%TODO: ajeitar essa seção... ta CTRL+C do WTICG, e essa tabela ta ruim...
+%TODO: essa tabela ta ruim...
 
-%falar de tentativas de resolver os problemas, alguns sucessos e alguns fracassos
-O esquema foi implementado na linguagem de programação Java, e testes foram realizados em um aparelho celular Nokia 6275.
+O esquema foi parcialmente implementado em linguagem de programação Java, e testes foram realizados em um aparelho celular Nokia 6275.
 
-O desempenho observado inicialmente foi insatisfatório, não atendendo aos requisitos de usabilidade estabelecidos na especificação. Foram feitas tentativas de melhoria do desempenho, como variação do tamanho das chaves, uso de diferentes funções de emparelhamento (Ate, Eta) \cite{freeman-scott-teske}, e implementações com diferentes bibliotecas que fornecessem a classe \emph{BigInteger} - a implementação da Sun se mostrou mais eficiente do que a implementação da Bouncy Castle. Algumas adaptações no esquema em si foram feitas, como inversão da ordem das curvas utilizadas. 
+O desempenho observado inicialmente foi insatisfatório, não atendendo aos requisitos de usabilidade estabelecidos na especificação. Foram feitas tentativas de melhoria do desempenho, como variação do tamanho das chaves, uso de diferentes funções de emparelhamento (Ate, Eta) \cite{freeman-scott-teske}, e implementações com diferentes bibliotecas que fornecessem a classe \emph{BigInteger}. Algumas adaptações no esquema em si foram feitas, como inversão da ordem das curvas utilizadas, porém sem efeitos consideráveis. 
 
 %TODO: falar das BNCurves em algum ponto...
 
@@ -756,36 +749,28 @@ Emparelhamento Ate          &  3.9\\\hline
 \end{tabular}
 \end{table}
 
-A implementação inicial tomava muito tempo computacional para incializar as classes usadas pelo esquema, pois muitos cálculos eram feitos. Além disso, observou-se que as operações de emparelhamento são muito custosas. Emparelhamentos são extensamente utilizados pelo BLMQ. A operação de signcrypt consome.... %TODO: falar que cada operação consumuia x emparalhementos, por isso mto ruim.
+Essa implementação inicial demandava muito tempo computacional para incializar as classes e realizar as operações de emparelhamento. Emparelhamentos são extensamente utilizados pelo BLMQ, como nos algoritmos de \emph{signcrypt} e \emph{unsigncrypt}, o que impunha grande \emph{overhead} às operações do sistema. %TODO: falar que cada operação consumuia x emparalhementos, por isso mto ruim.
 
-Como estes tempos não atendiam aos requisitos de usabilidade do projeto, fez-se necessário buscar alternativas. Estas dificuldades serviram como motivação para a criação de um esquema inovador. Como resultado de pesquisas realizadas, foi idealizado um novo esquema, apresentado em \cite{bdcps} e brevemente descrito a seguir.
+Como estes tempos não atendiam às métricas e aos requisitos de usabilidade do projeto, fez-se necessário buscar outras soluções. Estas dificuldades serviram como motivação para a criação de um esquema inovador. Como resultado de pesquisas realizadas, foi idealizado o protocolo BDCPS \cite{bdcps}, brevemente descrito a seguir.
 
 \section{BDCPS}
 %Falar aqui que o Barreto inventou o novo algoritmo, que publicou o SBSEG
-Visando resolver os problemas encontrados com a utilização do BLMQ, um novo esquema foi criado, e designado por BDCPS. Um artigo \cite{bdcps} foi submetido para o SBSEG'08, sediado em Gramado - RS.
 
-Na criação do novo esquema, em vez de utilizarmos exclusivamente criptografia e assinaturas baseadas em identidades, estendemos um esquema de criptografia sem certificados com um esquema de assinatura convencional, mas utilizando técnicas baseadas em identidades para validar a chave pública, evitando o uso de certificados ~\cite{bdcps}. A nova técnica mescla esses dois paradigmas, garantindo baixo tempo de cifrassinatura e de vericifração, tamanhos de chaves dentro dos limites adotados e níveis de segurança satisfatórios.
-
-O esquema proposto integra esquemas preexistentes como as assinaturas BLMQ e Schnorr \cite{schnorr} e o esquema isento de certificados de Zheng \cite{zheng}. Neste esquema, a geração das chaves dos usuários dispensa a necessidade de uma autoridade certificadora e a utilização de certificados para validar sua chave pública. Estas características implicaram em importantes, mas não únicas, melhorias em relação ao esquema anteriormente implementado e serão discutidas na seção "Análise da Proposta". 
-Por criptografia convencional entende-se o fato de o usuário poder escolher seu par de chaves não certificado, ou seja, ele escolhe apropriadamente uma chave privada e gera sua chave pública a partir dela. Desse modo, somente o usuário gerador de seu par de chaves convencional conhece sua chave privada, e este fato elimina a possibilidade de "Key Escrow", que é o comprometimento da chave e conseqüentemente das mensagens com ela encriptadas. 
-O par de chaves não certificado é combinado com a solução de criptografia baseada em identidades para que seja posteriormente validado por outro usuário do sistema.
-
-
-%Como uma observação, notamos que o mecanismo de validação da chave pública(algoritmos \textbf{Set-Public-Key} e \textbf{Public-Key-Validate}), pela sua combinação de assinaturas convencionais Schnorr e assinaturas baseadas em identidade BLMQ, constitui-se de um esquema de assinatura sem certificado e portanto tem interesse independente.
+O esquema proposto por \cite{bdcps} integra esquemas preexistentes como as assinaturas BLMQ e Schnorr \cite{schnorr} e o esquema isento de certificados de Zheng \cite{zheng}. Neste esquema, a geração das chaves dos usuários dispensa a necessidade de uma autoridade certificadora e a utilização de certificados convencionais para validar sua chave pública. 
 
 \subsection{Vantagens do esquema}
 %TODO: Falar mais vantagens além desta...
-Dentre as operações realizadas nos diversos algoritmos, a que apresenta maior custo computacional é a operação de emparelhamento bilinear. Observa-se que os algoritmos de \emph{Signcrypt} e \emph{Unsigncrypt} não executam nenhum emparelhamento.  Estes são os algoritmos que serão usados mais vezes, já que são usados toda vez que deseja-se enviar ou ler uma mensagem cifrassinada.
+Dentre as operações realizadas nos diversos algoritmos, a que apresenta maior custo computacional é a operação de emparelhamento. Observa-se que os algoritmos de \emph{Signcrypt} e \emph{Unsigncrypt} não executam nenhum emparelhamento.  Estes são os algoritmos que serão usados mais vezes, já que são usados toda vez que deseja-se enviar ou ler uma mensagem cifrassinada. Os emparelhamentos são executados apenas nos algoritmos de validação e checagem das chaves públicas. No entanto, seu custo é amortizado pois esses algoritmos são executados apenas uma vez para cada canal seguro estabelecido para um par de usuários, isto é, apenas na primeira interação. Estabelece-se, aqui, um esquema de assinaturas auto-certificado, isto é, não é necessária a interação com uma autoridade de confiança para que um par de usuários estabeleça um canal seguro. A interação com a autoridade de confiança é necessária apenas quando um usuário gera o seu par de chaves.
 
 \subsection{Testes de viabilidade}
 %Tabelinha de testes preliminares, mostrar que ficou bonzão!
 O novo esquema também foi implementado na plataforma JME (\emph{Java Platform Micro Edition}), e testes para validar a viabilidade foram feitos em diversos modelos de aparelhos celulares, além dos emuladores dos ambientes de desenvolvimento \emph{Eclipse} e \emph{NetBeans}.
 
-Os resultados foram satisfatórios, já que os tempos de cifrassinatura e vericifração estão de acordo com as métricas estabelecidas e bem mais eficientes em relação ao esquema inicialmente adotado. 
+Os resultados foram satisfatórios, já que os tempos de cifrassinatura e vericifração estavam de acordo com as métricas estabelecidas e bem mais eficientes em relação ao esquema inicialmente estudado. 
 
 O tempo necessário para validar uma chave pública é um pouco maior do que para as demais operações. Porém, conforme observado anteriormente, esta é uma operação que será executada apenas uma vez para cada nova identidade que se deseje validar. A chave validada fica armazenada na memória do aplicativo, não sendo necessário validá-la novamente em uma comunicação futura com o mesmo par.
 
-Os resultados dos testes são apresentados nas tabelas \ref{tab:bdcps127} e \ref{tab:bdcps160}. Foram feitos testes de viabilidade com chaves de 127 e 160 bits, para dois modelos distintos de celulares, Nokia 6275 e Sony Ericsson W200i.
+Os resultados dos testes preliminares são apresentados nas tabelas \ref{tab:bdcps127} e \ref{tab:bdcps160}. Foram feitos testes de viabilidade com chaves de 127 e 160 bits, para dois modelos distintos de celulares, Nokia 6275 e Sony Ericsson W200i.
 
 \begin{table}[h]\centering
 \caption{Testes com o novo esquema (chaves de 127 bits) e comparação com o RSA}\label{tab:bdcps127}
@@ -823,10 +808,12 @@ Public RSA-640             & 0,16                   &  0,03                     
 \end{tabular}
 \end{table}
 
-\section{Análise dos} %TODO: mudar o nome dessa seção, conclusão é muito ambíguo
+\section{Análise dos resultados preliminares} %TODO: mudar o nome dessa seção, conclusão é muito ambíguo
 %Falar que escolhemos o BDCPS e trabalharemos com ele daqui pra frente
 
-Pode-se verificar a partir das tabelas \ref{tab:bdcps127} e \ref{tab:bdcps160} que os tempos de assinatura e verificação no algoritmo proposto são menores do que os tempos do RSA, para o mesmo nível de segurança. 
+Pode-se verificar a partir das tabelas \ref{tab:bdcps127} e \ref{tab:bdcps160} que os tempos de assinatura e verificação no algoritmo proposto são menores do que os do BLMQ e, como observado em \cite{bdcps}, menores do que os de outros protocolos, como o RSA, para um mesmo nível de segurança.
+
+Desse modo, por ter sido especificamente projetado para as necessidades do cenário e ter apresentado ótima eficiência, o BDCPS foi escolhido como protocolo de segurança para nosso sitema.
 
 %Tinha um texto aqui, que movi pra outra seção. Dê localizar em: Dado que o tempo de uso do RSA de 1024 bits está no fim .....
 
