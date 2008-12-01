@@ -175,8 +175,7 @@ No início de nossa pesquisa, as alternativas de sistemas de segurança pra SMS di
 %TODO listar soluções atuais pelo geov´s
 
 \subsection{Ambiente}
-Na figura \ref{fig:Canal_Inseguro}, as entidades A (Alice) e B (Bob) estão se comunicando sobre um canal inseguro. Assumimos que todas as comunicações têm a presença de um agressor E (Eve) cujo objetivo é explorar falhas nos serviços de segurança sendo fornecidos por A e B.
-
+Na figura \ref{fig:Canal_Inseguro}, as entidades $A$ (Alice) e $B$ (Bob) estão se comunicando sobre um canal inseguro. Assumimos que todas as comunicações têm a presença de um agressor $E$ (Eve) cujo objetivo é explorar falhas nos serviços de segurança sendo fornecidos por $A$ e $B$.
 
 \begin{figure}[h]
 	\centering
@@ -185,11 +184,12 @@ Na figura \ref{fig:Canal_Inseguro}, as entidades A (Alice) e B (Bob) estão se co
 	\label{fig:Canal_Inseguro}
 \end{figure}
 
-Por exemplo, A e B poderiam ser 2 pessoas comunicando-se sobre uma rede de telefonia celular, e E está tentando interceptar a comunicação. 
+Por exemplo, $A$ e $B$ poderiam ser 2 pessoas comunicando-se sobre uma rede de telefonia celular, e $E$ está tentando interceptar a comunicação. 
 
-Ou, $\sim A$ poderia ser um web browser de um indivíduo A que está em processo de compra de um produto de uma loja online $\sim B$ representada por seu site B. Neste cenário, o canal de comunicações é a internet. Um agressor E poderia tentar ler o tráfego entre A e B, portanto saber a informação sobre o cartão de crédito de A, ou poderia tentar personificar A ou B na transação. 
-Como um terceiro exemplo, considere a situação onde A está enviando uma mensagem via email para B sobre a internet. Um agressor E poderia tentar ler a mensagem, modificar pedaços selecionados, ou personificar A enviando mensagens dela mesma para B. Finalmente, considere o cenário onde A é um smart card que está em processo de autenticar seu possuidor $\sim A$ em um computador mainframe B em uma sala protegida do banco. Aqui, E poderia tentar monitorar as comunicações para obter informações sobre a conta de $\sim A$ , ou poderia tentar personificar $\sim A$ para sacar fundos da conta de $\sim A$. Deveria ser evidente destes exemplos que uma entidade se comunicando não é necessariamente um humano, mas pode ser um computador, smart card, ou um módulo de software agindo no lugar de um indivíduo ou uma organização tal como uma loja ou um banco.
+Ou, $\sim A$ poderia ser um web browser de um indivíduo A que está em processo de compra de um produto de uma loja online $\sim B$ representada por seu site $B$. Neste cenário, o canal de comunicações é a \emph{Internet}. Um agressor $E$ poderia tentar ler o tráfego entre $A$ e $B$, portanto saber a informação sobre o cartão de crédito de $A$, ou poderia tentar personificar $A$ ou $B$ na transação. 
+Como um terceiro exemplo, considere a situação onde $A$ está enviando uma mensagem via \emph{e-mail} para $B$ sobre a internet. Um agressor $E$ poderia tentar ler a mensagem, modificar pedaços selecionados, ou personificar $A$ enviando mensagens dela mesma para $B$. Finalmente, considere o cenário onde $A$ é um smart card que está em processo de autenticar seu possuidor $\simA$ em um computador \emph{mainframe} $B$ em uma sala protegida do banco. Aqui, $E$ poderia tentar monitorar as comunicações para obter informações sobre a conta de $\sim A$ , ou poderia tentar personificar $\sim A$ para sacar fundos da conta de $\sim A$. Deveria ser evidente destes exemplos que uma entidade se comunicando não é necessariamente um humano, mas pode ser um computador, \emph{smart card}, ou um módulo de software agindo no lugar de um indivíduo ou uma organização tal como uma loja ou um banco.
 
+%TODO parágrafo perdido
 O ambiente em questão não se mostra muito propício para práticas criptográficas. A largura de banda é muito pequena, visto que em cada mensagem SMS podem ser trafegados apenas 140 bytes binários \cite{ortiz}.
 Além disto, existem limitações de processamento no dispositivo celular, que podem comprometer a usabilidade de um esquema criptográfico tradicional.
 
@@ -278,8 +278,8 @@ O primeiro sistema baseado em logaritmo discreto foi o protocolo de troca de cha
 
 \subsection{Geração de chaves com Logaritmos Discretos}
 
-Em sistemas de logaritmos discretos, um par de chaves está associado com um conjunto de parâmetros públicos do domínio ($p$,$q$, $g$). Aqui, $p$ é um primo, $q$ é um divisor primo de $p-1$, e $g \in [1,p-1]$ tem ordem $q$ (i.e., $t=q$ é o menor inteiro positivo satisfazendo $gt \equiv 1(mod p)$.
-Uma chave privada é um inteiro x que é selecionado uniformemente de modo aleatório no intervalo $[1,q-1]$ (esta operação é denotada $x \in [1,q-1]$, e a chave pública correspondente é $y=g^{x}mod p$. O problema de determinar $x$ dados os parâmetros do domínio ($p$,$q$, $g$) e $y$ é o problema do logaritmo discreto (DLP).
+Em sistemas de logaritmos discretos, um par de chaves está associado com um conjunto de parâmetros públicos do domínio $(p,q,g)$. Aqui, $p$ é um primo, $q$ é um divisor primo de $p-1$, e $g \in [1,p-1]$ tem ordem $q$ (i.e., $t=q$ é o menor inteiro positivo satisfazendo $gt \equiv 1(mod p)$.
+Uma chave privada é um inteiro x que é selecionado uniformemente de modo aleatório no intervalo $[1,q-1]$ (esta operação é denotada $x \in [1,q-1]$, e a chave pública correspondente é $y=g^{x}mod p$. O problema de determinar $x$ dados os parâmetros do domínio $(p,q,g)$ e $y$ é o problema do logaritmo discreto (DLP).
 
 
 \section{Curvas Elípticas}
@@ -298,28 +298,27 @@ Os sistemas baseados em logaritmos discretos apresentados anteriormente podem se
 
 \subsection{Grupos}
 
-Um grupo abeliano ($G$,$*$) consiste de um conjunto $\G$ com uma operação binária $* : \G \times \G \rightarrow \G$ satisfazendo as seguintes propriedades:
-	(Associatividade) $a * (b * c) = (a * b) * c$ para todos os $a,b, c \in \G$
+Um grupo abeliano ($\G$,$*$) consiste de um conjunto $\G$ com uma operação binária $* : \G \times \G \rightarrow \G$ satisfazendo as seguintes propriedades:
+	(Associatividade) $a*(b*c) = (a*b)*c$ para todos os $a,b,c \in \G$
 	(Existência de uma identidade) Existe um elemento $e \in \G$ tal que $a*e = e*a = a$ para todo $a \in \G$.
-	(Existência de inversos) Para cada $a \in \G$, existe um elemento $b \in \G$, chamado inverso de $a$, tal que $a * b = b * a = e$.
-	(Comutatividade) $a * b = b * a$ para todos $a$, $b \in \G$.
+	(Existência de inversos) Para cada $a \in \G$, existe um elemento $b \in \G$, chamado inverso de $a$, tal que $a*b = b*a = e$.
+	(Comutatividade) $a*b = b*a$ para todos $a,b \in \G$.
 
 
-A operação do grupo é geralmente chamada de adição ($+$) ou multiplicação ($-$). Em primeira instância, o grupo é chamado de grupo aditivo, o elemento (aditivo) identidade é normalmente denotado por $0$, e o inverso (aditivo) $d$ e $a$ é denotado por $-a$. Em uma segunda instância, o grupo é chamado de grupo multiplicativo, o elemento (multiplicativo) identidade é denotado por $1$ e o inverso (multiplicativo) de $a$ é denotado por a-1 .
-O grupo é finito se $\G$ é um conjunto finito, no caso em que o número de elementos em $_G$ é chamado a ordem de G.
-Por exemplo, seja p um numero primo, e $F_{p} = {0,1,2,...,p-1}$ denota o conjunto dos inteiros módulo $p$. Então $(F_{p},+)$, onde a operação $+$ é definida com a operação de adição de inteiros módulo $p$, é um grupo finito aditivo de ordem $p$ com elemento identidade (aditivo) $0$. Além isso, $(F*p,\bullet)$, onde $F*p$ denota os elementos diferentes de zero em $Fp$ e a operação $\bullet$ é definida como a multiplicação de inteiros módulo $p$, é um grupo finito multiplicativo de ordem $p-1$ com elemento identidade (multiplicativo) $1$. A tripla $(Fp, + , \bullet)$ é um campo finito, denotado mais sucintamente por $Fp$.
+A operação do grupo é geralmente chamada de adição ($+$) ou multiplicação ($*$). Em primeira instância, o grupo é chamado de grupo aditivo, o elemento (aditivo) identidade é normalmente denotado por $0$, e o inverso (aditivo) $d$ e $a$ é denotado por $-a$. Em uma segunda instância, o grupo é chamado de grupo multiplicativo, o elemento (multiplicativo) identidade é denotado por $1$ e o inverso (multiplicativo) de $a$ é denotado por $a^{-1}$ .
+O grupo é finito se $\G$ é um conjunto finito, no caso em que o número de elementos em $\G$ é chamado a ordem de $\G$.
+Por exemplo, seja p um numero primo, e $F_{p} = {0,1,2,...,p-1}$ denota o conjunto dos inteiros módulo $p$. Então $(F_{p},+)$, onde a operação $+$ é definida com a operação de adição de inteiros módulo $p$, é um grupo finito aditivo de ordem $p$ com elemento identidade (aditivo) $0$. Além isso, $(F^{*}_{p},\bullet)$, onde $F^{*}_{p}$ denota os elementos diferentes de zero em $F_{p}$ e a operação $\bullet$ é definida como a multiplicação de inteiros módulo $p$, é um grupo finito multiplicativo de ordem $p-1$ com elemento identidade (multiplicativo) $1$. A tripla $(F_{p}, + , \bullet)$ é um campo finito, denotado mais sucintamente por $F_{p}$.
 
-Agora, se $\G$ é um grupo finito multiplicativo de ordem $n$ e $g \in \G$, então o menor inteiro positivo $t$ tal que $gt = 1$ é chamado de ordem de $g$; esse $t$ sempre existe e é divisor de $n$. O conjunto $<g> = {gi : 0 \leq i \leq t-1}$ de todas as potências de $g$ é ele próprio um grupo sobre a mesma operação como $G$, e é chamado um subgrupo cíclico de $\G$ gerado por $\G$. Declarações análogas são verdadeiras se $\G$ é escrito aditivamente. Assim, a ordem de g   G é o menor divisor positivo $t$ de $n$ tal que $tg = 0$, e $<g> = {ig : 0 \leq i \leq t-1}$. Aqui, tg denota o elemento obtido por adicionar t cópias de $g$. Se G tem um elemento $g$ de ordem $n$, então $G$ é dito ser um grupo cíclico e $g$ é um gerador de G. Por exemplo, com o os parâmetros do DL ($p$,$q$, $g$) definidos anteriormente, o grupo multiplicativo $(F*p, \bullet)$ é um grupo cíclico de ordem p-1. Ademais, $<g>$ é um subgrupo cíclico de ordem $q$.
+Agora, se $\G$ é um grupo finito multiplicativo de ordem $n$ e $g \in \G$, então o menor inteiro positivo $t$ tal que $gt = 1$ é chamado de ordem de $g$; esse $t$ sempre existe e é divisor de $n$. O conjunto $<g> = {gi : 0 \leq i \leq t-1}$ de todas as potências de $g$ é ele próprio um grupo sobre a mesma operação como $\G$, e é chamado um subgrupo cíclico de $\G$ gerado por $\G$. Declarações análogas são verdadeiras se $\G$ é escrito aditivamente. Assim, a ordem de $g \in \G$ é o menor divisor positivo $t$ de $n$ tal que $tg = 0$, e $<g> = {ig : 0 \leq i \leq t-1}$. Aqui, tg denota o elemento obtido por adicionar t cópias de $g$. Se G tem um elemento $g$ de ordem $n$, então $G$ é dito ser um grupo cíclico e $g$ é um gerador de $\G$. Por exemplo, com o os parâmetros do DL $(p,q,g)$ definidos anteriormente, o grupo multiplicativo $(F^{*}_{p}, \bullet)$ é um grupo cíclico de ordem $p-1$. Ademais, $<g>$ é um subgrupo cíclico de ordem $q$.
 
- 
 \subsection{Grupos em Curvas Elípticas}
 
-Seja p um número primo, e $Fp$ o campo dos inteiros módulo $p$. Uma curva elíptica $E$ sobre $Fp$ é definida por uma equação da forma 
+Seja $p$ um número primo, e $F_{p}$ o campo dos inteiros módulo $p$. Uma curva elíptica $E$ sobre $F_{p}$ é definida por uma equação da forma 
 \begin{equation}
 \label{eq:defcurvaeliptica}
 y^2= x^3+ ax+b
 \end{equation}
-onde $a$, $b$   $Fp$ satisfaz $4a^{3}+ 27b^{2}=0 (mod p)$. Um par ($x$, $y$), onde $x$, $y$    $Fp$, é um ponto na curva se ($x$, $y$) satisfaz a equação \ref{eq:defcurvaeliptica}. O ponto no infinito, denotado por $\infty$, também é considerado estar contido na curva. O conjunto de todos os pontos sobre $E$ é denotado pro $E(Fp)$. Por exemplo, se $E$ é uma curva elíptica sobre $F7$ com definida pela equação:
+onde $a$, $b$   $F_{p}$ satisfaz $4a^{3}+ 27b^{2}=0 (mod p)$. Um par $(x, y)$, onde $x, y \in F_{p}$, é um ponto na curva se $(x, y)$ satisfaz a equação \ref{eq:defcurvaeliptica}. O ponto no infinito, denotado por $\infty$, também é considerado estar contido na curva. O conjunto de todos os pontos sobre $E$ é denotado por $E(F_{p})$. Por exemplo, se $E$ é uma curva elíptica sobre $F_{7}$ definida pela equação:
 
 \begin{equation}
 \label{eq:defcurvaeliptica2}
@@ -328,11 +327,9 @@ y^2= x^3+ 2x+4
 
  Então, os pontos sobre $E$ são:
 
-$E(F7) = { \infty, (0,2), (0,5), (1,0), (2,3), (2,4), (3,3), (3,4), (6,1), (6,6) }$.
+$E(F_{7}) = { \infty, (0,2), (0,5), (1,0), (2,3), (2,4), (3,3), (3,4), (6,1), (6,6) }$.
 
-Agora, há um método bem conhecido para somar 2 pontos numa curva elíptica $P: (x1, y1)$ e $Q: (x2, y2)$ para produzir um terceiro ponto na curvar $R: (x3, y3)$. Veja a figura seguinte:
-
-
+Agora, há um método bem conhecido para somar 2 pontos numa curva elíptica $P: (x_{1}, y_{1})$ e $Q: (x_{2}, y_{2})$ para produzir um terceiro ponto na curva $R: (x_{3}, y_{3})$. Veja a figura seguinte:
 
 \begin{figure}[h]
 	\centering
@@ -341,37 +338,33 @@ Agora, há um método bem conhecido para somar 2 pontos numa curva elíptica $P: (x
 	\label{fig:somaeliptica}
 \end{figure}
 
-
-A regra de adição requer algumas operações aritméticas (adição, subtração, multiplicação e inversão) in fp com as coordenadas $x1, y1, x2, y2$. Com esta regra de adição, o conjunto dos pontos $E$ ($Fp$) forma um grupo abeliano (aditivo) com $\infty$ servindo como elemento neutro. Subgrupos cíclicos destes grupos sobre curvas elípticas podem ser agora usados para implementar sistemas de logaritmos discretos.
+A regra de adição requer algumas operações aritméticas (adição, subtração, multiplicação e inversão) em $F_{p}$ com as coordenadas $x_{1}, y_{1}, x_{2}, y_{2}$. Com esta regra de adição, o conjunto dos pontos $E$ ($F_{p}$) forma um grupo abeliano (aditivo) com $\infty$ servindo como elemento neutro. Subgrupos cíclicos destes grupos sobre curvas elípticas podem ser agora usados para implementar sistemas de logaritmos discretos.
 
 \subsection{Geração de chaves em curva elíptica}
 
-Seja $E$ uma curva elíptica definida sobre o campo finito $Fp$. Seja $P$ um ponto em $E(Fp)$, e suponha que $P$ tenha ordem prima $n$. Então o subgrupo cíclico de $E(Fp)$ gerado por $P$ é 
+Seja $E$ uma curva elíptica definida sobre o campo finito $F_{p}$. Seja $P$ um ponto em $E(F_{p})$, e suponha que $P$ tenha ordem prima $n$. Então o subgrupo cíclico de $E(F_{p})$ gerado por $P$ é 
 
-$<P> = { \infty, P, 2P, 3P, ..., (n-1)P }.$
+\begin{equation}
+\label{eq:defcurvaeliptica3}
+<P> = { \infty, P, 2P, 3P, ..., (n-1)P }.
+\end{equation}
 
-O primo $p$, a equação da curva elíptica $E$, e o ponto $P$ e sua ordem $n$, são os parâmetros públicos do domínio. Uma chave privada é um inteiro d que é selecionado uniformemente de forma aleatória no intervalo $[1,n-1]$, e a chave pública correspondente é $Q = dP$.
-O problema de determinar d dados os parâmetros do domínio e Q é o problema do logaritmo discreto em curvas elípticas (ECDLP).
-
-\subsection{Encriptação em curva elíptica}
-
-Uma mensagem m é primeiramente representada como um ponto $M$, e então encriptada somando-se ela a $kQ$, onde $k$ é um inteiro aleatoriamente selecionado, e $Q$ é a chave pública do receptor. O emissor transmite os pontos $C1 = kP$ e $C2 = M + kQ$ para o receptor que usa sua chave privada $d$ para calcular $dC1 = d(kP) = k(dP) = kQ$, e, em seguida, recupera $M = C2 - kQ$. Um agressor que deseja recuperar $M$ precisa calcular $kQ$. Esta tarefa de computar $kQ$ a partir dos parâmetros do domínio, $Q$, e $C1 = kP$, é um problema análogo ao problema de Diffie-Hellman em curvas elípticas. %TODO colocar referencia aqui diffie--hellman
-
-
+O primo $p$, a equação da curva elíptica $E$, e o ponto $P$ e sua ordem $n$, são os parâmetros públicos do domínio. Uma chave privada é um inteiro d que é selecionado uniformemente de forma aleatória no intervalo $[1,n-1]$, e a chave pública correspondente é $Q = d_{P}$.
+O problema de determinar d dados os parâmetros do domínio e $Q$ é o problema do logaritmo discreto em curvas elípticas (ECDLP).
 
 \section{Criptografia baseada em identidades e sistemas isentos de certificados}
 %TODO arrumar
-Shamir introduced the notion of identity-based (IB) cryptography~\cite{shamir} in an attempt to mitigate the burden of a PKI. In an IB cryptosystem, private keys are not chosen by the users but rather issued by a trusted authority called the Key Generation Bureau (KGB) or Trust Authority (TA), and public keys are replaced by arbitrary strings representing users' identities, avoiding the need for certificates altogether. On the other hand, it has the drawback of implicitly establishing a key escrow mechanism, since the KGB has the ability to recover confidential information from any user.
+O conceito de criptografia baseada em identidades\cite{shamir} procura reduzir a dificuldade causada pela necessidade de manutenção de uma infra-estrutura de chave pública, ou \emph{PKI}. Nesse tipo de sistema a chave pública do usuário pode ser arbitrariamente escolhida, e uma autoridade de confiança gera sua chave privada. No entanto, a autoridade de confiança tem o conhecimento de todas as chaves privadas e poderia recuperar as informações de qualquer usuário.
 
 The concept of certificateless (CL) cryptosystems \cite{al-riyami-paterson} was introduced to address the key escrow issue while avoiding the use of certificates and the need for a public-key infrastructure. The usual principle behind a CL scheme is to partition private keys into two components: an identity-based partial key (known to the KGB and thus otherwise subject to escrow) and one conventional albeit non-certified partial key (unknown to the KGB). This technique potentially combines the best features of identity-based and certificate-based cryptography, and indeed a number of certificateless encryption schemes derived from identity-based encryption algorithms have been successfully constructed and proven secure under certain assumptions. On the other hand, certificateless signatures remain much trickier to define and analyze, and as a consequence constructing certificateless signcryption schemes has been an elusive task only recently solved, though the only known such protocol can be hardly considered efficient. A signcryption scheme \cite{zheng} is an integrated method to encrypt and sign a message in a more efficient way than to apply separately an encryption scheme and a signature scheme. The efficiency improvement may reside in the processing time, bandwidth occupation, key management, or any combination thereof; it may be simply a robust way to combine the two primitives so as to avoid deleterious interactions.
 
-\section{Emparelhamentos Bilineares}
+\section{Emparelhamentos}
 %TODO arrumar
-Identity-based cryptography became feasible when instantiated with the help of bilinear maps, or \emph{pairings} for short~\cite{sakai-ohgishi-kasahara,boneh-franklin}, and has since attracted widespread attention due to its unusual properties. Pairings are formally defined as follows. Let $k$ be a security parameter and $n$ be a $k$-bit prime number. Consider groups $\G_1$, $\G_2$ and $\G_T$ of order $n$. We say that $(\G_1,\G_2,\G_T)$ are pairing groups if there exists a bilinear map (i.e. a pairing) $e: \G_1 \times \G_2 \rightarrow \G_T$ satisfying the following properties:
+Os mapas bilineares, ou emparelhamentos \cite{sakai-ohgishi-kasahara,boneh-franklin}, tornaram possível o uso de criptografia baseada em identidades na prática. Emparelhamentos são formalmente definidos como se segue. Seja $k$ um parâmetro de segurança e $n$ um número primo de  $k$ \emph{bits}. Sejam $\G_1$, $\G_2$ e $\G_T$ grupos de ordem $n$. Dizemos que $(\G_1,\G_2,\G_T)$ são grupos de emparelhamento se existe um mapa bilinear $e: \G_1 \times \G_2 \rightarrow \G_T$ que satisfaça às propriedades:
 \begin{enumerate}
-\item Bilinearity: $\forall (S,T) \in \G_1 \times \G_2$, $\forall a,b \in \Z_n$, $e(aS, bT) = e(S,T)^{ab}$.
-\item Non-degeneracy: $\forall S \in \G_1$, $e(S,T)=1$ for all $T \in \G_2$ iff $S=\mathcal{O}_{\G_1}$.
-\item Computability: $\forall (S,T) \in \G_1 \times \G_2$, $e(S,T)$ is efficiently computable.
+\item Bilinearidade: $\forall (S,T) \in \G_1 \times \G_2$, $\forall a,b \in \Z_n$, $e(aS, bT) = e(S,T)^{ab}$.
+\item Non-degeneracy: $\forall S \in \G_1$, $e(S,T)=1$ para todo $T \in \G_2$ iff $S=\mathcal{O}_{\G_1}$.
+\item Computabilidade: $\forall (S,T) \in \G_1 \times \G_2$, $e(S,T)$ é eficientemente computável.
 \end{enumerate}
 
 \section{BLMQ}
