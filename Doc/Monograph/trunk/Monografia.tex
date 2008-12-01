@@ -835,7 +835,9 @@ As classes do sistema são divididas em 4 pacotes:
 \item \textbf{Data:} pacote que contém as classes que gerenciam a persistência dos dados da aplicação.
 \item \textbf{Application:} pacote que contém a interface gráfica e as classes que gerenciam os serviços do usuário e da autoridade de segurança (KeyGenerationBureau).
 \item \textbf{Messaging:} pacote que contém as classes que gerenciam a interface com o serviço de mensagens SMS e a serialização dos dados trafegados nas mensagens binárias.
-\end{itemize}\begin{figure}[h]
+\end{itemize}
+A figura \ref{fig:class_diagram} apresenta um diagrama de classes simplificado do sistema. O Apêndice \ref{app:classe_detalhados} apresenta diagramas de classe detalhados de cada pacote.
+\begin{figure}[h]
 	\centering
 		\includegraphics[width=1.00\textwidth]{figuras/class_diagram.PNG}
 	\caption{Diagrama de classes do sistema}
@@ -861,13 +863,6 @@ O intercâmbio de mensagens entre clientes, ou entre um cliente e a autoridade de
 		\includegraphics[width=1.00\textwidth]{figuras/SequenceDiagramClient.png}
 	\caption{Fluxo de comunicação entre dois usuários}	
 	\label{fig:SequenceDiagramClient}
-\end{figure}
-
-\begin{figure}[h]
-	\centering
-		\includegraphics{figuras/hereisyourqamessage.PNG}
-	\caption{SignupResponse}	
-	\label{fig:SignupResponse}
 \end{figure}
 
 \subsection{SignupMessage}
@@ -1061,6 +1056,8 @@ Unsigncryption	&	266,7 &	1957,0 & 492,2 \\\hline
 \end{tabular}
 \end{table}
 
+O Apêndice \ref{app:desempenho} apresenta gráficos e tabelas com todos os dados de desempenho obtidos.
+
 \section{Testes entre operadoras}
 Realizamos testes de envio de mensagens de nossa aplicação entre celulares habilitados para operadoras distintas. Foram testadas as principais operadoras do estado de São Paulo: \emph{Vivo}, \emph{Tim} e \emph{Claro}. Observou-se que em alguns casos o SMS enviado não era recebido na porta \emph{SMS} especificada no envio: mesmo sendo encaminhada à porta 50001, a mensagem era recebida na porta 0 (a porta padrão do SMS), não alcançando a aplicação e sim a caixa de entrada padrão do celular.
 
@@ -1102,28 +1099,53 @@ No decorrer do desenvolvimento deste trabalho, superamos as dificuldades tecnoló
 \begin{sidewaysfigure}[h]
 	\centering
 		\includegraphics{figuras/teste_variando_tamanho_mensagem.PNG}
-	\caption{Variação do tempo de Signcrypt enquanto varia-se o tamanho da mensagem}
+	\caption{Gráfico: tempo de Signcrypt x tamanho da mensagem}
 	\label{fig:teste_variando_tamanho_mensagem}
 \end{sidewaysfigure}
+
+\begin{table}[h]\centering
+\caption{Testes com a implementação final (chaves de 176 bits)} \label{tab:bdcps176final}
+\begin{tabular}{cccccc}\hline
+Tam. Msg (bytes)	&Emulador(ms)	&Nokia E51(ms)	&Nokia 6275(ms)\\hline
+8	& 387,3	& 183,0	& 1440,8\\\hline
+28	& 393,6	& 144,8	& 1383,9\\\hline
+48	& 396,4	& 167,8	& 1369,6\\\hline
+68	& 388,1	& 148,8	& 1372,9\\\hline
+88	& 394,9	& 192,6	& 1394,0\\\hline
+108	& 397,2	& 157,9	& 1393,1\\\hline
+128	& 393,0	& 173,3	& 1381,0\\\hline
+148	& 397,3	& 149,4	& 1386,4\\\hline
+168	& 391,4	& 235,3	& 1391,3\\\hline
+188	& 394,7	& 147,4	& 1378,8\\\hline
+208	& 400,7	& 191,2	& 1395,9\\\hline
+228	& 393,9	& 151,6	& 1384,6\\\hline
+248	& 398,2	& 171,6	& 1387,1\\\hline
+268	& 396,6	& 147,7	& 1406,1\\\hline
+288	& 395,1	& 197,4	& 1405,6\\\hline
+308	& 398,4	& 159,9	& 1401,6\\\hline
+328	& 394,6	& 190,0	& 1410,8\\\hline
+348	& 395,5	& 189,7	& 1409,9\\\hline
+\end{tabular}
+\end{table}
 
 \begin{sidewaysfigure}[h]
 	\centering
 		\includegraphics{figuras/teste_nokiae51.PNG}
-	\caption{Variação do tempo das operações enquanto varia-se o tamanho da chave no celular Nokia E51}
+	\caption{Gráfico: tempo das operações x tamanho da chave (Nokia E51)}
 	\label{fig:teste_nokiae51}
 \end{sidewaysfigure}
 
 \begin{sidewaysfigure}[h]
 	\centering
 		\includegraphics{figuras/teste_nokia6275.PNG}
-	\caption{Variação do tempo das operações enquanto varia-se o tamanho da chave no celular Nokia 6275}
+	\caption{Gráfico: tempo das operações x tamanho da chave (Nokia 6275)}
 	\label{fig:teste_nokia6275}
 \end{sidewaysfigure}
 
 \begin{sidewaysfigure}[h]
 	\centering
 		\includegraphics{figuras/teste_emulador.PNG}
-	\caption{Variação do tempo das operações enquanto varia-se o tamanho da chave no emulador do WTK 2.5.2}	\label{fig:teste_emulador}
+	\caption{Gráfico: tempo das operações x tamanho da chave (Emulador WTK2.5.2)}	\label{fig:teste_emulador}
 \end{sidewaysfigure}
 
 \chapter{Diagramas de classe detalhados}\label{app:classe_detalhados}
