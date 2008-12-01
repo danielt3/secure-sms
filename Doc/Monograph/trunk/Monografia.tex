@@ -108,19 +108,21 @@
 \paginadedicatoria{}
 
 \begin{agradecimentos}
-%TODO
-Agradeço a... etc etc etc 
+Ao nosso orientador Prof. Dr. Paulo Sérgio Licciardi Messeder Barreto, pelo envolvimento e constante incentivo ao projeto.
+Aos nossos familiares, por fornecer o suporte necessário para alcançarmos nossos objetivos e por compreenderem nossa constante ausência nos últimos meses.
+Aos nossos professores, por guiarnos na busca pelo conhecimento necessário à realização do trabalho.
+Aos nossos colegas, que sempre nos apoiaram e ajudaram a superar as dificuldades enfrentadas durante o curso.
+Ao André Felipe Santos, por auxiliar-nos na realização dos testes finais.
+Ao Felipe Sanches, por ter criado o ícone do aplicativo.
+
 \end{agradecimentos}
 
 \begin{resumo}
-Este trabalho consiste na especificação e implementação de um sistema que garanta serviços de segurança na troca de mensagens SMS entre aperelhos de telefonia celular. Ao longo da monografia, apresentaremos aspectos da nossa solução, um esquema criptográfico inovador que viabilizou a implementação, métricas, resultados de testes de desempenho, além de considerações sobre o andamento do trabalho.
-%TODO: atualizar isso depois de ter feito tudo
+Este trabalho consiste na especificação e implementação de um sistema que garanta serviços de segurança na troca de mensagens SMS entre aperelhos de telefonia celular. Ao longo da monografia, apresentaremos aspectos da nossa solução, métricas, um esquema criptográfico inovador que viabilizou a implementação, especificação do sistema e resultados de testes de desempenho do sistema implementado.
 \end{resumo}
 
 \begin{abstract}
-%TODO
-This work consists in the specification and implementation of a system which is able to guarantee security services while exchanging SMS between
-
+This work consists in the specification and implementation of a system that guarantees security services while exchanging SMS between mobile phone devices. Throughout this monograph, we'll present aspects of our solution, metrics, an innovative cryptographic scheme that made the implementation possible, specification of the system and performance test results.
 \end{abstract}
 
 \tableofcontents
@@ -129,7 +131,7 @@ This work consists in the specification and implementation of a system which is 
 
 \listoftables
 
-%TODO: \sigla não funciona!!!
+%TOLERADO: \sigla não funciona!!!
 %To fazendo a lista de siglas na mão... consertar depois talvez
 \listadesiglas{
 \begin{center}
@@ -145,10 +147,7 @@ This work consists in the specification and implementation of a system which is 
 \emph{\textbf{DSA} - Digital Signature Algorithm}\\
 \emph{\textbf{MAC} - Message Authentication Code}\\
 \emph{\textbf{DSS} - Digital Signature System}\\
-\emph{\textbf{ECC} - Ellyptic Curve Cryptography}\\
-
-%TODO: acrescentar as siglas aqui
-%Existe uma norma, acho que é pra por na ordem de aparição no texto... ou em ordem alfabética.. não sei, TODO: confirmar nas diretrizes
+%Existe uma norma, acho que é pra por na ordem de aparição no texto... ou em ordem alfabética.. não sei, TOLERADO: confirmar nas diretrizes
 \end{center}
 }
 
@@ -156,6 +155,7 @@ This work consists in the specification and implementation of a system which is 
 \chapter{Introdução}
 
 O Serviço de Mensagens Curtas (\emph{Short Message Service}, ou SMS) é um serviço oferecido por operadoras de telefonia celular para que seus usuários troquem mensagens curtas de texto com outros usuários da rede ou com serviços da Internet. Atualmente, cerca de XXX pessoas utilizam o SMS no mundo e XXX mensagens são trocadas anualmente.
+%TODO: Tirar o XXX !
 
 A rede GSM (Global System for Mobile Comunnication), sobre a qual as mensagens SMS trafegam, usa o mecanismo \emph{store-and-forward}, que é similar ao serviço SMTP de correio eletrônico. Em vez de servidores de email, são usados centros de SMS (SMSC) que armazenam as mensagens SMS antes de serem enviadas para o fornecedor de serviços (operadora) ou para outro SMSC.
 
@@ -179,7 +179,7 @@ Na figura \ref{fig:Canal_Inseguro}, as entidades $A$ (Alice) e $B$ (Bob) estão s
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=1.00\textwidth]{figuras/Canal_Inseguro.jpg}
+	\includegraphics[width=0.50\textwidth]{figuras/Canal_Inseguro.jpg}
 	\caption{Canal inseguro}
 	\label{fig:Canal_Inseguro}
 \end{figure}
@@ -243,7 +243,7 @@ Uma segunda desvantagem é o problema de administração de chaves. Em uma rede de 
 \section{Criptografia de chave pública}
 
 \subsection{Introdução}
-A noção de criptografia de chave pública foi introduzida por Diffie e Hellman \cite{diffie-hellamn} e Merkle \cite{merkle} para resolver as deficiências da criptografia de chaves simétricas mencionadas anteriormente. Em contraste aos esquemas de chave simétrica, os esquemas de chave pública requerem apenas que as entidades em comunicação troquem informações de chaves que são autenticas (mas não secretas). Cada entidade seleciona um único par $(e,d)$ consistindo de uma chave pública $e$, e uma chave privada relacionada $d$ que a entidade mantém secreta). As chaves têm a propriedade de que é computacionalmente impraticável determinar a chave privada apenas de conhecimento da chave pública.
+A noção de criptografia de chave pública foi introduzida por Diffie e Hellman \cite{diffie-hellman} e Merkle \cite{merkle} para resolver as deficiências da criptografia de chaves simétricas mencionadas anteriormente. Em contraste aos esquemas de chave simétrica, os esquemas de chave pública requerem apenas que as entidades em comunicação troquem informações de chaves que são autenticas (mas não secretas). Cada entidade seleciona um único par $(e,d)$ consistindo de uma chave pública $e$, e uma chave privada relacionada $d$ que a entidade mantém secreta). As chaves têm a propriedade de que é computacionalmente impraticável determinar a chave privada apenas de conhecimento da chave pública.
 
 \subsection{Confidencialidade}
 
@@ -322,11 +322,11 @@ y^2= x^3+ 2x+4
 
 $E(F_{7}) = { \infty, (0,2), (0,5), (1,0), (2,3), (2,4), (3,3), (3,4), (6,1), (6,6) }$.
 
-Agora, há um método bem conhecido para somar 2 pontos numa curva elíptica $P: (x_{1}, y_{1})$ e $Q: (x_{2}, y_{2})$ para produzir um terceiro ponto na curva $R: (x_{3}, y_{3})$. Veja a figura seguinte:
+Agora, há um método bem conhecido para somar 2 pontos numa curva elíptica $P: (x_{1}, y_{1})$ e $Q: (x_{2}, y_{2})$ para produzir um terceiro ponto na curva $R: (x_{3}, y_{3})$, conforme ilustrado na Figura \ref{fig:somaeliptica} \cite{menezes}.
 
 \begin{figure}[h]
 	\centering
-		\includegraphics{figuras/SomaEliptica.PNG}
+		\includegraphics[width=1.00\textwidth]{figuras/SomaEliptica.PNG}
 	\caption{Soma em Curva Elíptica}
 	\label{fig:somaeliptica}
 \end{figure}
@@ -346,12 +346,12 @@ O primo $p$, a equação da curva elíptica $E$, e o ponto $P$ e sua ordem $n$, são
 O problema de determinar d dados os parâmetros do domínio e $Q$ é o problema do logaritmo discreto em curvas elípticas (ECDLP).
 
 \section{Criptografia baseada em identidades e sistemas isentos de certificados}
-%TODO arrumar
+%TOLERADO: arrumar
 O conceito de criptografia baseada em identidades \cite{shamir} procura reduzir a dificuldade causada pela necessidade de manutenção de uma infra-estrutura de chave pública, ou \emph{PKI}. Nesse tipo de sistema a chave pública do usuário pode ser arbitrariamente escolhida, e uma autoridade de confiança gera sua chave privada. No entanto, a autoridade de confiança tem o conhecimento de todas as chaves privadas e poderia recuperar as informações de qualquer usuário.
 Os sistemas de segurança isentos de certificados (ou, em uma definição mais precisa, auto-certificados) \cite{al-riyami-paterson} foram concebidos com o objetivo de resolver o problema de comprometimento da chave de sistemas baseados em identidades. Nesses sistemas, a chave privada do usuário é composta por dois componentes: uma parcela baseada em identidades, e, desse modo, sujeita a comprometimento, e uma parcela convencional, porém não certificada. Esse tipo de sistema combina as melhores características de sistemas baseados em identidades e em certificados, porém continuam sendo de difícil especificação.
 
 \section{Emparelhamentos}
-%TODO arrumar
+%TOLERADO: arrumar
 Os mapas bilineares, ou emparelhamentos \cite{sakai-ohgishi-kasahara,boneh-franklin}, tornaram possível o uso de criptografia baseada em identidades na prática. Emparelhamentos são formalmente definidos como se segue. Seja $k$ um parâmetro de segurança e $n$ um número primo de  $k$ \emph{bits}. Sejam $\G_1$, $\G_2$ e $\G_T$ grupos de ordem $n$. Dizemos que $(\G_1,\G_2,\G_T)$ são grupos de emparelhamento se existe um mapa bilinear $e: \G_1 \times \G_2 \rightarrow \G_T$ que satisfaça às propriedades:
 \begin{enumerate}
 \item Bilinearidade: $\forall (S,T) \in \G_1 \times \G_2$, $\forall a,b \in \Z_n$, $e(aS, bT) = e(S,T)^{ab}$.
@@ -360,7 +360,7 @@ Os mapas bilineares, ou emparelhamentos \cite{sakai-ohgishi-kasahara,boneh-frank
 \end{enumerate}
 
 \section{BLMQ}
-%TODO arrumar
+%DONE arrumar
 Nesta seção apresentamos características básicas e definições do BLMQ ~\cite{barreto-libert-mccullagh-quisquater}, um esquema de criptografia baseado em identidades. O esquema é composto pelos seguintes algoritmos:
 
 \begin{itemize}
@@ -489,7 +489,7 @@ A seguir, definimos as métricas e restrições do sistema. % e suas limitações.
 
 \begin{itemize}
 
-\item Nível de segurança: Desejamos que o nível de segurança de nosso protocolo seja equiparável ao nível de segurança do RSA usando chaves de 1024 bits, que pode ser calculado como $2^{1024}$ \{rsalabs}.
+\item Nível de segurança: Desejamos que o nível de segurança de nosso protocolo seja equiparável ao nível de segurança do RSA usando chaves de 1024 bits, que pode ser calculado como $2^{1024}$ \cite{rsalabs}.
 
 \item Tempo de espera: Consiste nos tempos para cifrassinar e vericifrar uma mensagem. Baseando-se em aplicações já existentes e satisfazendo os requisitos de usabilidade de nosso projeto, estimamos que um intervalo de espera para processamento de uma mensagem de no máximo 5 segundos seja tolerável pelo usuário.
 
@@ -501,7 +501,7 @@ A seguir, definimos as métricas e restrições do sistema. % e suas limitações.
 
 \end{itemize}
 
-%TODO: aqui ta tudo igual ao paper... alterar, enriquecer!
+%TOLERADO: aqui ta tudo igual ao paper... alterar, enriquecer!
 
 Sabendo que um certificado digital típico ocupa entre 2KB e 4KB, nota-se aqui que uma solução baseada em infra-estrutura convencional de chaves públicas inviabilizaria completamente o sistema: antes de se enviar uma mensagem SMS segura para algum usuário, seria necessário receber o certificado desse usuário particionado em 15 a 30 mensagens SMS, além de enviar em resposta outro certificado em mais 15 a 30 mensagens SMS. Esse esforço precisaria ser efetuado novamente para cada novo destinatário a quem determinado usuário desejasse enviar mensagens. Some-se a isto o espaço ocupado por uma única assinatura convencional, tipicamente de 128 bytes por estar baseada no algoritmo RSA com 1024 bits; este \emph{overhead} seria duplicado com o requisito de cifrar e assinar a mensagem, isto é, tomaria 256 bytes do espaço disponível. 
 
@@ -674,7 +674,7 @@ Nas seções abaixo detalharemos cada caso de uso do sistema, representados sucint
 
 
 \subsection{Geração de chave privada}
-\textbf{Introdução/Propósito}: O sistema deve fornecer para um novo usuário o serviço gerar sua chave privada e entregá-lo de forma segura. O Key Bureau Generator possui essa responsabilidade.
+\textbf{Introdução/Propósito}: O sistema deve fornecer para um novo usuário o serviço gerar sua chave privada e entregá-lo de forma segura. O Key Generation Bureau possui essa responsabilidade.
 	
 \textbf{Estímulo/Resposta}: Novo usuário requisita ao sistema a geração de sua chave privada. A requisição chega até o KGB que gera a chave privada do usuário
  e a retorna por meio de uma mensagem segura.
@@ -715,9 +715,9 @@ As famílias do RSA, do logaritmo discreto e das curvas elípticas introduziram na
 Durante os anos, pesquisadores desenvolveram técnicas para modelar e provar a segurança dos protocolos RSA, logaritmo discreto e curvas elípticas sob hipóteses razoáveis. A questão fundamental da segurança que permanece é a dificuldade do problema matemático subjacente que é necessário para a segurança de todos os protocolos em uma família de chave pública - o problema da fatoração inteira para sistemas RSA, o problema do logaritmo discreto para os sistemas baseados em logaritmos discretos e o problema de logaritmo discreto em curvas elípticas em sistemas baseados em curvas elípticas. A dificuldade percebida desses problemas impacta diretamente na eficiência uma vez que ela dita os tamanhos do domínio e dos parâmetros das chaves. Isso, por outro lado, afeta a eficiência das operações aritméticas subjacentes.
 
 %TODO: Eu (Eduardo) colei aqui esse texto. Talvez reformular.. Deve ter informação repetida acima.
-Dado que o tempo de uso do RSA de 1024 bits está no fim, uma nova versão será necessária \cite{rsalabs}. Contudo, para um aumento no nível de segurança do RSA, é preciso aumentar consideravelmente o tamanho das chaves, uma vez que a relação entre o tamanho das chaves e o nível de segurança do RSA é: %TODO: colocar a fórmula, é exponencial? citar ref...
+Dado que o tempo de uso do RSA de 1024 bits está no fim, uma nova versão será necessária \cite{rsalabs}. Contudo, para um aumento no nível de segurança do RSA, é preciso aumentar consideravelmente o tamanho das chaves, uma vez que a relação entre o tamanho das chaves e o nível de segurança é exponencial, a chave cresce muito rapidamente quando aumenta-se o nível de segurança desejado. %TODO TODO TODO: colocar a fórmula, é exponencial? citar ref...
 
-Em paralelo, um aumento equivalente no nível de segurança de criptografia em curvas elípticas acarreta menor aumento no tamanho das chaves. Este fato ocorre devido à relação entre o nível de segurança de criptografia em curvas elípticas e o tamanho das chaves, que é uma relação diretamente proporcional (cresce linearmente). %TODO: citar algo! Colocar a fórmula... é 2^n ? Acho que isso é só uma aproximação... Citar ref..
+Em paralelo, um aumento equivalente no nível de segurança de criptografia em curvas elípticas acarreta menor aumento no tamanho das chaves. Este fato ocorre devido à relação entre o nível de segurança de criptografia em curvas elípticas e o tamanho das chaves, que é uma relação diretamente proporcional (cresce linearmente). Para uma chave $k$, tem-se um nível de seguraça de aproximadamente $k/2$. %TODO: citar algo! Colocar a fórmula... é 2^k/2 ? Acho que isso é só uma aproximação... Citar ref..
 
 %Explicar aqui que analisamos os seguintes candidatos:
 \section{BLMQ}
@@ -727,8 +727,6 @@ A primeira tentativa de solução adotava o esquema de cifrassinatura baseada em i
 O esquema foi escolhido por, aparentemente, atender aos requisitos estabelecidos. O BLMQ era notadamente mais eficiente que esquemas de criptografia baseada em identidades anteriores, como o de Boneh-Franklin \cite{boneh-franklin}, o que poderia tornar, pela primeira vez, o uso desse tipo de criptografia viável em ambientes móveis como a telefonia celular. Além disso, o uso de uma assinatura de 160 bits garantiria um nível de segurança equivalente ao do RSA de 1024 bits \cite{rsalabs}, maximizando o espaço útil da mensagem.
 
 \subsection{Testes de viabilidade}
-
-%TODO: essa tabela ta ruim...
 
 O esquema foi parcialmente implementado em linguagem de programação Java, e testes foram realizados em um aparelho celular Nokia 6275.
 
@@ -748,9 +746,9 @@ Emparelhamento Ate          &  3.9\\\hline
 \end{tabular}
 \end{table}
 
-Essa implementação inicial demandava muito tempo computacional para incializar as classes e realizar as operações de emparelhamento. Emparelhamentos são extensamente utilizados pelo BLMQ, como nos algoritmos de \emph{signcrypt} e \emph{unsigncrypt}, o que impunha grande \emph{overhead} às operações do sistema. %TODO: falar que cada operação consumuia x emparalhementos, por isso mto ruim.
+Essa implementação inicial demandava muito tempo computacional para incializar as classes e realizar as operações de emparelhamento. Emparelhamentos são extensamente utilizados pelo BLMQ, como nos algoritmos de \emph{signcrypt} e \emph{unsigncrypt}, o que impunha grande \emph{overhead} às operações do sistema. 
 
-Como estes tempos não atendiam às métricas e aos requisitos de usabilidade do projeto, fez-se necessário buscar outras soluções. Estas dificuldades serviram como motivação para a criação de um esquema inovador. Como resultado de pesquisas realizadas, foi idealizado o protocolo BDCPS \cite{bdcps}, brevemente descrito a seguir.
+Como estes tempos não atendiam às métricas e aos requisitos de usabilidade do projeto, fez-se necessário buscar outras soluções. Estas dificuldades serviram como motivação para a criação de um esquema inovador. Como resultado de pesquisas realizadas, foi idealizado o protocolo, brevemente descrito a seguir.
 
 \section{BDCPS}
 %Falar aqui que o Barreto inventou o novo algoritmo, que publicou o SBSEG
@@ -769,12 +767,12 @@ Os resultados foram satisfatórios, já que os tempos de cifrassinatura e vericifr
 
 O tempo necessário para validar uma chave pública é um pouco maior do que para as demais operações. Porém, conforme observado anteriormente, esta é uma operação que será executada apenas uma vez para cada nova identidade que se deseje validar. A chave validada fica armazenada na memória do aplicativo, não sendo necessário validá-la novamente em uma comunicação futura com o mesmo par.
 
-Os resultados dos testes preliminares são apresentados nas tabelas \ref{tab:bdcps127} e \ref{tab:bdcps160}. Foram feitos testes de viabilidade com chaves de 127 e 160 bits, para dois modelos distintos de celulares, Nokia 6275 e Sony Ericsson W200i.
+Os resultados dos testes preliminares são apresentados nas tabelas \ref{tab:bdcps127} e \ref{tab:bdcps160}. Foram feitos testes de viabilidade com chaves de 127 e 160 bits, para dois modelos distintos de celulares: Nokia 6275 e Sony Ericsson W200i.
 
 \begin{table}[h]\centering
 \caption{Testes com o novo esquema (chaves de 127 bits) e comparação com o RSA}\label{tab:bdcps127}
 \begin{tabular}{cccccc}\hline
-Operação                   & Tempo Nokia 6275 (s)   &  Tempo Sony Ericsson W200i (s) \\\hline
+Operação                   & Nokia 6275 (s)   &  Sony Ericsson W200i (s) \\\hline
 Emparelhamento Eta         & 7,30                   &  2,37                          \\\hline
 Emparelhamento Ate         & 7,43                   &  2,38                          \\\hline
 Private-Key-Extract        & 2,63                   &  0,93                          \\\hline
@@ -792,7 +790,7 @@ Public RSA-508             & 0,03                   &  0,02                     
 \begin{table}[h]\centering
 \caption{Testes com o novo esquema (chaves de 160 bits) e comparação com o RSA}\label{tab:bdcps160}
 \begin{tabular}{cccccc}\hline
-Operação                   & Tempo Nokia 6275 (s)   &  Tempo Sony Ericsson W200i (s) \\\hline
+Operação                   & Nokia 6275 (s)   &  Sony Ericsson W200i (s) \\\hline
 Emparelhamento Eta         & 10,53                  &  3,59                          \\\hline
 Emparelhamento Ate         & 10,54                  &  3,64                          \\\hline
 Private-Key-Extract        & 3,72                   &  1,32                          \\\hline
@@ -807,7 +805,7 @@ Public RSA-640             & 0,16                   &  0,03                     
 \end{tabular}
 \end{table}
 
-\section{Análise dos resultados preliminares} %TODO: mudar o nome dessa seção, conclusão é muito ambíguo
+\section{Análise dos resultados preliminares} 
 %Falar que escolhemos o BDCPS e trabalharemos com ele daqui pra frente
 
 Pode-se verificar a partir das tabelas \ref{tab:bdcps127} e \ref{tab:bdcps160} que os tempos de assinatura e verificação no algoritmo proposto são menores do que os do BLMQ e, como observado em \cite{bdcps}, menores do que os de outros protocolos, como o RSA, para um mesmo nível de segurança.
@@ -818,16 +816,18 @@ Desse modo, por ter sido especificamente projetado para as necessidades do cenár
 
 \chapter{Especificação e projeto}
 \section{Arquitetura}
-%Diag de arquitetura, pequenas considerações, seção bem curta
-\section{Classes}
-%Diag de classes aqui, e descrição das classes
-\subsection{Diagrama}
+
+O sistema será dividido em dois módulos: o módulo do cliente, que possibilitará ao usuário a troca de mensagens com outros usuários, e o módulo da autoridade certificadora, ou \emph{KGB}, que será responsável pela geração de parte da chave privada dos usuários, conforme a Figura \ref{fig:deploy_diagram}. 
+
 \begin{figure}[h]
 	\centering
-		\includegraphics[width=1.00\textwidth]{figuras/class_diagram.PNG}
-	\caption{Diagrama de classes do sistema}
-	\label{fig:class_diagram}
+		\includegraphics[width=0.70\textwidth]{figuras/DeploymentDiagram.png}
+	\caption{Diagrama de implantação do sistema}
+	\label{fig:deploy_diagram}
 \end{figure}
+
+\section{Classes}
+%Diag de classes aqui, e descrição das classes
 \subsection{Descrição}
 As classes do sistema são divididas em 4 pacotes: 
 \begin{itemize}
@@ -835,9 +835,14 @@ As classes do sistema são divididas em 4 pacotes:
 \item \textbf{Data:} pacote que contém as classes que gerenciam a persistência dos dados da aplicação.
 \item \textbf{Application:} pacote que contém a interface gráfica e as classes que gerenciam os serviços do usuário e da autoridade de segurança (KeyGenerationBureau).
 \item \textbf{Messaging:} pacote que contém as classes que gerenciam a interface com o serviço de mensagens SMS e a serialização dos dados trafegados nas mensagens binárias.
-\end{itemize}
+\end{itemize}\begin{figure}[h]
+	\centering
+		\includegraphics[width=1.00\textwidth]{figuras/class_diagram.PNG}
+	\caption{Diagrama de classes do sistema}
+	\label{fig:class_diagram}
+\end{figure}
 
-\section{Especificação do protocolo}
+\section{Especificação do protocolo de troca de mensagens}
 
 %Falar das nossas primitivas, como é feita serialização dos bytes em cada mensagem, etc
 %Deixa que eu faço (Eduardo)
@@ -941,19 +946,9 @@ A partir do byte 8, ocorre o armazenamento dinâmico dos parâmetros. É reservado 
 \begin{figure}[h]
 	\centering
 		\includegraphics{figuras/signcryptedmessage.PNG}
-	\caption{SignCryptedMessage}
+	\caption{SigncryptedMessage}
 	\label{fig:signcryptedmessage}
 \end{figure}
-
-
-\section{Escolha de parâmetros}
-
-\subsection{Escolha do tamanho de chave padrão}
-Como inicialmente desejávamos um nível de segurança equiparável ao do RSA, foi escolhido o número 176 como tamanho de chave, pois este fornece um nível de segurança de $176/2 = 88$\footnote{Apesar de termos escolhido este valor padrão, a aplicação pode ser facilmente alterada para trabalhar com outros valores permitidos pela curva escolhida. }, ou seja, um pouco superior ao nível de segurança do RSA-1024. %TODO: colocar o valor, e citar. Geovs tem o link, acho...
-\subsection{Escolha da porta SMS}
-Quando se envia um SMS, associa-se a ele uma porta. A porta é um valor inteiro entre 0 e 65535 que serve para que o receptor encaminhe a mensagem recebida a uma aplicação específica. No caso de um SMS de texto normal, o valor da porta é 0. Quando um sistema operacional de um telefone móvel recebe uma mensagem com o valor de porta 0 ele aciona as rotinas do próprio sistema operacional para tratá-la, como armazená-la na caixa de entrada e tocar um som de alerta para o usuário. No caso de a porta ser diferente de 0, o sistema operacional procura numa área chamada \emph{PushRegistry} por algum aplicativo instalado que deseja receber mensagens nesta porta (é como se o aplicativo estivesse escutando a porta) e assim executa aplicativo registrado, que irá tratar a mensagem recebida\footnote{Em alguns celulares, o sistema operacional pode pedir uma confirmação do usuário antes de executar a aplicação automaticamente.}.
-
-Sendo assim, escolhemos arbitrariamente o valor 50001 para usar como a porta de nossa aplicação. A aplicação envia e se registra para escutar mensagens nesta porta.
 
 \chapter{Implementação}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -974,11 +969,20 @@ Para o desenvolvimento do código, foi usado o \emph{IDE Netbeans 6.0.1}, integra
 A biblioteca SMSPairings foi fornecida por nosso orientador. Contém classes que implementam curvas elípticas e emparelhamentos bilineares, de uma forma otimizada para a ordem de grandeza de nossas chaves.
 %TODO: falar mais
 \subsection{BouncyCastle}
-%TODO: citar o cite do bouncycastle?
+%TODO: citar o site do bouncycastle?
 O \emph{BouncyCastle} é uma biblioteca que contém implementações de vários algoritmos de criptografia e \emph{hashs}. Existe uma versão da biblioteca implementada para o ambiente \emph{J2ME}, a qual usamos. Fez-se necessário o uso desta biblioteca devido à ausência dos pacotes \emph{java.security} e \emph{javax.crypto} no ambiente dos celulares usados. Estas bibliotecas são opcionais do framework J2ME, e não estava presente nos celulares que usamos para desenvolver e testar. Assim, usamos a biblioteca \emph{BouncyCastle} como substituta para estes pacotes ausentes.
 \subsection{Floggy}
-%TODO: citar o cite do floggy?
+%TODO: citar o site do floggy?
 O \emph{Floggy} é um framwork brasileiro para persistência de dados em ambiente J2ME. Foi essencial para nosso projeto para persistir objetos como mensagens crifrassinadas recebidas, contatos validados e dados do protocolo, como a chave privada parcial $Q_A$;
+
+\section{Escolha de parâmetros}
+
+\subsection{Escolha do tamanho de chave padrão}
+Como inicialmente desejávamos um nível de segurança equiparável ao do RSA, foi escolhido o número 176 como tamanho de chave, pois este fornece um nível de segurança de $176/2 = 88$\footnote{Apesar de termos escolhido este valor padrão, a aplicação pode ser facilmente alterada para trabalhar com outros valores permitidos pela curva escolhida. }, ou seja, um pouco superior ao nível de segurança do RSA-1024, que tem o valor $80$. %TODO: colocar o valor, e citar. Geovs tem o link, acho...
+\subsection{Escolha da porta SMS}
+Quando se envia um SMS, associa-se a ele uma porta. A porta é um valor inteiro entre 0 e 65535 que serve para que o receptor encaminhe a mensagem recebida a uma aplicação específica. No caso de um SMS de texto normal, o valor da porta é 0. Quando um sistema operacional de um telefone móvel recebe uma mensagem com o valor de porta 0 ele aciona as rotinas do próprio sistema operacional para tratá-la, como armazená-la na caixa de entrada e tocar um som de alerta para o usuário. No caso de a porta ser diferente de 0, o sistema operacional procura numa área chamada \emph{PushRegistry} por algum aplicativo instalado que deseja receber mensagens nesta porta (é como se o aplicativo estivesse escutando a porta) e assim executa aplicativo registrado, que irá tratar a mensagem recebida\footnote{Em alguns celulares, o sistema operacional pode pedir uma confirmação do usuário antes de executar a aplicação automaticamente.}.
+
+Sendo assim, escolhemos arbitrariamente o valor 50001 para usar como a porta de nossa aplicação. A aplicação envia e se registra para escutar mensagens nesta porta.
 
 \section{Telas do sistema}
 Abaixo apresentamos algumas telas do sistema, depois de implementado.
@@ -1016,9 +1020,6 @@ Abaixo apresentamos algumas telas do sistema, depois de implementado.
 
 \chapter{Resultados}% (tabelas, etc, os objetivos foram alcançados? Testes, benchmarks)
 Após implementado, o sistema foi testado usando diferentes celulares e diferentes operadoras. 
-\subsection{Problemas com operadoras distintas}
-
-%TODO: Falar que as operadoras mudam a porta
 \section{Desempenho}
 
 Foram executados testes de desempenho com a versão final do sistema. Na tabela \ref{tab:bdcps176final} podemos observar os tempos das operações usando chaves de 176 bits.
@@ -1028,7 +1029,7 @@ No apêndice \ref{app:desempenho} acrescentamos gráficos demonstrando como estes 
 \begin{table}[h]\centering
 \caption{Testes com a implementação final (chaves de 176 bits)} \label{tab:bdcps176final}
 \begin{tabular}{cccccc}\hline
-Operação                   & Tempo Nokia E51 (s)   &  Tempo Nokia 6275 (s) & Emulador WTK 2.5.2\\\hline
+Operação                   & Nokia E51(ms)   &  Nokia 6275(ms) & Emulador(ms)\\\hline
 Set-Public-Value	&	66,9	& 750,6  & 204,5	 \\\hline
 Private-Key-Extract &	379,0 &	4381,7 &	1033,9 \\\hline
 Check-Private-Key	& 1164,9	& 12171,1  & 3209,9	 \\\hline
@@ -1039,22 +1040,38 @@ Unsigncryption	&	266,7 &	1957,0 & 492,2 \\\hline
 \end{tabular}
 \end{table}
 
-\section{Comparação com outras soluções}
-%TODO: Eu voto em sacrificar isso...
+\section{Testes entre operadoras}
+Realizamos testes de envio de mensagens de nossa aplicação entre celulares habilitados para operadoras distintas. Foram testadas as principais operadoras do estado de São Paulo: \emph{Vivo}, \emph{Tim} e \emph{Claro}. Observou-se que em alguns casos o SMS enviado não era recebido na porta \emph{SMS} especificada no envio: mesmo sendo encaminhada à porta 50001, a mensagem era recebida na porta 0 (a porta padrão do SMS), não alcançando a aplicação e sim a caixa de entrada padrão do celular.
+
+Na tabela \ref{tab:operadoras} apresentamos o resultado de nossos testes, informando quais são as combinações em que o nosso sistema funcionou corretamente.
+
+\begin{table}[h]\centering
+\caption{Compatibilidade entre operadoras}\label{tab:operadoras}
+\begin{tabular}{cccccc}\hline
+   & Vivo  &  Tim & Claro\\\hline
+Vivo & OK & NOK & NOK\\\hline
+Tim & NOK & OK & OK\\\hline
+Claro & NOK & OK & OK\\\hline
+\end{tabular}
+\end{table}
+
+Este problema ocorre devido às implementações internas das integrações entre as operadoras, sendo impossível resolvê-lo em nível de aplicação. Seria necessário uma negociação com as operadoras, solicitando a completa integração de uma porta específica para o uso de nosso sistema . Por estar fora do escopo de nosso projeto, este problema não foi tratado.
 
 \chapter{Conclusão}
-Ao longo do trabalho, foi possível observar que criptografia em curvas elípticas já é uma alternativa viável  em ambientes com restrições, principalmente de banda, como dispositvos móveis. O uso de curvas elípticas com emparelhamentos, no entanto, ainda é problemático nesses dispositivos devido à sua considerável exigência de poder computacional. No entanto, o uso de esquemas híbridos, como o aqui proposto, alia as melhores qualidades dos dois paradigmas, possibilitando a implantação imediata de sistemas de segurança completos, em termos de serviços, no contexto de dispositivos e aplicações móveis.
+Ao longo do trabalho, foi possível observar que a criptografia em curvas elípticas (\emph{ECC}) já é uma alternativa viável em ambientes com restrições, principalmente de banda, como os serviços de telefonia móvel, apesar de sua considerável exigência de poder computacional. No entanto, o uso de esquemas híbridos, como o aqui proposto, alia as melhores qualidades dos dois paradigmas, possibilitando a implantação imediata de sistemas de segurança completos no contexto de dispositivos e aplicações móveis.
 
 \section{Análise dos resultados}
-O sistema de modo geral funcionou de acordo com o esperado, satisfazendo nossos requisitos e métricas. Os resultados apresentados mostram tempos excelentes, atingindo assim as métricas de usabilidade desejadas, não existe a sensação de lentidão durante o uso do sistema.
+O sistema de modo geral funcionou de acordo com o esperado, satisfazendo os requisitos e métricas propostos. Os resultados apresentados mostram tempos excelentes, atingindo assim as métricas de usabilidade desejadas, e comprovam a adequação do protocolo de segurança.
 
-Além disto, o nível de segurança desejado também foi alcançado. Com uma chave de 176 bits, obtivemos um nível de segurança equivalente ao do RSA com 1024 bits.
+Além disto, o nível de segurança desejado também foi alcançado. Com uma chave de 176 bits, obtivemos um nível de segurança equivalente ao do RSA com 1024 bits, conforme previsto.
 
-\section{Possíveis desenvolvimentos futuros}
-%TODO: Que features novos poderiam ser adicionados?
+\section{Perspectivas futuras}
+Apesar de já termos apresentado um sistema de segurança funcional, pronto para o uso, existem ainda pontos em que ele pode ser aperfeiçoado. Especificamente, o protocolo de segurança utilizado não fornece os serviços de irretratabilidade e revogação de chaves. O serviço de irretratabilidade poderia ser implantado com o uso de outros protocolos de cifrassinatura, no entanto ao custo de degradação do desempenho devido ao uso mais extenso de emparelhamentos \cite[section~3]{bdcps}.
 
-\section({Considerações finais}
-%TODO
+Por outro lado, são amplas as possibilidades de aplicações do sistema em ambientes reais, entre as quais podemos citar transações bancárias, pagamentos por celular e comunicação corporativa. Acreditamos que conceitualmente o sistema já esteja maduro o suficiente para este tipo de aplicação, ficando pendentes apenas estudos mais detalhados sobre as necessidades específicas de cada cenário de implantação.
+
+\section{Considerações finais}
+No decorrer do desenvolvimento deste trabalho, superamos as dificuldades tecnológicas impostas de maneira inovadora, gerando pesquisa e produzindo publicações \cite{ssms, bdcps} reconhecidas no meio acadêmico nacional. Esperamos, também, ter aberto caminho para novas pesquisas e desenvolvimentos na área de criptografia para dispositivos móveis, ainda pouco explorada.
 
 \bibliography{Monografia}
 
@@ -1092,28 +1109,28 @@ Além disto, o nível de segurança desejado também foi alcançado. Com uma chave de
 
 \begin{sidewaysfigure}[h]
 	\centering
-		\includegraphics{figuras/ClassDiagramApplication.png}
+		\includegraphics[width=1.00\textwidth]{figuras/ClassDiagramApplication.png}
 	\caption{Diagrama de classes do pacote Application}
 	\label{fig:ClassDiagramApplication}
 \end{sidewaysfigure}
 
 \begin{sidewaysfigure}[h]
 	\centering
-		\includegraphics{figuras/ClassDiagramData.png}
+		\includegraphics[width=1.00\textwidth]{figuras/ClassDiagramData.png}
 	\caption{Diagrama de classes do pacote Data}
 	\label{fig:ClassDiagramData}
 \end{sidewaysfigure}
 
 \begin{sidewaysfigure}[h]
 	\centering
-		\includegraphics{figuras/ClassDiagramMessaging.png}
+		\includegraphics[width=1.00\textwidth]{figuras/ClassDiagramMessaging.png}
 	\caption{Diagrama de classes do pacote Messaging}
 	\label{fig:ClassDiagramMessaging}
 \end{sidewaysfigure}
 
 \begin{sidewaysfigure}[h]
 	\centering
-		\includegraphics{figuras/ClassDiagramProtocol.png}
+		\includegraphics[width=1.00\textwidth]{figuras/ClassDiagramProtocol.png}
 	\caption{Diagrama de classes do pacote Protocol}
 	\label{fig:ClassDiagramProtocol}
 \end{sidewaysfigure}
