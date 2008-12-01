@@ -652,7 +652,6 @@ Nas seções abaixo detalharemos cada caso de uso do sistema, representados sucint
 		\end{enumerate}
 		\item \textbf{Pós-Condição:} Sistema exibindo mensagem clara para o usuário.
 		\end{enumerate}
-\end{enumerate}
 
 
 \section{Requisitos funcionais}
@@ -830,14 +829,20 @@ Desse modo, por ter sido especificamente projetado para as necessidades do cenár
 	\label{fig:class_diagram}
 \end{figure}
 \subsection{Descrição}
-%TODO: falar das classes
+As classes do sistema são divididas em 4 pacotes: 
+\begin{itemize}
+\item \textbf{Protocol:} pacote que contém as classes que implementam o protocolo de segurança BDCPS.
+\item \textbf{Data:} pacote que contém as classes que gerenciam a persistência dos dados da aplicação.
+\item \textbf{Application:} pacote que contém a interface gráfica e as classes que gerenciam os serviços do usuário e da autoridade de segurança (KeyGenerationBureau).
+\item \textbf{Messaging:} pacote que contém as classes que gerenciam a interface com o serviço de mensagens SMS e a serialização dos dados trafegados nas mensagens binárias.
+\end{itemize}
 
 \section{Especificação do protocolo}
 
 %Falar das nossas primitivas, como é feita serialização dos bytes em cada mensagem, etc
 %Deixa que eu faço (Eduardo)
 
-O intercâmbio de mensagens entre clientes, ou entre um cliente e a KGB, se dá através do envio de mensagens  binárias de SMS. Em nosso protocolo existem 4 tipos de mensagens (4 primitivas). Nesta seção apresentamos como é feita a divisão de bytes em cada tipo de mensagem. \footnote{Os bytes de uma mensagem serão numerados iniciando de 1.}
+O intercâmbio de mensagens entre clientes, ou entre um cliente e a autoridade de confiança, se dá através do envio de mensagens  binárias de SMS. Em nosso sistema existem 4 tipos de mensagens (4 primitivas). Nesta seção apresentamos como é feita a divisão de bytes em cada tipo de mensagem. \footnote{Os bytes de uma mensagem serão numerados iniciando de 1.}
 
 \subsection{SignupMessage}
 Representa a mensagem que um cliente A envia para KGB contendo sua chave pública $y_A$.
@@ -942,11 +947,9 @@ A partir do byte 8, ocorre o armazenamento dinâmico dos parâmetros. É reservado 
 
 
 \section{Escolha de parâmetros}
-\subsection{Escolha de curvas elípticas adequadas}
-%TODO: como o Barreto escolheu as curvas?
 
 \subsection{Escolha do tamanho de chave padrão}
-Como inicialmente desejávamos um nível de segurança equiparável ao do RSA, foi escolhido o número 176 como tamanho de chave, pois este fornece um nível de segurança de $176/2 = 88$\footnote{Apesar de termos escolhido este valor padrão, a aplicação pode ser facilmente alterada para trabalhar com os seguintes valores: }, ou seja, um pouco superior ao nível de segurança do RSA-1024, que é de XXX. %TODO: colocar o valor, e citar. Geovs tem o link, acho...
+Como inicialmente desejávamos um nível de segurança equiparável ao do RSA, foi escolhido o número 176 como tamanho de chave, pois este fornece um nível de segurança de $176/2 = 88$\footnote{Apesar de termos escolhido este valor padrão, a aplicação pode ser facilmente alterada para trabalhar com outros valores permitidos pela curva escolhida. }, ou seja, um pouco superior ao nível de segurança do RSA-1024. %TODO: colocar o valor, e citar. Geovs tem o link, acho...
 \subsection{Escolha da porta SMS}
 Quando se envia um SMS, associa-se a ele uma porta. A porta é um valor inteiro entre 0 e 65535 que serve para que o receptor encaminhe a mensagem recebida a uma aplicação específica. No caso de um SMS de texto normal, o valor da porta é 0. Quando um sistema operacional de um telefone móvel recebe uma mensagem com o valor de porta 0 ele aciona as rotinas do próprio sistema operacional para tratá-la, como armazená-la na caixa de entrada e tocar um som de alerta para o usuário. No caso de a porta ser diferente de 0, o sistema operacional procura numa área chamada \emph{PushRegistry} por algum aplicativo instalado que deseja receber mensagens nesta porta (é como se o aplicativo estivesse escutando a porta) e assim executa aplicativo registrado, que irá tratar a mensagem recebida\footnote{Em alguns celulares, o sistema operacional pode pedir uma confirmação do usuário antes de executar a aplicação automaticamente.}.
 
@@ -958,7 +961,7 @@ Sendo assim, escolhemos arbitrariamente o valor 50001 para usar como a porta de 
 % IMPLEMENTAÇÃO
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-A implementação foi feita na linguagem Java, plataforma J2ME MIDP-1.0 CLDC-1.1.
+A implementação foi feita na linguagem \emph{Java}, plataforma \emph{J2ME MIDP-1.0 CLDC-1.1}.
 %TODO: escrever mais?
 %\section{Metodologia}
 %sacrifiquei essa seção
@@ -972,15 +975,11 @@ A biblioteca SMSPairings foi fornecida por nosso orientador. Contém classes que 
 %TODO: falar mais
 \subsection{BouncyCastle}
 %TODO: citar o cite do bouncycastle?
-O \emph{BouncyCastle} é uma biblioteca que contém implementações de vários algoritmos de criptografia e hashs. Existe uma versão da biblioteca implementada para o ambiente J2ME, a qual usamos. Fez-se necessário o uso desta biblioteca devido à ausência dos pacotes \emph{java.security} e \emph{javax.crypto} no ambiente dos celulares usados. Estas bibliotecas são opcionais do framework J2ME, e não estava presente nos celulares que usamos para desenvolver e testar. Assim, usamos a biblioteca \emph{BouncyCastle} como substituta para estes pacotes ausentes.
+O \emph{BouncyCastle} é uma biblioteca que contém implementações de vários algoritmos de criptografia e \emph{hashs}. Existe uma versão da biblioteca implementada para o ambiente \emph{J2ME}, a qual usamos. Fez-se necessário o uso desta biblioteca devido à ausência dos pacotes \emph{java.security} e \emph{javax.crypto} no ambiente dos celulares usados. Estas bibliotecas são opcionais do framework J2ME, e não estava presente nos celulares que usamos para desenvolver e testar. Assim, usamos a biblioteca \emph{BouncyCastle} como substituta para estes pacotes ausentes.
 \subsection{Floggy}
 %TODO: citar o cite do floggy?
 O \emph{Floggy} é um framwork brasileiro para persistência de dados em ambiente J2ME. Foi essencial para nosso projeto para persistir objetos como mensagens crifrassinadas recebidas, contatos validados e dados do protocolo, como a chave privada parcial $Q_A$;
-\section{Problemas encontrados}
-%TODO: Falar dos problemas encontrados nesta etapa, ou talvez sacrificar essa seção
-%TODO: pitanga o que é isso de modelos? sacrifiquei...
-%\chapter{Modelos}%, justificar o sistema
-%Seria isso modelo de negócio? (vale a pena por na monografia)?
+
 \section{Telas do sistema}
 Abaixo apresentamos algumas telas do sistema, depois de implementado.
 
@@ -1044,28 +1043,24 @@ Unsigncryption	&	266,7 &	1957,0 & 492,2 \\\hline
 %TODO: Eu voto em sacrificar isso...
 
 \chapter{Conclusão}
-Ao longo do trabalho, foi possível observar que criptografia em curvas elípticas é a melhor alternativa para criptografia em ambientes com restrições, como dispositvos móveis.
-%TODO: Falar que nosso projeto ficou bom demais e pode ter utilização real, ser vendido e difundido, etc...
-%escrever mais da conclusão... ta sux...
+Ao longo do trabalho, foi possível observar que criptografia em curvas elípticas já é uma alternativa viável  em ambientes com restrições, principalmente de banda, como dispositvos móveis. O uso de curvas elípticas com emparelhamentos, no entanto, ainda é problemático nesses dispositivos devido à sua considerável exigência de poder computacional. No entanto, o uso de esquemas híbridos, como o aqui proposto, alia as melhores qualidades dos dois paradigmas, possibilitando a implantação imediata de sistemas de segurança completos, em termos de serviços, no contexto de dispositivos e aplicações móveis.
 
 \section{Análise dos resultados}
 O sistema de modo geral funcionou de acordo com o esperado, satisfazendo nossos requisitos e métricas. Os resultados apresentados mostram tempos excelentes, atingindo assim as métricas de usabilidade desejadas, não existe a sensação de lentidão durante o uso do sistema.
 
-Além disto, o nível de segurança desejado também foi alcançado. Com uma chave de 176 bits, temos um nível de segurança equivalente ao do RSA com 1024 bits.
-
-\section{Sumissão de artigo ao WTICG'08}
-%TODO: Falar aqui do WTICG? 
+Além disto, o nível de segurança desejado também foi alcançado. Com uma chave de 176 bits, obtivemos um nível de segurança equivalente ao do RSA com 1024 bits.
 
 \section{Possíveis desenvolvimentos futuros}
 %TODO: Que features novos poderiam ser adicionados?
 
+\section({Considerações finais}
+%TODO
 
 \bibliography{Monografia}
 
 \appendix
 \chapter{Desempenho da implementação final}\label{app:desempenho}
 
-%TODO: colocar os gráficos
 \begin{sidewaysfigure}[h]
 	\centering
 		\includegraphics{figuras/teste_variando_tamanho_mensagem.PNG}
@@ -1087,14 +1082,40 @@ Além disto, o nível de segurança desejado também foi alcançado. Com uma chave de
 	\label{fig:teste_nokia6275}
 \end{sidewaysfigure}
 
-
 \begin{sidewaysfigure}[h]
 	\centering
 		\includegraphics{figuras/teste_emulador.PNG}
 	\caption{Variação do tempo das operações enquanto varia-se o tamanho da chave no emulador do WTK 2.5.2}	\label{fig:teste_emulador}
 \end{sidewaysfigure}
 
-
 \chapter{Diagramas de classe detalhados}\label{app:classe_detalhados}
+
+\begin{sidewaysfigure}[h]
+	\centering
+		\includegraphics{figuras/ClassDiagramApplication.png}
+	\caption{Diagrama de classes do pacote Application}
+	\label{fig:ClassDiagramApplication}
+\end{sidewaysfigure}
+
+\begin{sidewaysfigure}[h]
+	\centering
+		\includegraphics{figuras/ClassDiagramData.png}
+	\caption{Diagrama de classes do pacote Data}
+	\label{fig:ClassDiagramData}
+\end{sidewaysfigure}
+
+\begin{sidewaysfigure}[h]
+	\centering
+		\includegraphics{figuras/ClassDiagramMessaging.png}
+	\caption{Diagrama de classes do pacote Messaging}
+	\label{fig:ClassDiagramMessaging}
+\end{sidewaysfigure}
+
+\begin{sidewaysfigure}[h]
+	\centering
+		\includegraphics{figuras/ClassDiagramProtocol.png}
+	\caption{Diagrama de classes do pacote Protocol}
+	\label{fig:ClassDiagramProtocol}
+\end{sidewaysfigure}
 
 \end{document}
