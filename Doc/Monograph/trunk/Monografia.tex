@@ -140,12 +140,12 @@ This work consists in the specification and implementation of a system which is 
 \emph{\textbf{WTK} - Wireless Toolkit}\\
 \emph{\textbf{MIDP} - Mobile Information Device Profile}\\
 \emph{\textbf{CLDC} - Connected Limited Device Configuration}\\
-\emph{\textbf{DES} - Data Encryption Standard}
-\emph{\textbf{AES} - Advanced Encryption Standard}
-\emph{\textbf{DSA} - Digital Signature Algorithm}
-\emph{\textbf{MAC} - Message Authentication Code}
-\emph{\textbf{DSS} - Digital Signature System}
-\emph{\textbf{ECC} - Ellyptic Curve Cryptography}
+\emph{\textbf{DES} - Data Encryption Standard}\\
+\emph{\textbf{AES} - Advanced Encryption Standard}\\
+\emph{\textbf{DSA} - Digital Signature Algorithm}\\
+\emph{\textbf{MAC} - Message Authentication Code}\\
+\emph{\textbf{DSS} - Digital Signature System}\\
+\emph{\textbf{ECC} - Ellyptic Curve Cryptography}\\
 
 %TODO: acrescentar as siglas aqui
 %Existe uma norma, acho que é pra por na ordem de aparição no texto... ou em ordem alfabética.. não sei, TODO: confirmar nas diretrizes
@@ -159,9 +159,9 @@ O Serviço de Mensagens Curtas (\emph{Short Message Service}, ou SMS) é um serviç
 
 A rede GSM (Global System for Mobile Comunnication), sobre a qual as mensagens SMS trafegam, usa o mecanismo \emph{store-and-forward}, que é similar ao serviço SMTP de correio eletrônico. Em vez de servidores de email, são usados centros de SMS (SMSC) que armazenam as mensagens SMS antes de serem enviadas para o fornecedor de serviços (operadora) ou para outro SMSC.
 
-Embora as conexões entre um SMSC e os nós da rede GSM sejam protegidas por túneis VPN, as mensagens SMS ficam armazenadas em texto claro no SMSC. Isto significa que os operadores ou um atacante que invada o sistema podem visualizar e alterar o conteúdo de todas as mensagens SMS que estão armazenadas no SMSC, além de enviar mensagens em nome de outrem\cite{loon}.
+Embora as conexões entre um SMSC e os nós da rede GSM sejam protegidas por túneis VPN, as mensagens SMS ficam armazenadas em texto claro no SMSC. Isto significa que os operadores ou um atacante que invada o sistema podem visualizar e alterar o conteúdo de todas as mensagens SMS que estão armazenadas no SMSC, além de enviar mensagens em nome de outrem \cite{loon}.
 
-Além de comprometer a privacidade dos usuários, essa vulnerabilidade da rede GSM limita usos da tecnologia SMS além da comunicação interpessoal, como a realização de transações bancárias, sistemas de comunicação que requeiram confidencialidade e integridade (órgãos militares e governamentais, comunicação corporativa) ou ainda serviços de monitoração remota de dados sensíveis\cite{smsanalysis}.
+Além de comprometer a privacidade dos usuários, essa vulnerabilidade da rede GSM limita usos da tecnologia SMS além da comunicação interpessoal, como a realização de transações bancárias, sistemas de comunicação que requeiram confidencialidade e integridade (órgãos militares e governamentais, comunicação corporativa) ou ainda serviços de monitoração remota de dados sensíveis \cite{smsanalysis}.
 
 Desse modo, nos motivamos a projetar e implementar um sistema que oferecesse serviços de segurança à plataforma SMS de maneira transparente, isto é, sem que fossem necessárias mudanças na rede atual e, por outro lado, fosse viável em dispositivos móveis, dada suas limitações de banda, processamento e energia.
 
@@ -179,7 +179,7 @@ Na figura \ref{fig:Canal_Inseguro}, as entidades $A$ (Alice) e $B$ (Bob) estão s
 
 \begin{figure}[h]
 	\centering
-		\includegraphics{figuras/Canal_Inseguro.jpg}
+	\includegraphics[width=1.00\textwidth]{figuras/Canal_Inseguro.jpg}
 	\caption{Canal inseguro}
 	\label{fig:Canal_Inseguro}
 \end{figure}
@@ -187,26 +187,20 @@ Na figura \ref{fig:Canal_Inseguro}, as entidades $A$ (Alice) e $B$ (Bob) estão s
 Por exemplo, $A$ e $B$ poderiam ser 2 pessoas comunicando-se sobre uma rede de telefonia celular, e $E$ está tentando interceptar a comunicação. 
 
 Ou, $\sim A$ poderia ser um web browser de um indivíduo A que está em processo de compra de um produto de uma loja online $\sim B$ representada por seu site $B$. Neste cenário, o canal de comunicações é a \emph{Internet}. Um agressor $E$ poderia tentar ler o tráfego entre $A$ e $B$, portanto saber a informação sobre o cartão de crédito de $A$, ou poderia tentar personificar $A$ ou $B$ na transação. 
-Como um terceiro exemplo, considere a situação onde $A$ está enviando uma mensagem via \emph{e-mail} para $B$ sobre a internet. Um agressor $E$ poderia tentar ler a mensagem, modificar pedaços selecionados, ou personificar $A$ enviando mensagens dela mesma para $B$. Finalmente, considere o cenário onde $A$ é um smart card que está em processo de autenticar seu possuidor $\simA$ em um computador \emph{mainframe} $B$ em uma sala protegida do banco. Aqui, $E$ poderia tentar monitorar as comunicações para obter informações sobre a conta de $\sim A$ , ou poderia tentar personificar $\sim A$ para sacar fundos da conta de $\sim A$. Deveria ser evidente destes exemplos que uma entidade se comunicando não é necessariamente um humano, mas pode ser um computador, \emph{smart card}, ou um módulo de software agindo no lugar de um indivíduo ou uma organização tal como uma loja ou um banco.
-
-%TODO parágrafo perdido
-O ambiente em questão não se mostra muito propício para práticas criptográficas. A largura de banda é muito pequena, visto que em cada mensagem SMS podem ser trafegados apenas 140 bytes binários \cite{ortiz}.
-Além disto, existem limitações de processamento no dispositivo celular, que podem comprometer a usabilidade de um esquema criptográfico tradicional.
-
-%TODO: Citar aqui exemplos de soluções existentes e comparar com cenário no início do ano
-Devido a estas dificuldades, o cenário atual não apresenta uma grande variedade de soluções abrangindo objetivos similares aos de nosso sistema, e não há uma solução universalmente adotada.
+Como um terceiro exemplo, considere a situação onde $A$ está enviando uma mensagem via \emph{e-mail} para $B$ sobre a internet. Um agressor $E$ poderia tentar ler a mensagem, modificar pedaços selecionados, ou personificar $A$ enviando mensagens dela mesma para $B$. Finalmente, considere o cenário onde $A$ é um smart card que está em processo de autenticar seu possuidor $\sim A$ em um computador \emph{mainframe} $B$ em uma sala protegida do banco. Aqui, $E$ poderia tentar monitorar as comunicações para obter informações sobre a conta de $\sim A$ , ou poderia tentar personificar $\sim A$ para sacar fundos da conta de $\sim A$. Deveria ser evidente destes exemplos que uma entidade se comunicando não é necessariamente um humano, mas pode ser um computador, \emph{smart card}, ou um módulo de software agindo no lugar de um indivíduo ou uma organização tal como uma loja ou um banco.
 
 \section{Objetivos}
 
-Considerando o cenário atual e suas limitações, capaz de prover confidencialidade, integridade e autenticidade a mensagens SMS (\emph{Short Message Service}) sem extrapolar as limitações de recursos computacionais e de ocupação de banda típicas desse ambiente.
+O ambiente em questão não se mostra muito propício para práticas criptográficas. A largura de banda é muito pequena, visto que em cada mensagem SMS podem ser trafegados apenas 140 bytes binários \cite{ortiz}.
+Além disto, existem limitações de processamento no dispositivo celular, que podem comprometer a usabilidade de um esquema criptográfico tradicional \cite{loon}.
 
-Esse objetivo deve ser alcançado sem comprometer a usabilidade do serviço.
+Devido a estas dificuldades tecnológicas, o cenário atual não apresenta uma grande variedade de soluções abrangindo os problemas de segurança supracitados. Desse modo, nos propomos a projetar, e implantar um sistema capaz de prover confidencialidade, integridade e autenticidade a mensagens SMS (\emph{Short Message Service}) sem extrapolar as limitações de recursos computacionais e de ocupação de banda típicas desse ambiente.
 
 \section{Metodologia}
 
-Nossa metodologia de pesquisa se divide basicamente em três vertentes. A primeira consistiu no estudo do cenário, o levantamento da necessidade de nossa solução e a especificação dos requisitos do sistema. 
+Nossa metodologia de pesquisa se dividiu basicamente em três vertentes. A primeira consistiu no estudo do cenário, o detalhamento do problema e o levantamento das necessidades, além da especificação de uma solução que as endereçasse. 
 
-Posteriormente, realizamos o estudo de esquemas de criptografia de modo a buscar o que mais se adequasse aos requisitos e limitações do meio. Esse estudo incluiu a realização de testes em microcomputadores convencionais e em dispositivos móveis com pseudo-implementações de diversos esquemas com o objetivo de comparar seu desempenho em termos de necessiadades de processamento. Como veremos, nenhum esquema pesquisado atendeu a nossos requisitos, o que motivou o desenvolvimento de um novo protocolo de segurança totalmente voltado a nossas necessiades.
+Posteriormente, realizamos o estudo de esquemas de criptografia de modo a buscar o que mais se adequasse aos requisitos e limitações do meio. Esse estudo incluiu a realização de testes em microcomputadores convencionais e em dispositivos móveis com pseudo-implementações de diversos esquemas com o objetivo de comparar seu desempenho em termos de necessiadades de processamento. Como veremos, nenhum esquema pesquisado atendeu a nossos requisitos, o que motivou o desenvolvimento de um novo protocolo de segurança totalmente voltado a estes.
 
 Por último, realizamos a implementação do sistema conforme sua especificação e realizamos testes de modo a confrontar os dados obtidos em um ambiente real com as previsões feitas na fase anterior.
 
@@ -249,7 +243,7 @@ Uma segunda desvantagem é o problema de administração de chaves. Em uma rede de 
 \section{Criptografia de chave pública}
 
 \subsection{Introdução}
-A noção de criptografia de chave pública foi introduzida por Diffie e Hellman\cite{diffie-hellamn} e Merkle\cite{merkle} para resolver as deficiências da criptografia de chaves simétricas mencionadas anteriormente. Em contraste aos esquemas de chave simétrica, os esquemas de chave pública requerem apenas que as entidades em comunicação troquem informações de chaves que são autenticas (mas não secretas). Cada entidade seleciona um único par $(e,d)$ consistindo de uma chave pública $e$, e uma chave privada relacionada $d$ que a entidade mantém secreta). As chaves têm a propriedade de que é computacionalmente impraticável determinar a chave privada apenas de conhecimento da chave pública.
+A noção de criptografia de chave pública foi introduzida por Diffie e Hellman \cite{diffie-hellamn} e Merkle \cite{merkle} para resolver as deficiências da criptografia de chaves simétricas mencionadas anteriormente. Em contraste aos esquemas de chave simétrica, os esquemas de chave pública requerem apenas que as entidades em comunicação troquem informações de chaves que são autenticas (mas não secretas). Cada entidade seleciona um único par $(e,d)$ consistindo de uma chave pública $e$, e uma chave privada relacionada $d$ que a entidade mantém secreta). As chaves têm a propriedade de que é computacionalmente impraticável determinar a chave privada apenas de conhecimento da chave pública.
 
 \subsection{Confidencialidade}
 
@@ -273,7 +267,7 @@ Em um esquema de chave pública, um par de chaves é selecionado para que o proble
 
 \subsection{Problemas Baseados em Logaritmos Discretos}
 
-O primeiro sistema baseado em logaritmo discreto foi o protocolo de troca de chaves proposto por Diffie e Hellman em 1976\cite{diffie-hellman}. Em 1984, ElGamal descreveu a encriptação de chave pública baseada no problema do logaritmo discreto e esquemas de assinatura\cite{elgamal}. Desde então, muitas variantes destes esquemas foram propostas.
+O primeiro sistema baseado em logaritmo discreto foi o protocolo de troca de chaves proposto por Diffie e Hellman em 1976 \cite{diffie-hellman}. Em 1984, ElGamal descreveu a encriptação de chave pública baseada no problema do logaritmo discreto e esquemas de assinatura \cite{elgamal}. Desde então, muitas variantes destes esquemas foram propostas.
 
 
 \subsection{Geração de chaves com Logaritmos Discretos}
@@ -287,7 +281,7 @@ Uma chave privada é um inteiro x que é selecionado uniformemente de modo aleatór
 \subsection{Histórico}
 O estudo das curvas elípticas por matemáticos data da metade do século XIX. Em 1984, Hendrik Lenstra descreve um engenhoso algoritmo para fatorar inteiros que recai nas propriedades das curvas elípticas. Esta descoberta motivou os pesquisadores a investigar novas aplicações em criptografia sobre curvas elípticas e teoria computacional dos números.
 
-A criptografia de chave pública foi concebida em 1976, mas sua primeira construção prática se seguiu em 1977 quando Ron Rivest, Adi Shamir e Len Adleman propuseram o protocolo agora tão conhecido RSA\cite{rsa} cuja segurança é baseada na intratabilidade do problema da fatoração inteira. A criptografia baseada em curvas elípticas (ECC) foi descoberta em 1985 por Neal Koblitz e Victor Miller.
+A criptografia de chave pública foi concebida em 1976, mas sua primeira construção prática se seguiu em 1977 quando Ron Rivest, Adi Shamir e Len Adleman propuseram o protocolo agora tão conhecido RSA \cite{rsa} cuja segurança é baseada na intratabilidade do problema da fatoração inteira. A criptografia baseada em curvas elípticas (ECC) foi descoberta em 1985 por Neal Koblitz e Victor Miller.
 
 Os protocolos de ECC são baseados em um problemas mais difícil de resolver que o do RSA, o ECDLP, sendo que os melhores algoritmos para resolvê-lo levam tempo exponencial frente ao tempo sub-exponencial para o RSA. Isso acarreta em um maior nível de segurança para chaves de menor tamanho comparativamente.
 
@@ -353,22 +347,21 @@ O problema de determinar d dados os parâmetros do domínio e $Q$ é o problema do 
 
 \section{Criptografia baseada em identidades e sistemas isentos de certificados}
 %TODO arrumar
-O conceito de criptografia baseada em identidades\cite{shamir} procura reduzir a dificuldade causada pela necessidade de manutenção de uma infra-estrutura de chave pública, ou \emph{PKI}. Nesse tipo de sistema a chave pública do usuário pode ser arbitrariamente escolhida, e uma autoridade de confiança gera sua chave privada. No entanto, a autoridade de confiança tem o conhecimento de todas as chaves privadas e poderia recuperar as informações de qualquer usuário.
-
-The concept of certificateless (CL) cryptosystems \cite{al-riyami-paterson} was introduced to address the key escrow issue while avoiding the use of certificates and the need for a public-key infrastructure. The usual principle behind a CL scheme is to partition private keys into two components: an identity-based partial key (known to the KGB and thus otherwise subject to escrow) and one conventional albeit non-certified partial key (unknown to the KGB). This technique potentially combines the best features of identity-based and certificate-based cryptography, and indeed a number of certificateless encryption schemes derived from identity-based encryption algorithms have been successfully constructed and proven secure under certain assumptions. On the other hand, certificateless signatures remain much trickier to define and analyze, and as a consequence constructing certificateless signcryption schemes has been an elusive task only recently solved, though the only known such protocol can be hardly considered efficient. A signcryption scheme \cite{zheng} is an integrated method to encrypt and sign a message in a more efficient way than to apply separately an encryption scheme and a signature scheme. The efficiency improvement may reside in the processing time, bandwidth occupation, key management, or any combination thereof; it may be simply a robust way to combine the two primitives so as to avoid deleterious interactions.
+O conceito de criptografia baseada em identidades \cite{shamir} procura reduzir a dificuldade causada pela necessidade de manutenção de uma infra-estrutura de chave pública, ou \emph{PKI}. Nesse tipo de sistema a chave pública do usuário pode ser arbitrariamente escolhida, e uma autoridade de confiança gera sua chave privada. No entanto, a autoridade de confiança tem o conhecimento de todas as chaves privadas e poderia recuperar as informações de qualquer usuário.
+Os sistemas de segurança isentos de certificados (ou, em uma definição mais precisa, auto-certificados) \cite{al-riyami-paterson} foram concebidos com o objetivo de resolver o problema de comprometimento da chave de sistemas baseados em identidades. Nesses sistemas, a chave privada do usuário é composta por dois componentes: uma parcela baseada em identidades, e, desse modo, sujeita a comprometimento, e uma parcela convencional, porém não certificada. Esse tipo de sistema combina as melhores características de sistemas baseados em identidades e em certificados, porém continuam sendo de difícil especificação.
 
 \section{Emparelhamentos}
 %TODO arrumar
 Os mapas bilineares, ou emparelhamentos \cite{sakai-ohgishi-kasahara,boneh-franklin}, tornaram possível o uso de criptografia baseada em identidades na prática. Emparelhamentos são formalmente definidos como se segue. Seja $k$ um parâmetro de segurança e $n$ um número primo de  $k$ \emph{bits}. Sejam $\G_1$, $\G_2$ e $\G_T$ grupos de ordem $n$. Dizemos que $(\G_1,\G_2,\G_T)$ são grupos de emparelhamento se existe um mapa bilinear $e: \G_1 \times \G_2 \rightarrow \G_T$ que satisfaça às propriedades:
 \begin{enumerate}
 \item Bilinearidade: $\forall (S,T) \in \G_1 \times \G_2$, $\forall a,b \in \Z_n$, $e(aS, bT) = e(S,T)^{ab}$.
-\item Non-degeneracy: $\forall S \in \G_1$, $e(S,T)=1$ para todo $T \in \G_2$ iff $S=\mathcal{O}_{\G_1}$.
+\item Não-degenerabilidade: $\forall S \in \G_1$, $e(S,T)=1$ para todo $T \in \G_2$ se e somente se $S=\mathcal{O}_{\G_1}$.
 \item Computabilidade: $\forall (S,T) \in \G_1 \times \G_2$, $e(S,T)$ é eficientemente computável.
 \end{enumerate}
 
 \section{BLMQ}
 %TODO arrumar
-Nesta seção apresentamos características básicas e definições do BLMQ \cite{barreto-libert-mccullagh-quisquater}, um esquema de criptografia baseado em identidades. O esquema é composto pelos seguintes algoritmos:
+Nesta seção apresentamos características básicas e definições do BLMQ ~\cite{barreto-libert-mccullagh-quisquater}, um esquema de criptografia baseado em identidades. O esquema é composto pelos seguintes algoritmos:
 
 \begin{itemize}
 
@@ -395,11 +388,11 @@ O verificador aceita a mensagem assinada se e somente se $v = h$.
 
 \end{itemize}
 
-Pose-se mostrar que esse esquema é existencialmente infalsificável sob ataques de mensagens adaptativamente escolhidas (EUF-IBS-CMA abreviados) no modelo do oráculo aleatório sob a assunção do $q$-SDHP \cite[section~3.1]{barreto-libert-mccullagh-quisquater}. Perceba que nesta descrição escolhemos definir $P_{pub} \in \G_1$, $Q_A \in \G_2$ para evitar a aritmética em $\G_2$, mas uma descrição análoga com $Q_{pub} \in \G_2$, $P_A \in \G_1$ e mensagens assinadas em $\{0, 1\}^\ast \times \Z_n^\ast \times \G_1$ seria igualmente segura, enquanto mantemos a assinatura tão curta quanto possível na prática.
+Pode-se mostrar que esse esquema é existencialmente infalsificável sob ataques de mensagens adaptativamente escolhidas (EUF-IBS-CMA abreviados) no modelo do oráculo aleatório sob a assunção do $q$-SDHP \cite[section~3.1]{barreto-libert-mccullagh-quisquater}. Perceba que nesta descrição escolhemos definir $P_{pub} \in \G_1$, $Q_A \in \G_2$ para evitar a aritmética em $\G_2$, mas uma descrição análoga com $Q_{pub} \in \G_2$, $P_A \in \G_1$ e mensagens assinadas em $\{0, 1\}^\ast \times \Z_n^\ast \times \G_1$ seria igualmente segura, enquanto mantemos a assinatura tão curta quanto possível na prática.
 
 \section{BDCPS}
 
-O protocolo de segurança BDCPS \cite{bdcps} integra as assinaturas baseadas em identidades do BLMQ, assinaturas de Schnorr \cite{schnorr} e cifrassinatura de Zheng \cite{zheng} em um esquema isento de certificados conforme proposto por \cite{al-riyami-paterson}. Este protocolo foi criado para atender às necessiades deste projeto.
+O protocolo de segurança BDCPS \cite{bdcps} integra as assinaturas baseadas em identidades do BLMQ, assinaturas de Schnorr \cite{schnorr} e a cifrassinatura de Zheng \cite{zheng} em um esquema isento de certificados conforme proposto por \cite{al-riyami-paterson}. Este protocolo foi criado especialmente para atender às necessiades deste projeto.
 
 O protocolo é composto pelos seguintes algoritmos:
 \begin{itemize}
@@ -463,7 +456,7 @@ O verificador aceita a mensagem se, e somente se $v_A = h_A$. O processo de vali
 \item $h \gets h_3(r, m, y_A, \ID_A, y_B, \ID_B)$ \label{eq:auth}
 \item $z \gets u - x_A h$ \label{eq:sign}
 \end{enumerate}
-O criptograma de assinatura é a tripla $(c, h, z) \in \{0, 1\}^\ast \times \Z_n^2$. Comparado ao método de cifrassinatura de Zheng, as identidades de ambos o emissor e o destinatário são inclusas na equação de autenticação~\ref{eq:auth}, e a equação de assinatura~\ref{eq:sign} segue o estilo Schnorr em vez do dedicado, porém levemente mais complicado(devido à presença da inversão de campos), estilo Zheng, similar ao DSA \cite{nist-fips-186-2}.
+O criptograma de assinatura é a tripla $(c, h, z) \in \{0, 1\}^\ast \times \Z_n^2$. Comparado ao método de cifrassinatura de Zheng, as identidades de ambos o emissor e o destinatário são inclusas na equação de autenticação~\ref{eq:auth}, e a equação de assinatura~\ref{eq:sign} segue o estilo Schnorr em vez do dedicado, porém levemente mais complicado(devido à presença da inversão de campos), estilo Zheng, similar ao DSA ~\cite{nist-fips-186-2}.
 
 \item \textbf{Unsigncrypt:} dada a chave pública do emissor $y_A \in \G_T$ previamente validade para a identidade $\ID_A$ e $P_{pub}$, e a chave privada do receptor $x_B \in \Z_n^\ast$, a chave pública $y_B \in \G_T$ e a identidade $\ID_B$, sob a recepção da tripla $(c, h, z)$ o receptor verifica se $h, z \in \Z_n^\ast$ e calcula
 \begin{enumerate}
@@ -481,54 +474,52 @@ O receptor aceita a mensagem se, e somente se, $v = h$. A equação \ref{eq:nonce-
 
 \section{Escopo}
 %Falar aqui exatamente o que o sistema faz e o que ele não faz! Falar de problemas que existem, mas que ficam fora do nosso escopo.
-O software a ser desenvolvido será designado por "Sistema de SMS Seguro".
-O objetivo do software é prover uma camada de segurança a nível de aplicação para mensagens SMS em redes de telefonia móvel. O software deverá fornecer alguns serviços básicos de segurança como confidencialidade, integridade e autenticidade das mensagens SMS, permitindo ao usuário assinar, cifrar, decifrar e verificar mensagens enviadas por SMS. As soluções adotadas no projeto envolvem criptografia de chave pública, criptografia baseada em idententidade e também esquemas auto-certificados. Tal adoção deve deve dispensar a existência de um diretório de chaves públicas, uma vez que seria necessário o uso de certificados que ocupam muita banda do abiente restrito utilizado e encarece o processo.
+O software a ser desenvolvido será designado por "Sistema de SMS Seguro". O objetivo do software é prover uma camada de segurança a nível de aplicação para mensagens SMS em redes de telefonia móvel. O software deverá fornecer serviços básicos de segurança, a saber, confidencialidade, integridade e autenticidade às mensagens SMS, permitindo ao usuário assinar, cifrar, decifrar e verificar mensagens enviadas pela rede GSM. As soluções adotadas no projeto envolvem criptografia de chave pública, criptografia baseada em idententidade e também esquemas auto-certificados, conforme definidos no capítulo anterior. A adoção dessa combinação deve dispensar a existência de um diretório de chaves públicas, uma vez que o uso de certificados convencionais exigiria uma infra-estrutura e demandaria um consumo de banda impraticáveis em uma rede de telefonia celular com SMS.
 
-O software será aplicável em áreas que requeiram segurança da informação que trafega nas redes de telefonia móvel. Alguns exemplos são aplicações militares, bancárias, comunicação pessoal sigilosa e comércio eletrônico. Os principais benefícios do sistema são a sua flexibilidade, podendo ser adaptado às necessidades dos clientes, e leveza, já que sua arquitetura é restrita à camada de aplicação: o software opera sobre a camada de aplicação do modelo OSI, sendo transparente à arquitetura interna da rede móvel. Essas duas qualidades tornam possível sua viabilidade em diversos cenários.
+O software será aplicável em áreas que requeiram segurança da informação que trafega nas redes de telefonia móvel. Alguns exemplos são aplicações militares, bancárias, comunicação pessoal sigilosa e comércio eletrônico. Os principais benefícios do sistema são a sua flexibilidade, podendo ser adaptado às necessidades dos clientes, e leveza, já que sua arquitetura é restrita à camada de aplicação: o software opera sobre a camada de aplicação do modelo OSI \cite{osi}, sendo transparente à arquitetura interna da rede GSM. Essas duas qualidades tornam possível sua viabilidade em diversos cenários.
 
-%
-O Sistema de SMS Seguro não é responsável pela confiabilidade e disponibilidade de entrega das mensagens independente de sua natureza, essa função é de responsabilidade do fornecedor da aplicação que utiliza o protocolo, no caso de mensagens SMS a responsabilidade de entrega será da operadora telefônica, no caso de serviços de e-mail a responsabilidade de entrega é conferida ao servidor que fornece o serviço, etc.
+O \emph{Sistema de SMS Seguro} não é responsável por garantir a confiabilidade e disponibilidade de entrega das mensagens. Essa função é de responsabilidade do fornecedor do serviço móvel.
+O sistema também não garante proteção quanto à clonagem do telefone, mas pode garantir a autenticidade do emissor e indiretamente detectar a clonagem caso o usuário já tenha se cadastrado na autoridade de confiança.
 
-No caso do serviço SMS, se houver qualquer tipo de clonagem de telefone o Sistema Seguro de SMS não mais se responsabiliza pelo serviço de segurança, uma vez que o número do telefone é o identificador do usuário e não mais poderá garantir a autenticidade do emissor das mensagens produzidas pelo dispositivo clonado. Porém, a vantagem do sistema é que ele é capaz de perceber a clonagem quando uma nova mensagem é enviada a partir do telefone clonado.
+O sistema também não oferece o serviço de irretratabilidade, uma vez que a chave privada do receptor é utilizada no processo de verificação de autenticidade da mensagem. Desse modo, um usuário $B$ não pode convencer um terceiro de que uma mensagem foi enviada por $A$ sem comprometer sua chave privada.
 
-Uma outra característica não tratada é a irretratabilidade, ou seja, o sistema não fornece este serviço, porém pode ser feita uma pesquisa de viabilidade futura para tornar possível implemetar o serviço de irretratabilidade.
+\section{Métricas e Restrições}
 
-\section{Métricas}
-
-A seguir, definimos as métricas desejadas. % e suas limitações.
+A seguir, definimos as métricas e restrições do sistema. % e suas limitações.
 
 \begin{itemize}
 
-\item Nível de segurança: Desejamos que o nível de segurança de nosso protocolo seja equiparável ao nível de segurança do RSA usando chaves de 1024 bits, que pode ser calculado como  2 a 1024. %TODO: fix essa gambi, e citar
+\item Nível de segurança: Desejamos que o nível de segurança de nosso protocolo seja equiparável ao nível de segurança do RSA usando chaves de 1024 bits, que pode ser calculado como $2^{1024}$ \{rsalabs}.
 
 \item Tempo de espera: Consiste nos tempos para cifrassinar e vericifrar uma mensagem. Baseando-se em aplicações já existentes e satisfazendo os requisitos de usabilidade de nosso projeto, estimamos que um intervalo de espera para processamento de uma mensagem de no máximo 5 segundos seja tolerável pelo usuário.
 
-\item Tamanho máximo de mensagens do protocolo: Consiste da soma dos bytes úteis da mensagem com os bytes de controle do algoritmo. Implementações SMS baseadas em \emph{Sun Wireless Messaging API (WMA)} podem dividir uma única mensagem em, no máximo, 3 segmentos, totalizando 399 bytes binários \cite{ortiz}. Porém para evitar problemas devido à segmentação, decidimos que as mensagens do nosso protocolo deverão caber em apenas 1 segmento, o que nos dá um tamanho de 140 bytes binários para cada mensagem do protocolo.
+\item Tamanho máximo de mensagens do protocolo: Consiste no número de bytes ocupados por dados de controle do algoritmo. Estabelecemos que este \emph{overhead} não deve ultrapassar 25\% do espaço total da mensagem.
 
 \item Tamanho das chaves privada/pública: Devido às limitações de banda, estabeleceu-se que cada o tamanho chave usada não deverá exceder 200 bits. No entanto, essa restrição não deve comprometer o nível de segurança desejado.
 
-\item Tamanho máximo de uma mensagem de texto a ser cifrassinada e enviada: Uma mensagem cifrassinada deverá caber em uma única mensagem do protocolo, cujo tamanho máixmo foi defindo em 140 bytes. Porém nem todos os bytes poderão ser usados para a mensagem, pois existirá um overhead do protocolo, devido à cabeçalhos e dados da assinatura. Estabelecemos então um tamanho máximo de 70 bytes para uma mensagem de texto. Desta forma, ficam reservados outros 70 bytes para o overhead e a assinatura.
-
-\item Tamanho do certificado: Devido às limitações de banda, estabeleceu-se que o tamanho do certificado de uma chave não deverá exceder 512 bits. Desejamos poder transferir o certificado em um único SMS, sem comprometer o espaço necessário para o overhead do protocolo. \footnote{Mais tarde o leitor verá que optamos por um esquema que não usa certificados, ou seja, esta métrica será atendida com 0 bits de tamanho de certificado}
+\item Tamanho do certificado: Devido às limitações de banda, estabeleceu-se que o tamanho do certificado de uma chave não deverá exceder 512 bits. Desejamos poder transferir o certificado em um único SMS, sem comprometer o espaço necessário para o overhead do protocolo.
 
 \end{itemize}
 
 %TODO: aqui ta tudo igual ao paper... alterar, enriquecer!
 
-Sabendo que um certificado digital típico ocupa entre 2KB e 4KB, nota-se aqui que uma solução baseada em infra-estrutura convencional de chaves públicas inviabilizaria completamente o sistema: antes de se enviar uma mensagem SMS segura para algum usuário, seria necessário receber o certificado desse usuário particionado em 15 a 30 mensagens SMS, além de enviar em resposta outro certificado em mais 15 a 30 mensagens SMS. Esse esforço precisaria ser efetuado novamente para cada novo destinatário a quem determinado usuário desejasse enviar mensagens, ou em cada caso de renovação ou revogação de certificado. Some-se a isto o espaço ocupado por uma única assinatura convencional, tipicamente de 128 bytes por estar baseada no algoritmo RSA com 1024 bits; este \emph{overhead} seria duplicado com o requisito de cifrar e assinar a mensagem, isto é, tomaria 256 bytes do espaço disponível. 
+Sabendo que um certificado digital típico ocupa entre 2KB e 4KB, nota-se aqui que uma solução baseada em infra-estrutura convencional de chaves públicas inviabilizaria completamente o sistema: antes de se enviar uma mensagem SMS segura para algum usuário, seria necessário receber o certificado desse usuário particionado em 15 a 30 mensagens SMS, além de enviar em resposta outro certificado em mais 15 a 30 mensagens SMS. Esse esforço precisaria ser efetuado novamente para cada novo destinatário a quem determinado usuário desejasse enviar mensagens. Some-se a isto o espaço ocupado por uma única assinatura convencional, tipicamente de 128 bytes por estar baseada no algoritmo RSA com 1024 bits; este \emph{overhead} seria duplicado com o requisito de cifrar e assinar a mensagem, isto é, tomaria 256 bytes do espaço disponível. 
 
-Por outro lado, a manutenção de um diretório confiável de chaves públicas, típico de sistemas de criptografia convencionais, seria impraticável em uma rede de telefonia celular.  Uma solução tecnológica baseada em alternativas à criptografia convencional é, portanto, imprescindível.
-
-Sendo assim, foi considerado o uso de criptografia em curvas elípticas com assinatura baseada em identidades, de acordo com o conceito proposto inicialmente por Shamir \cite{shamir}. Aprofundando-se na especificação, percebeu-se ainda que a chave pública do usuário poderia ser estabelecida essencialmente a partir de sua identificação única no sistema, ou seja, seu próprio número de celular. Desse modo, a criptografia em curvas elípticas baseada em identidades com emparelhamentos bilineares parecia ser capaz de atender aos requisitos do nosso aplicativo.%. e foi inicialmente adotada na solução do projeto.
-
-
+Por outro lado, a manutenção de um diretório confiável de chaves públicas, típico de sistemas de criptografia convencionais, seria impraticável em uma rede de telefonia celular.  Uma solução tecnológica baseada em alternativas à criptografia convencional é, portanto, imprescindível. Sendo assim, foi considerado o uso de criptografia em curvas elípticas com assinatura baseada em identidades. Aprofundando-se na especificação, percebeu-se ainda que a chave pública do usuário poderia ser estabelecida essencialmente a partir de sua identificação única no sistema, ou seja, seu próprio número de celular. Desse modo, a criptografia em curvas elípticas baseada em identidades com emparelhamentos bilineares parecia, inicialmente, ser capaz de atender aos requisitos do sistema.
 
 \chapter{Análise de requisitos do sistema}
 
 \section{Casos de uso}
-%Diag de casos de uso, e descrição do fluxo
 
-\subsection{Diagrama}
+O sistema possui 3 atores, a saber
+\begin{enumerate}
+	\item \textbf{Usuário:} o usuário do sistema móvel pessoal que enviará e receberá mensagens através do canal seguro.
+	\item \textbf{KGB:} é a autoridade de segurança, responsável por gerar a parcela da chave privada baseada em identidades dos usuários.
+	\item \textbf{Sistema:} o sistema deverá acionar-se sempre que uma mensagem SMS chegar no \emph{listener} da porta especificada.
+\end{enumerate}
+
+Nas seções abaixo detalharemos cada caso de uso do sistema, representados sucintamente no diagrama da Figura \ref{fig:usecase_diagrama}.
+
 \begin{figure}[h]
 	\centering
 		\includegraphics[width=1.00\textwidth]{figuras/usecase_diagram.PNG}
@@ -536,16 +527,13 @@ Sendo assim, foi considerado o uso de criptografia em curvas elípticas com assin
 	\label{fig:usecase_diagrama}
 \end{figure}
 
-
-\subsection{Fluxos}
-\begin{enumerate}
-\item Cadastrar-se no sistema
+\subsection{Cadastrar-se no sistema}
 	 \begin{enumerate} 
-	 \item Descrição: Novo usuário deseja usar o sistema pela primeira vez e precisa efetuar as configurações necessárias para poder receber sua chave privada.
-   \item Evento Iniciador: Usuário seleciona a opção de primeiro uso do sistema
-	 \item Atores: Usuário, KGB.
-	 \item Pré-condição: Sistema de SMS seguro apresentando sua tela inicial.
-	 \item Seqüência de Eventos: 
+	 \item \textbf{Descrição:} Novo usuário deseja usar o sistema pela primeira vez e precisa efetuar as configurações necessárias para poder receber sua chave privada.
+   \item \textbf{Evento Iniciador:} Usuário seleciona a opção de primeiro uso do sistema
+	 \item \textbf{Atores:} Usuário, KGB.
+	 \item \textbf{Pré-condição:} Sistema de SMS seguro apresentando sua tela inicial.
+	 \item \textbf{Seqüência de Eventos:} 
 	 \begin{enumerate}
 			\item Usuário seleciona o botão de primeiro uso.
 			\item Sistema pede a entrada de uma nova senha privada do usuário.
@@ -558,20 +546,20 @@ Sendo assim, foi considerado o uso de criptografia em curvas elípticas com assin
 			\item O sistema verifica se a chave privada recebida é válida.
 			\item O sistema armazena a nova chave no celular.
 		\end{enumerate}
-		\item Pós-Condição: Sistema volta para a tela inicial e usuário está apto a autenticar novos contatos para trocar mensagens.
-		\item Extensões: 
+		\item \textbf{Pós-Condição:} Sistema volta para a tela inicial e usuário está apto a autenticar novos contatos para trocar mensagens.
+		\item \textbf{Extensões:} 
 		\begin{enumerate}
 		\item Caso haja algum problema na geração ou na mensagem que contém a chave privada do usuário ou ainda se outra entidade tentou se passar por KGB então o sistema exibe mensagem de chave inválida ao usuário.
 		\end{enumerate}
 \end{enumerate}
 		
-\item Autenticar novo contato
+\subsection{Autenticar novo contato}
 		\begin{enumerate}
-		\item Descrição: Quando um usuário quiser trocar mensagem com um contato que ainda não foi autenticado pelo Sistema de SMS Seguro deverá requisitar sua autenticação.
-		\item Evento Iniciador: Usuário deseja autenticar um novo contato para enviá-lo uma mensagem.
-		\item Atores: Usuário que quer se comunicar, usuário recebedor da mensagem.
-		\item Pré-condição: Sistema exibe tela inicial.
-		\item Seqüência de Eventos: 
+		\item \textbf{Descrição:} Quando um usuário quiser trocar mensagem com um contato que ainda não foi autenticado pelo Sistema de SMS Seguro deverá requisitar sua autenticação.
+		\item \textbf{Evento Iniciador:} Usuário deseja autenticar um novo contato para enviá-lo uma mensagem.
+		\item \textbf{Atores:} Usuário que quer se comunicar, usuário recebedor da mensagem.
+		\item \textbf{Pré-condição:} Sistema exibe tela inicial.
+		\item \textbf{Seqüência de Eventos:} 
 		\begin{enumerate}
 			\item Usuário seleciona a opção de autenticar novo contato.
 			\item Usuário insere o número do telefone do novo contato e seleciona ok.
@@ -579,20 +567,20 @@ Sendo assim, foi considerado o uso de criptografia em curvas elípticas com assin
 			\item Usuário confirma o envio da mensagem SMS.
 			\item Sistema envia requisição de autenticação para o novo contato.
 		\end{enumerate}
-    \item Pós-Condição: Sistema volta para a tela inicial.
-		\item Extensões: 
+    \item \textbf{Pós-Condição:} Sistema volta para a tela inicial.
+		\item \textbf{Extensões:} 
 		\begin{enumerate}
 			\item Sistema exibe notificação de erro no envio da mensagem caso o serviço de envio esteja indisponível. (Passo v).
 		\end{enumerate}
 		\end{enumerate}
 	
-\item Enviar Mensagem
+\subsection{Enviar Mensagem}
   	\begin{enumerate}
-  	\item Descrição: Usuário deseja compor e enviar uma nova mensagem SMS para outro usuário.
-  	\item Evento Iniciador: Usuário seleciona botão de envio de nova mensagem.
-  	\item Atores: Usuário emissor da mensagem.
-  	\item Pré-condição: Sistema de SMS seguro apresentando sua tela inicial.
-  	\item Seqüência de Eventos: 
+  	\item \textbf{Descrição:} Usuário deseja compor e enviar uma nova mensagem SMS para outro usuário.
+  	\item \textbf{Evento Iniciador:} Usuário seleciona botão de envio de nova mensagem.
+  	\item \textbf{Atores:} Usuário emissor da mensagem.
+  	\item \textbf{Pré-condição:} Sistema de SMS seguro apresentando sua tela inicial.
+  	\item \textbf{Seqüência de Eventos:} 
   	\begin{enumerate}
   	\item Usuário emissor da mensagem seleciona botão de envio de mensagem. 
 		\item Sistema exige que o usuário indique o destinatário da mensagem.
@@ -601,32 +589,32 @@ Sendo assim, foi considerado o uso de criptografia em curvas elípticas com assin
 		\item	Usuário confirma o envio da mensagem para o destinatário escolhido.
 		\item Sistema exibe notificação de envio da mensagem.
 		\end{enumerate}
-	  \item Pós-Condição: A notificação de mensagem enviada é exibida e o sistema retorna à tela inicial.
-		\item Extensões: 
+	  \item \textbf{Pós-Condição:} A notificação de mensagem enviada é exibida e o sistema retorna à tela inicial.
+		\item \textbf{Extensões:} 
 		\begin{enumerate}
 		\item Sistema exibe notificação de erro no envio da mensagem caso o serviço de envio esteja indisponível. (Passo v).
 		\end{enumerate}
-		\item Inclusões
+		\item \textbf{Inclusões:}
 		\begin{enumerate}
 		\item Sistema busca todos os contatos da lista de contatos do celular para exibi-los.
 		\item	Caso de uso 4.
 		\end{enumerate}
 		\end{enumerate}
 
-\item Recepção de Mensagem
+\subsection{Recepção de Mensagem}
 	\begin{enumerate}
-	\item Descrição: Quando uma nova mensagem chega no celular o sistema deve captá-la e fazer seu tratamento.
-	\item Evento Iniciador: Chega uma nova mensagem do Sistema de SMS Seguro no celular de um usuário.
-	\item Atores: Sistema operacional.
-	\item Pré-condição: Celular do usuário ligado.
-	\item Seqüência de Eventos:
+	\item \textbf{Descrição:} Quando uma nova mensagem chega no celular o sistema deve captá-la e fazer seu tratamento.
+	\item \textbf{Evento Iniciador:} Chega uma nova mensagem do Sistema de SMS Seguro no celular de um usuário.
+	\item \textbf{Atores:} Sistema operacional.
+	\item \textbf{Pré-condição:} Celular do usuário ligado.
+	\item \textbf{Seqüência de Eventos:}
 	\begin{enumerate}
 	\item Celular recebe a nova mensagem e a coloca na fila.
 	\item	Sistema operacional do celular capta a mensagem e requisita ao usuário que inicialize a aplicação caso ela não esteja em execução.
 	\item	O sistema identifica a primitiva da mensagem e trata de forma correspondente.
 	\end{enumerate}
-	\item Pós-Condição: a mensagem está processada e o sistema está exibindo a tela inicial.
-	\item Extensões: 
+	\item \textbf{Pós-Condição:} a mensagem está processada e o sistema está exibindo a tela inicial.
+	\item \textbf{Extensões:} 
 	\begin{enumerate}
 	\item	Sistema trata mensagem cifrada e assinada. (Passo iii)
 	\item	Sistema trata mensagem de autenticação de usuário.(Passo iii)
@@ -635,45 +623,42 @@ Sendo assim, foi considerado o uso de criptografia em curvas elípticas com assin
 	\end{enumerate}
 \end{enumerate}
 
-\item Encriptação/Assinatura de Mensagem
+\subsection{Encriptar/Assinar Mensagem}
 		\begin{enumerate}
-		\item Descrição: Usuário escreveu uma mensagem para alguém e deseja cifrá-la e assiná-la.
-		\item Evento Iniciador: Usuário requisita envio de mensagem cifrada e assinada ao sistema.
-		\item Atores: Usuário que deseja enviar uma mensagem segura.
-		\item Pré-condição: Usuário está com a mensagem pronta na tela de envio.
-		\item Seqüência de Eventos:
+		\item \textbf{Descrição:} Usuário escreveu uma mensagem para alguém e deseja cifrá-la e assiná-la.
+		\item \textbf{Evento Iniciador:} Usuário requisita envio de mensagem cifrada e assinada ao sistema.
+		\item \textbf{Atores:} Usuário que deseja enviar uma mensagem segura.
+		\item \textbf{Pré-condição:} Usuário está com a mensagem pronta na tela de envio.
+		\item \textbf{Seqüência de Eventos:}
 		\begin{enumerate}
 		\item	Usuário seleciona a opção de enviar a mensagem.
 		\item	Sistema cifra e assina a mensagem e exibe tela de confirmação de envio.
 		\item	Usuário confirma o envio e sistema transmite a mensagem segura.
 		\end{enumerate}
-		\item Pós-Condição: Sistema volta para a tela inicial.
+		\item \textbf{Pós-Condição:} Sistema volta para a tela inicial.
 		\end{enumerate}
 
-\item Verificar Mensagem
+\subsection{Decriptar/Verificar Mensagem}
   	\begin{enumerate}
-  	\item Descrição: Usuário deseja visualizar uma mensagem na sua caixa de entrada.
-		\item Evento Iniciador: Usuário abre a caixa de entrada do sistema.
-		\item Atores: Usuário.
-		\item Pré-condição: Sistema de SMS seguro apresentando mensagens recebidas na caixa de entrada.
+  	\item \textbf{Descrição:} Usuário deseja visualizar uma mensagem na sua caixa de entrada.
+		\item \textbf{Evento Iniciador:} Usuário abre a caixa de entrada do sistema.
+		\item \textbf{Atores:} Usuário.
+		\item \textbf{Pré-condição:} Sistema de SMS seguro apresentando mensagens recebidas na caixa de entrada.
 		Seqüência de Eventos: 
 		\begin{enumerate}
 		\item	Usuário escolhe a mensagem que deseja visualizar e seleciona ok.
 		\item	Sistema verifica e decifra a mensagem.
 		\item	Sistema exibe a mensagem clara para que o usuário possa lê-la.
 		\end{enumerate}
-		\item Pós-Condição: Sistema exibindo mensagem clara para o usuário.
+		\item \textbf{Pós-Condição:} Sistema exibindo mensagem clara para o usuário.
 		\end{enumerate}
 \end{enumerate}
 
 
-
 \section{Requisitos funcionais}
 
- Após a análise da especificação do sistema pode-se extrair os seguintes requisitos:
+ Após a análise do escopo e das restrições do sistema, foram levantados os seguintes requisitos funcionais:
  
-
-%Atenção: o cara ainda não sabe o que é KGB!
 \subsection{Cifrassinatura de mensagem}
 \textbf{Introdução/Propósito} O sistema deverá fornecer serviço de confidencialidade através da funcionalidade de cifrassinatura das mensagens SMS, ou seja, as mensagens, para trafegar na rede GSM deverão estar encriptadas e assinadas.
 \textbf{Estímulo/Resposta} O estímulo neste caso provém do usuário ao requisitar o serviço de cifrassinatura e a resposta do sistema é realizar o serviço enviando a mensagem cifrassinada.
@@ -738,10 +723,10 @@ Em paralelo, um aumento equivalente no nível de segurança de criptografia em cur
 %Explicar aqui que analisamos os seguintes candidatos:
 \section{BLMQ}
 
-A primeira tentativa de solução adotava o esquema de cifrassinatura baseada em identidades BLMQ \cite{barreto-libert-mccullagh-quisquater}. Trata-se de um algoritmo de criptografia baseada em identidades.
+A primeira tentativa de solução adotava o esquema de cifrassinatura baseada em identidades BLMQ ~\cite{barreto-libert-mccullagh-quisquater}. Trata-se de um algoritmo de criptografia baseada em identidades.
 %TODO: o que mais? enriquecer!
 
-O esquema foi escolhido por, aparentemente, atender aos requisitos estabelecidos inicialmente. O BLMQ era notadamente mais eficiente que esquemas de criptografia baseada em identidades anteriores, como o de Boneh-Franklin \cite{boneh-franklin}, o que poderia tornar o uso desse tipo de criptografia viável em ambientes produtivos. Além disso, uma assinatura de 160 bits garantiria um nível de segurança de aproximadamente 80 bits equivalente ao do RSA de 1024 bits\cite{rsalabs}.
+O esquema foi escolhido por, aparentemente, atender aos requisitos estabelecidos inicialmente. O BLMQ era notadamente mais eficiente que esquemas de criptografia baseada em identidades anteriores, como o de Boneh-Franklin \cite{boneh-franklin}, o que poderia tornar o uso desse tipo de criptografia viável em ambientes produtivos. Além disso, uma assinatura de 160 bits garantiria um nível de segurança de aproximadamente 80 bits equivalente ao do RSA de 1024 bits \cite{rsalabs}.
 
 %TODO: escrever muito mais! enriquecer! Não tá falando nada do BLMQ aqui...
 
@@ -755,7 +740,7 @@ O esquema foi escolhido por, aparentemente, atender aos requisitos estabelecidos
 %falar de tentativas de resolver os problemas, alguns sucessos e alguns fracassos
 O esquema foi implementado na linguagem de programação Java, e testes foram realizados em um aparelho celular Nokia 6275.
 
-O desempenho observado inicialmente foi insatisfatório, não atendendo aos requisitos de usabilidade estabelecidos na especificação. Foram feitas tentativas de melhoria do desempenho, como variação do tamanho das chaves, uso de diferentes funções de emparelhamento (Ate, Eta)\cite{freeman-scott-teske}, e implementações com diferentes bibliotecas que fornecessem a classe \emph{BigInteger} - a implementação da Sun se mostrou mais eficiente do que a implementação da Bouncy Castle. Algumas adaptações no esquema em si foram feitas, como inversão da ordem das curvas utilizadas. 
+O desempenho observado inicialmente foi insatisfatório, não atendendo aos requisitos de usabilidade estabelecidos na especificação. Foram feitas tentativas de melhoria do desempenho, como variação do tamanho das chaves, uso de diferentes funções de emparelhamento (Ate, Eta) \cite{freeman-scott-teske}, e implementações com diferentes bibliotecas que fornecessem a classe \emph{BigInteger} - a implementação da Sun se mostrou mais eficiente do que a implementação da Bouncy Castle. Algumas adaptações no esquema em si foram feitas, como inversão da ordem das curvas utilizadas. 
 
 %TODO: falar das BNCurves em algum ponto...
 
@@ -779,9 +764,9 @@ Como estes tempos não atendiam aos requisitos de usabilidade do projeto, fez-se 
 %Falar aqui que o Barreto inventou o novo algoritmo, que publicou o SBSEG
 Visando resolver os problemas encontrados com a utilização do BLMQ, um novo esquema foi criado, e designado por BDCPS. Um artigo \cite{bdcps} foi submetido para o SBSEG'08, sediado em Gramado - RS.
 
-Na criação do novo esquema, em vez de utilizarmos exclusivamente criptografia e assinaturas baseadas em identidades, estendemos um esquema de criptografia sem certificados com um esquema de assinatura convencional, mas utilizando técnicas baseadas em identidades para validar a chave pública, evitando o uso de certificados \cite{bdcps}. A nova técnica mescla esses dois paradigmas, garantindo baixo tempo de cifrassinatura e de vericifração, tamanhos de chaves dentro dos limites adotados e níveis de segurança satisfatórios.
+Na criação do novo esquema, em vez de utilizarmos exclusivamente criptografia e assinaturas baseadas em identidades, estendemos um esquema de criptografia sem certificados com um esquema de assinatura convencional, mas utilizando técnicas baseadas em identidades para validar a chave pública, evitando o uso de certificados ~\cite{bdcps}. A nova técnica mescla esses dois paradigmas, garantindo baixo tempo de cifrassinatura e de vericifração, tamanhos de chaves dentro dos limites adotados e níveis de segurança satisfatórios.
 
-O esquema proposto integra esquemas preexistentes como as assinaturas BLMQ e Schnorr \cite{schnorr} e o esquema isento de certificados de Zheng\cite{zheng}. Neste esquema, a geração das chaves dos usuários dispensa a necessidade de uma autoridade certificadora e a utilização de certificados para validar sua chave pública. Estas características implicaram em importantes, mas não únicas, melhorias em relação ao esquema anteriormente implementado e serão discutidas na seção "Análise da Proposta". 
+O esquema proposto integra esquemas preexistentes como as assinaturas BLMQ e Schnorr \cite{schnorr} e o esquema isento de certificados de Zheng \cite{zheng}. Neste esquema, a geração das chaves dos usuários dispensa a necessidade de uma autoridade certificadora e a utilização de certificados para validar sua chave pública. Estas características implicaram em importantes, mas não únicas, melhorias em relação ao esquema anteriormente implementado e serão discutidas na seção "Análise da Proposta". 
 Por criptografia convencional entende-se o fato de o usuário poder escolher seu par de chaves não certificado, ou seja, ele escolhe apropriadamente uma chave privada e gera sua chave pública a partir dela. Desse modo, somente o usuário gerador de seu par de chaves convencional conhece sua chave privada, e este fato elimina a possibilidade de "Key Escrow", que é o comprometimento da chave e conseqüentemente das mensagens com ela encriptadas. 
 O par de chaves não certificado é combinado com a solução de criptografia baseada em identidades para que seja posteriormente validado por outro usuário do sistema.
 
