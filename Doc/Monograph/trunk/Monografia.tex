@@ -27,6 +27,8 @@
 \newtheorem{definition}{Definição}{\bfseries}{\itshape}
 \newtheorem{corollary}{Corolário}{\bfseries}{\itshape}
 
+\newcommand{\samples}{\mathop{\stackrel{\,_\$}{\gets}}}
+
 \sloppy
 
 \begin{document}
@@ -198,7 +200,7 @@ Posteriormente, realizamos o estudo de esquemas de criptografia de modo a buscar
 
 Por último, realizamos a implementação do sistema conforme sua especificação e realizamos testes de modo a confrontar os dados obtidos em um ambiente real com as previsões feitas na fase anterior.
 
-\setion{Organização}
+\section{Organização}
 O restante desta monografia organiza-se como se segue. No capítulo bla vla af
 %TODO
 
@@ -232,7 +234,7 @@ Por exemplo, se confidencialidade fosse desejada e a chave secreta compartilhada
 
 A principal vantagem da criptografia de chave simétrica é a alta eficiência, contudo, há significantes desvantagens destes sistemas. Uma delas é o conhecido problema da distribuição de chave - a necessidade de um canal que seja ambos, secreto e autenticado, para a distribuição das chaves. Em algumas aplicações, esta distribuição pode ser convenientemente feita por usar um canal fisicamente seguro tal como um emissário de confiança. Outra maneira é usar os serviços de uma terceira parte confiável on-line que inicialmente estabelece chaves secretas com todas as entidades na rede e conseqüentemente usa essas chaves para distribuir as informações de chaves para as entidades em comunicação quando requerido \footnote{Este modo de usar uma Terceira parte centralizada para distribuir chaves para algoritmos de chave simétrica às partes conforme elas necessitarem é usado pelo protocolo de autenticação da rede Kerberos para aplicações cliente/servidor.}. Soluções como esta podem ser bem apropriadas para ambientes onde uma autoridade central aceitável e confiável, mas é claramente impraticável em aplicações tal como e-mail na internet.
 
-Uma segunda desvantagem é o problema de administração de chaves. - em uma rede de N entidades cada entidade pode ter que manter diferentes informações de chaves com cada uma das N-1 entidades. Logo, seriam necessárias N(N-1)/2 chaves privadas em toda a rede o que inviabiliza a administração quando N se torna grande. Este problema pode ser aliviado usando serviços de uma terceira parte on-line que distribui as chaves conforme sãs requeridas, assim reduzindo a necessidade das entidades de armazenar múltiplas chaves seguramente. Novamente, contudo, tais soluções não são práticas em alguns cenários. Finalmente, uma vez que a informação sobre as chaves é compartilhada entre duas (ou mais) entidades, técnicas de chave simétrica não podem ser usadas para implementar esquemas de assinatura digital (DSS) elegantes que forneçam serviços de irretratabilidade. Isto porque é impossível distinguir entre as ações tomadas por diferentes detentores de uma chave secreta. \footnote{Esquemas de assinaturas digitais podem ser implementados usando técnicas de chave simétrica; contudo, estes esquemas geralmente impraticáveis conforme requerido seu uso de uma terceira parte confiável on-line ou novas informações de chaves para cada assinatura.}
+Uma segunda desvantagem é o problema de administração de chaves. - em uma rede de N entidades cada entidade pode ter que manter diferentes informações de chaves com cada uma das N-1 entidades. Logo, seriam necessárias N(N-1)/2 chaves privadas em toda a rede o que inviabiliza a administração quando N se torna grande. Este problema pode ser aliviado usando serviços de uma terceira parte on-line que distribui as chaves conforme sãs requeridas, assim reduzindo a necessidade das entidades de armazenar múltiplas chaves seguramente. Novamente, contudo, tais soluções não são práticas em alguns cenários. Finalmente, uma vez que a informação sobre as chaves é compartilhada entre duas (ou mais) entidades, técnicas de chave simétrica não podem ser usadas para implementar esquemas de assinatura digital (DSS) elegantes que forneçam serviços de irretratabilidade. Isto porque é impossível distinguir entre as ações tomadas por diferentes detentores de uma chave secreta. \footnote{Esquemas de assinaturas digitais podem ser implementados usando técnicas de chave simétrica; contudo, estes esquemas geralmente são geralmente impraticáveis quando for requerido o uso de uma terceira parte confiável on-line ou de novas chaves para cada assinatura.}
 
 \section{Criptografia de chave pública}
 
@@ -533,10 +535,6 @@ Sendo assim, foi considerado o uso de criptografia em curvas elípticas com assin
 	\label{fig:usecase_diagrama}
 \end{figure}
 
-\subsection{Atores}
-\begin{enumerate}
-	\item Ator 1: %TODO
-\end{enumerate}
 
 \subsection{Fluxos}
 \begin{enumerate}
@@ -671,32 +669,30 @@ Sendo assim, foi considerado o uso de criptografia em curvas elípticas com assin
 
 \section{Requisitos funcionais}
 
-%TODO: FAZER TUDO !!! 
-%TODO: FAZER TUDO !!! 
-%TODO: FAZER TUDO !!! 
+ Após a análise da especificação do sistema pode-se extrair os seguintes requisitos:
+ 
 
 %Atenção: o cara ainda não sabe o que é KGB!
-\subsection{Requisito A}
-\textbf{Introdução/Propósito}: TODO TODO
+\subsection{Cifrassinatura de mensagem}
+\textbf{Introdução/Propósito} O sistema deverá fornecer serviço de confidencialidade através da funcionalidade de cifrassinatura das mensagens SMS, ou seja, as mensagens, para trafegar na rede GSM deverão estar encriptadas e assinadas.
+\textbf{Estímulo/Resposta} O estímulo neste caso provém do usuário ao requisitar o serviço de cifrassinatura e a resposta do sistema é realizar o serviço enviando a mensagem cifrassinada.
+
+\subsection{Vericifração de mensagem}
+\textbf{Introdução/Propósito} O sistema deverá fornecer ao usuário o serviço de ele poder verificar o autor de uma mensagem recebida como o de ler seu conteúdo.
+
+\textbf{Estímulo/Resposta} O usuário requisita ao sistema a vericifração de uma determinada mensagem e o sistema processa a mensagem devolvendo a vericidade de sua validade e seu conteúdo.
+
+\subsection{Envio de mensagem}
+\textbf{Introdução/Propósito}: O sistema deve fornecer ao usuário o serviço de envio de uma mensagem para o destinatário desejado.
 	
-\textbf{Estímulo/Resposta}: TODO TODO TODO
+\textbf{Estímulo/Resposta}: Usuário deseja enviar uma mensagem SMS criptografada e requisita o serviço ao sistema que efetua o envio.
 
-\textbf{Detalhamento}: TODO TODO TODO
 
-\subsection{Requisito B}
-\textbf{Introdução/Propósito}: TODO TODO
-
-\textbf{Estímulo/Resposta}: TODO TODO TODO
-
-\textbf{Detalhamento}: TODO TODO TODO
-
-\subsection{Requisito C}
-\textbf{Introdução/Propósito}: TODO TODO
+\subsection{Geração de chave privada}
+\textbf{Introdução/Propósito}: O sistema deve fornecer para um novo usuário o serviço gerar sua chave privada e entregá-lo de forma segura. O Key Bureau Generator possui essa responsabilidade.
 	
-\textbf{Estímulo/Resposta}: TODO TODO TODO
-
-\textbf{Detalhamento}: TODO TODO TODO
-
+\textbf{Estímulo/Resposta}: Novo usuário requisita ao sistema a geração de sua chave privada. A requisição chega até o KGB que gera a chave privada do usuário
+ e a retorna por meio de uma mensagem segura.
 
 \section{Requisitos não-funcionais}
 \subsection{Usabilidade}
