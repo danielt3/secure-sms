@@ -118,11 +118,15 @@ Ao Felipe Sanches, por ter criado o ícone do aplicativo.
 \end{agradecimentos}
 
 \begin{resumo}
-Este trabalho consiste na especificação, projeto e implementação de um sistema que garanta serviços de segurança na troca de mensagens SMS entre aperelhos de telefonia celular. Ao longo da monografia, apresentaremos aspectos da nossa solução, métricas, um esquema criptográfico inovador que viabilizou a implementação, especificação do sistema e resultados de testes de desempenho do sistema implementado.
+Este trabalho consiste na especificação, projeto e implementação de um sistema que garanta serviços de segurança na troca de mensagens \emph{SMS} entre aperelhos de telefonia celular. A necessidade da implementação de mais uma camada de segurança sobre a rede de telefonia celular \emph{GSM} justifica-se pelo fato de as mensagens traferagem pela rede interna da operadora sem qualquer mecanismo de segurança, deixando-a vulnerável a quaisquer atacantes que comprometam o sistema e tenham acesso à sua base de dados SMS, incluindo funcionários mal intencionados. Desse modo, aplicações que requeiram segurança ficam impossibilitadas de se aproveitar das qualidades desse meio: mobilidade, leveza e baixo custo.
+Os paradigmas de segurança atualmente empregados na \emph{Internet} não são adequados a esse cenário, uma vez que há grandes limitações de banda e poder de processamento. Analisamos os conceitos relativamente recentes de Criptografia de Curvas Elípticas e Criptografia Baseada em Identidades, chegando a um esquema híbrido entre essas e a criptografia de chave pública convencional que atende aos requisitos estabelecidos.
+Ao longo da monografia, apresentaremos aspectos da nossa solução, métricas, detalhes do protocolo criptográfico que viabilizou a implementação, especificação do sistema e resultados de testes de desempenho do sistema implementado.
 \end{resumo}
 
 \begin{abstract}
-This work consists of the specification, design and implementation of a system that guarantees security services while exchanging SMS between mobile phone devices. Throughout this monograph, we are going to present aspects of our solution, metrics, an innovative cryptographic scheme that made the implementation possible, specification of the system and performance test results.
+This work consists of the specification, design and implementation of a system that guarantees security services to the mobile Short Message Service (\emph{SMS}. The need of an extra security layer onto the \emph{GSM} network resides on the fact that short messages are exchanged through the carrier's internal network as plain text, vulnerable to any attacker that manages to compromise the system and gain access to the SMS database, including malicious employees. Therefore, security-sensitive applications remain unable to take advantage from this media's best features: mobility, lightness and low cost.
+The security paradigms currently adopted on the Internet don't fulfill this background's requirements, since there are strong bandwidth and processing restrictions. The analysis of the relatively recent concepts of Elliptic Curve Cryptography and Identity-Based Cryptography lead us to a hybrid scheme that assembles the best qualities of these and Public Key Cryptography and fulfills the established requirements.
+Throughout this monograph, we are going to present aspects of our solution, metrics, details of the adopted cryptographic scheme, a system specification and performance test results.
 \end{abstract}
 
 \tableofcontents
@@ -157,7 +161,7 @@ This work consists of the specification, design and implementation of a system t
 O Serviço de Mensagens Curtas (\emph{Short Message Service}, ou SMS) é um serviço oferecido por operadoras de telefonia celular para que seus usuários troquem mensagens curtas de texto com outros usuários da rede ou com serviços da Internet. Atualmente, cerca de XXX pessoas utilizam o SMS no mundo e XXX mensagens são trocadas anualmente.
 %TODO: Tirar o XXX !
 
-A rede GSM (Global System for Mobile Comunnication), sobre a qual as mensagens SMS trafegam, usa o mecanismo \emph{store-and-forward}, que é similar ao serviço SMTP de correio eletrônico. Em vez de servidores de email, são usados centros de SMS (SMSC) que armazenam as mensagens SMS antes de serem enviadas para o fornecedor de serviços (operadora) ou para outro SMSC.
+A rede GSM (Global System for Mobile Comunnication), sobre a qual as mensagens SMS trafegam, usa o mecanismo \emph{store-and-forward}, que é similar ao serviço SMTP de correio eletrônico. Em vez de servidores de \emph{e-mail}, são usados centros de SMS (SMSC) que armazenam as mensagens SMS antes de serem enviadas para o fornecedor de serviços (operadora) ou para outro SMSC.
 
 Embora as conexões entre um SMSC e os nós da rede GSM sejam protegidas por túneis VPN, as mensagens SMS ficam armazenadas em texto claro no SMSC. Isto significa que os operadores ou um atacante que invada o sistema podem visualizar e alterar o conteúdo de todas as mensagens SMS que estão armazenadas no SMSC, além de enviar mensagens em nome de outrem \cite{loon}.
 
@@ -187,7 +191,7 @@ Na figura \ref{fig:Canal_Inseguro}, as entidades $A$ (Alice) e $B$ (Bob) estão s
 Por exemplo, $A$ e $B$ poderiam ser 2 pessoas comunicando-se sobre uma rede de telefonia celular, e $E$ está tentando interceptar a comunicação. 
 
 Ou, $\sim A$ poderia ser um web browser de um indivíduo A que está em processo de compra de um produto de uma loja online $\sim B$ representada por seu site $B$. Neste cenário, o canal de comunicações é a \emph{Internet}. Um agressor $E$ poderia tentar ler o tráfego entre $A$ e $B$, portanto saber a informação sobre o cartão de crédito de $A$, ou poderia tentar personificar $A$ ou $B$ na transação. 
-Como um terceiro exemplo, considere a situação onde $A$ está enviando uma mensagem via \emph{e-mail} para $B$ sobre a internet. Um agressor $E$ poderia tentar ler a mensagem, modificar pedaços selecionados, ou personificar $A$ enviando mensagens dela mesma para $B$. Finalmente, considere o cenário onde $A$ é um smart card que está em processo de autenticar seu possuidor $\sim A$ em um computador \emph{mainframe} $B$ em uma sala protegida do banco. Aqui, $E$ poderia tentar monitorar as comunicações para obter informações sobre a conta de $\sim A$ , ou poderia tentar personificar $\sim A$ para sacar fundos da conta de $\sim A$. Deveria ser evidente destes exemplos que uma entidade se comunicando não é necessariamente um humano, mas pode ser um computador, \emph{smart card}, ou um módulo de software agindo no lugar de um indivíduo ou uma organização tal como uma loja ou um banco.
+Como um terceiro exemplo, considere a situação onde $A$ está enviando uma mensagem via \emph{e-mail} para $B$ sobre a Internet. Um agressor $E$ poderia tentar ler a mensagem, modificar pedaços selecionados, ou personificar $A$ enviando mensagens dela mesma para $B$. Finalmente, considere o cenário onde $A$ é um smart card que está em processo de autenticar seu possuidor $\sim A$ em um computador \emph{mainframe} $B$ em uma sala protegida do banco. Aqui, $E$ poderia tentar monitorar as comunicações para obter informações sobre a conta de $\sim A$ , ou poderia tentar personificar $\sim A$ para sacar fundos da conta de $\sim A$. Deveria ser evidente destes exemplos que uma entidade se comunicando não é necessariamente um humano, mas pode ser um computador, \emph{smart card}, ou um módulo de software agindo no lugar de um indivíduo ou uma organização tal como uma loja ou um banco.
 
 \section{Objetivos}
 
@@ -497,7 +501,7 @@ A seguir, definimos as métricas e restrições do sistema. % e suas limitações.
 
 \item Tamanho das chaves privada/pública: Devido às limitações de banda, estabeleceu-se que cada o tamanho chave usada não deverá exceder 200 bits. No entanto, essa restrição não deve comprometer o nível de segurança desejado.
 
-\item Tamanho do certificado: Devido às limitações de banda, estabeleceu-se que o tamanho do certificado de uma chave não deverá exceder 512 bits. Desejamos poder transferir o certificado em um único SMS, sem comprometer o espaço necessário para o overhead do protocolo.
+\item Tamanho do certificado: Devido às limitações de banda, estabeleceu-se que o tamanho do certificado de uma chave não deverá exceder 512 bits. Desejamos poder transferir o certificado em um único SMS, sem comprometer o espaço necessário para o \emph{overhead} do protocolo.
 
 \end{itemize}
 
