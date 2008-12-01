@@ -373,31 +373,30 @@ Nesta seção apresentamos características básicas e definições do BLMQ \cite{barr
 
 \begin{itemize}
 
-\item \textbf{Setup:} dado um parâmetro de segurança $k$, this algorithm chooses a $k$-bit prime number $n$, bilinear map groups $(\G_1,\G_2,\G_T)$ of order $n$ supporting an efficiently computable, non-degenerate pairing $e: \G_1 \times \G_2 \rightarrow \G_T$, generators $P \in \G_1$, $Q \in \G_2$ and hash functions
-$h_0: \G_T \times \{0, 1\}^\ast \rightarrow \Z_n^\ast$,
+\item \textbf{Setup:} dado um parâmetro de segurança $k$, este algoritmo escolhe um número primo de $k$ bits $n$, grupos de mapeamento bilinear $(\G_1,\G_2,\G_T)$  de ordem $n$ que suportam um pareamento computável eficientemente e não degenerado $e: \G_1 \times \G_2 \rightarrow \G_T$, geradores $P \in \G_1$, $Q \in \G_2$ e as funções de hash $h_0: \G_T \times \{0, 1\}^\ast \rightarrow \Z_n^\ast$,
 $h_1: \{0, 1\}^\ast \rightarrow \Z_n^\ast$.
-A master key $s \samples \Z_n^\ast$ is also chosen, to which the public key $P_{pub} = sP \in \G_1$ is associated. The generator $g = e(P, Q) \in \G_T$ is also included among the public parameters which are $\texttt{params} = (k, n, \G_1, \G_2, \G_T, P, Q, g, P_{pub}, e, h_0, h_1)$.
+Uma chave mestra $s \samples \Z_n^\ast$ é também escolhida, para a qual a seguinte chave publica $P_{pub} = sP \in \G_1$ é associada. O gerador $g = e(P, Q) \in \G_T$ é também incluído entre os parâmetros públicos que são $\texttt{params} = (k, n, \G_1, \G_2, \G_T, P, Q, g, P_{pub}, e, h_0, h_1)$.
 
-\item \textbf{Private-Key-Extract:} takes as input entity $A$'s identifier $\ID_A \in \{0, 1\}^\ast$ and extracts $A$'s identity-based private key $Q_A \gets (h_1(\ID_A) + s)^{-1}Q \in \G_2$. Entity $A$ can verify the consistency of this key by checking that $e(h_1(\ID_A) P + P_{pub}, Q_A) = g$. This setting is called the Sakai-Kasahara key style~\cite{sakai-kasahara}.
+\item \textbf{Private-Key-Extract:} Toma como entrada o identificador $\ID_A \in \{0, 1\}^\ast$ da entidade $A$ e extrai a chave privada baseada em identidades $Q_A \gets (h_1(\ID_A) + s)^{-1}Q \in \G_2$ de $A$. A entidade $A$ pode verificar a consistência dessa chave verificando que $e(h_1(\ID_A) P + P_{pub}, Q_A) = g$. Esta configuração é chamada de estilo Sakai-Kasahara~\cite{sakai-kasahara}.
 
-\item \textbf{Sign:} to sign $m \in \{0, 1\}^\ast$ under the private key $P_A$, the signer picks $u \samples \Z_n^\ast$ and computes
+\item \textbf{Sign:} Para assinar $m \in \{0, 1\}^\ast$ sob a chave privada  $P_A$, o assinante toma $u \samples \Z_n^\ast$ e calcula
 \begin{enumerate}
 \item $r \gets g^u$
 \item $h \gets h_0(r, m)$
 \item $S \gets (u - h) Q_A$
 \end{enumerate}
-The signed message is the triple $(m, h, S) \in \{0, 1\}^\ast \times \Z_n^\ast \times \G_2$.
+A mensagem assinada é a tripla $(m, h, S) \in \{0, 1\}^\ast \times \Z_n^\ast \times \G_2$.
 
-\item \textbf{Verify:} given an identity $\ID_A$, upon reception of $(m, h, S)$ the verifier computes
+\item \textbf{Verify:} dada um identidade $\ID_A$, sob a recepção de $(m, h, S)$ o verificador
 \begin{enumerate}
 \item $r \gets e(h_1(\ID_A) P + P_{pub}) g^h$
 \item $v \gets h_0(r, m)$
 \end{enumerate}
-The verifier accepts the signed message iff $v = h$.
+O verificador aceita a mensagem assinada se e somente se $v = h$.
 
 \end{itemize}
 
-This scheme can be shown to be existentially unforgeable under adaptively chosen message attacks (EUF-IBS-CMA for short) in the random oracle model under the $q$-SDHP assumption \cite[section~3.1]{barreto-libert-mccullagh-quisquater}. Notice that in this description we choose to define $P_{pub} \in \G_1$, $Q_A \in \G_2$ to avoid $\G_2$ arithmetic during verification, but an analogous description with $Q_{pub} \in \G_2$, $P_A \in \G_1$ and signed messages in $\{0, 1\}^\ast \times \Z_n^\ast \times \G_1$ would be equally secure, while keeping the signature as short as possible in practice.
+Pose-se mostrar que esse esquema é existencialmente infalsificável sob ataques de mensagens adaptativamente escolhidas (EUF-IBS-CMA abreviados) no modelo do oráculo aleatório sob a assunção do $q$-SDHP \cite[section~3.1]{barreto-libert-mccullagh-quisquater}. Perceba que nesta descrição escolhemos definir $P_{pub} \in \G_1$, $Q_A \in \G_2$ para evitar a aritmética em $\G_2$, mas uma descrição análoga com $Q_{pub} \in \G_2$, $P_A \in \G_1$ e mensagens assinadas em $\{0, 1\}^\ast \times \Z_n^\ast \times \G_1$ seria igualmente segura, enquanto mantemos a assinatura tão curta quanto possível na prática.
 
 \section{BDCPS}
 
