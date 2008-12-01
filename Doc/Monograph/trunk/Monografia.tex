@@ -190,54 +190,17 @@ Considerando o cenário atual e suas limitações, capaz de prover confidencialidad
 
 Esse objetivo deve ser alcançado sem comprometer a usabilidade do serviço.
 
-\section{Escopo}
-%Falar aqui exatamente o que o sistema faz e o que ele não faz! Falar de problemas que existem, mas que ficam fora do nosso escopo.
-O software a ser desenvolvido será designado por "Sistema de SMS Seguro".
-O objetivo do software é prover uma camada de segurança a nível de aplicação para mensagens SMS em redes de telefonia móvel. O software deverá fornecer alguns serviços básicos de segurança como confidencialidade, integridade e autenticidade das mensagens SMS, permitindo ao usuário assinar, cifrar, decifrar e verificar mensagens enviadas por SMS. As soluções adotadas no projeto envolvem criptografia de chave pública, criptografia baseada em idententidade e também esquemas auto-certificados. Tal adoção deve deve dispensar a existência de um diretório de chaves públicas, uma vez que seria necessário o uso de certificados que ocupam muita banda do abiente restrito utilizado e encarece o processo.
-
-O software será aplicável em áreas que requeiram segurança da informação que trafega nas redes de telefonia móvel. Alguns exemplos são aplicações militares, bancárias, comunicação pessoal sigilosa e comércio eletrônico. Os principais benefícios do sistema são a sua flexibilidade, podendo ser adaptado às necessidades dos clientes, e leveza, já que sua arquitetura é restrita à camada de aplicação: o software opera sobre a camada de aplicação do modelo OSI, sendo transparente à arquitetura interna da rede móvel. Essas duas qualidades tornam possível sua viabilidade em diversos cenários.
-
-%
-O Sistema de SMS Seguro não é responsável pela confiabilidade e disponibilidade de entrega das mensagens independente de sua natureza, essa função é de responsabilidade do fornecedor da aplicação que utiliza o protocolo, no caso de mensagens SMS a responsabilidade de entrega será da operadora telefônica, no caso de serviços de e-mail a responsabilidade de entrega é conferida ao servidor que fornece o serviço, etc.
-
-No caso do serviço SMS, se houver qualquer tipo de clonagem de telefone o Sistema Seguro de SMS não mais se responsabiliza pelo serviço de segurança, uma vez que o número do telefone é o identificador do usuário e não mais poderá garantir a autenticidade do emissor das mensagens produzidas pelo dispositivo clonado. Porém, a vantagem do sistema é que ele é capaz de perceber a clonagem quando uma nova mensagem é enviada a partir do telefone clonado.
-
-Uma outra característica não tratada é a irretratabilidade, ou seja, o sistema não fornece este serviço, porém pode ser feita uma pesquisa de viabilidade futura para tornar possível implemetar o serviço de irretratabilidade.
-
 \section{Metodologia}
+
 Nossa metodologia de pesquisa se divide basicamente em três vertentes. A primeira consistiu no estudo do cenário, o levantamento da necessidade de nossa solução e a especificação dos requisitos do sistema. 
+
 Posteriormente, realizamos o estudo de esquemas de criptografia de modo a buscar o que mais se adequasse aos requisitos e limitações do meio. Esse estudo incluiu a realização de testes em microcomputadores convencionais e em dispositivos móveis com pseudo-implementações de diversos esquemas com o objetivo de comparar seu desempenho em termos de necessiadades de processamento. Como veremos, nenhum esquema pesquisado atendeu a nossos requisitos, o que motivou o desenvolvimento de um novo protocolo de segurança totalmente voltado a nossas necessiades.
+
 Por último, realizamos a implementação do sistema conforme sua especificação e realizamos testes de modo a confrontar os dados obtidos em um ambiente real com as previsões feitas na fase anterior.
 
-\section{Métricas}
-
-A seguir, definimos as métricas desejadas. % e suas limitações.
-
-\begin{itemize}
-
-\item Nível de segurança: Desejamos que o nível de segurança de nosso protocolo seja equiparável ao nível de segurança do RSA usando chaves de 1024 bits, que pode ser calculado como  2 a 1024. %TODO: fix essa gambi, e citar
-
-\item Tempo de espera: Consiste nos tempos para cifrassinar e vericifrar uma mensagem. Baseando-se em aplicações já existentes e satisfazendo os requisitos de usabilidade de nosso projeto, estimamos que um intervalo de espera para processamento de uma mensagem de no máximo 5 segundos seja tolerável pelo usuário.
-
-\item Tamanho máximo de mensagens do protocolo: Consiste da soma dos bytes úteis da mensagem com os bytes de controle do algoritmo. Implementações SMS baseadas em \emph{Sun Wireless Messaging API (WMA)} podem dividir uma única mensagem em, no máximo, 3 segmentos, totalizando 399 bytes binários \cite{ortiz}. Porém para evitar problemas devido à segmentação, decidimos que as mensagens do nosso protocolo deverão caber em apenas 1 segmento, o que nos dá um tamanho de 140 bytes binários para cada mensagem do protocolo.
-
-\item Tamanho das chaves privada/pública: Devido às limitações de banda, estabeleceu-se que cada o tamanho chave usada não deverá exceder 200 bits. No entanto, essa restrição não deve comprometer o nível de segurança desejado.
-
-\item Tamanho máximo de uma mensagem de texto a ser cifrassinada e enviada: Uma mensagem cifrassinada deverá caber em uma única mensagem do protocolo, cujo tamanho máixmo foi defindo em 140 bytes. Porém nem todos os bytes poderão ser usados para a mensagem, pois existirá um overhead do protocolo, devido à cabeçalhos e dados da assinatura. Estabelecemos então um tamanho máximo de 70 bytes para uma mensagem de texto. Desta forma, ficam reservados outros 70 bytes para o overhead e a assinatura.
-
-\item Tamanho do certificado: Devido às limitações de banda, estabeleceu-se que o tamanho do certificado de uma chave não deverá exceder 512 bits. Desejamos poder transferir o certificado em um único SMS, sem comprometer o espaço necessário para o overhead do protocolo. \footnote{Mais tarde o leitor verá que optamos por um esquema que não usa certificados, ou seja, esta métrica será atendida com 0 bits de tamanho de certificado}
-
-\end{itemize}
-
-\chapter{Discussão}
-
-%TODO: aqui ta tudo igual ao paper... alterar, enriquecer!
-
-Sabendo que um certificado digital típico ocupa entre 2KB e 4KB, nota-se aqui que uma solução baseada em infra-estrutura convencional de chaves públicas inviabilizaria completamente o sistema: antes de se enviar uma mensagem SMS segura para algum usuário, seria necessário receber o certificado desse usuário particionado em 15 a 30 mensagens SMS, além de enviar em resposta outro certificado em mais 15 a 30 mensagens SMS. Esse esforço precisaria ser efetuado novamente para cada novo destinatário a quem determinado usuário desejasse enviar mensagens, ou em cada caso de renovação ou revogação de certificado. Some-se a isto o espaço ocupado por uma única assinatura convencional, tipicamente de 128 bytes por estar baseada no algoritmo RSA com 1024 bits; este \emph{overhead} seria duplicado com o requisito de cifrar e assinar a mensagem, isto é, tomaria 256 bytes do espaço disponível. 
-
-Por outro lado, a manutenção de um diretório confiável de chaves públicas, típico de sistemas de criptografia convencionais, seria impraticável em uma rede de telefonia celular.  Uma solução tecnológica baseada em alternativas à criptografia convencional é, portanto, imprescindível.
-
-Sendo assim, foi considerado o uso de criptografia em curvas elípticas com assinatura baseada em identidades, de acordo com o conceito proposto inicialmente por Shamir \cite{shamir}. Aprofundando-se na especificação, percebeu-se ainda que a chave pública do usuário poderia ser estabelecida essencialmente a partir de sua identificação única no sistema, ou seja, seu próprio número de celular. Desse modo, a criptografia em curvas elípticas baseada em identidades com emparelhamentos bilineares parecia ser capaz de atender aos requisitos do nosso aplicativo.%. e foi inicialmente adotada na solução do projeto.
+\setion{Organização}
+O restante desta monografia organiza-se como se segue. No capítulo bla vla af
+%TODO
 
 \chapter{Preliminares teóricas}% (assunto geral: curvas elípticas, emparelhamento, identidadesz protocolos, conceitos, etc)
 
@@ -307,7 +270,9 @@ Em sistemas de logaritmos discretos, um par de chaves está associado com um conj
 Uma chave privada é um inteiro x que é selecionado uniformemente de modo aleatório no intervalo $[1,q-1]$ (esta operação é denotada $x \in [1,q-1]$, e a chave pública correspondente é $y=g^{x}mod p$. O problema de determinar $x$ dados os parâmetros do domínio ($p$,$q$, $g$) e $y$ é o problema do logaritmo discreto (DLP).
 
 
-\section{Histórico das curvas elípticas}
+\section{Curvas Elípticas}
+
+\subsection{Histórico}
 O estudo das curvas elípticas, por matemáticos, data da metade do século XIX. Como conseqüência, encontramos hoje uma vasta literatura sobre o assunto. Em 1984, Hendrik Lenstra descreve um engenhoso algoritmo para fatorar inteiros que recai nas propriedades das curvas elípticas. Esta descoberta motivou os pesquisadores a investigar novas aplicações em criptografia sobre curvas elípticas e teoria dos números computacional.
 
 A criptografia de chave pública foi concebida em 1976 por Whitfield Diffie e Martin Hellman. Sua primeira construção prática se seguiu em 1977 quando Ron Rivest, Adi Shamir e Len Adleman propuseram o protocolo agora tão conhecido RSA cuja segurança é baseada na intratabilidade do problema da fatoração de inteiros. A criptografia baseada em curvas elípticas (ECC) foi descoberta em 1985 por Neal Koblitz e Victor Miller.
@@ -316,10 +281,6 @@ A criptografia de chave pública foi concebida em 1976 por Whitfield Diffie e Mar
 As vantagens obtidas com tamanhos de chaves menores são velocidade e uso eficiente de energia, largura de banda e armazenamento.
 
 Desde então, grande quantidade de pesquisas começou a ser publicada na segurança e implementação eficiente em ECC. No fim dos anos 90, sistemas sobre curvas elípticas começaram a receber aceitação comercial quando organizações de padrões respeitadas especificaram protocolos sobre curvas elípticas, e empresas privadas incluíram estes protocolos nos seus produtos de segurança. Hoje, ECC é considerado o estado-da-arte em criptografia de chave pública.
-
-
-
-\section{Curvas Elítpticas}
 
 Os sistemas baseados em logaritmos discretos apresentados anteriormente podem ser descritos na configuração de um grupo cíclico finito. A definição de grupos segue abaixo.
 
@@ -386,16 +347,178 @@ Uma mensagem m é primeiramente representada como um ponto $M$, e então encriptad
 
 
 
+\section{Criptografia baseada em identidades e sistemas isentos de certificados}
+%TODO arrumar
+Shamir introduced the notion of identity-based (IB) cryptography~\cite{shamir} in an attempt to mitigate the burden of a PKI. In an IB cryptosystem, private keys are not chosen by the users but rather issued by a trusted authority called the Key Generation Bureau (KGB) or Trust Authority (TA), and public keys are replaced by arbitrary strings representing users' identities, avoiding the need for certificates altogether. On the other hand, it has the drawback of implicitly establishing a key escrow mechanism, since the KGB has the ability to recover confidential information from any user.
 
+The concept of certificateless (CL) cryptosystems \cite{al-riyami-paterson} was introduced to address the key escrow issue while avoiding the use of certificates and the need for a public-key infrastructure. The usual principle behind a CL scheme is to partition private keys into two components: an identity-based partial key (known to the KGB and thus otherwise subject to escrow) and one conventional albeit non-certified partial key (unknown to the KGB). This technique potentially combines the best features of identity-based and certificate-based cryptography, and indeed a number of certificateless encryption schemes derived from identity-based encryption algorithms have been successfully constructed and proven secure under certain assumptions. On the other hand, certificateless signatures remain much trickier to define and analyze, and as a consequence constructing certificateless signcryption schemes has been an elusive task only recently solved, though the only known such protocol can be hardly considered efficient. A signcryption scheme \cite{zheng} is an integrated method to encrypt and sign a message in a more efficient way than to apply separately an encryption scheme and a signature scheme. The efficiency improvement may reside in the processing time, bandwidth occupation, key management, or any combination thereof; it may be simply a robust way to combine the two primitives so as to avoid deleterious interactions.
 
 \section{Emparelhamentos Bilineares}
-%Dar uma introdução do que é emparalhamento, apresentar os emparelhamentos ATE e ETA
-\section{Criptografia baseada em identidades}
-%Explicar o que é isso para um leitor leigo
-\section{Alternativas existentes}% (RSA, coisas mobile)
-%Não sei o que escrever aqui... sacrificar???
-\section{Revisão literatura} %????
-%Hein? Que isso? Sacrificar talvez...
+%TODO arrumar
+Identity-based cryptography became feasible when instantiated with the help of bilinear maps, or \emph{pairings} for short~\cite{sakai-ohgishi-kasahara,boneh-franklin}, and has since attracted widespread attention due to its unusual properties. Pairings are formally defined as follows. Let $k$ be a security parameter and $n$ be a $k$-bit prime number. Consider groups $\G_1$, $\G_2$ and $\G_T$ of order $n$. We say that $(\G_1,\G_2,\G_T)$ are pairing groups if there exists a bilinear map (i.e. a pairing) $e: \G_1 \times \G_2 \rightarrow \G_T$ satisfying the following properties:
+\begin{enumerate}
+\item Bilinearity: $\forall (S,T) \in \G_1 \times \G_2$, $\forall a,b \in \Z_n$, $e(aS, bT) = e(S,T)^{ab}$.
+\item Non-degeneracy: $\forall S \in \G_1$, $e(S,T)=1$ for all $T \in \G_2$ iff $S=\mathcal{O}_{\G_1}$.
+\item Computability: $\forall (S,T) \in \G_1 \times \G_2$, $e(S,T)$ is efficiently computable.
+\end{enumerate}
+
+\section{BLMQ}
+%TODO arrumar
+Nesta seção apresentamos características básicas e definições do BLMQ \cite{barreto-libert-mccullagh-quisquater}, um esquema de criptografia baseado em identidades. O esquema é composto pelos seguintes algoritmos:
+
+\begin{itemize}
+
+\item \textbf{Setup:} dado um parâmetro de segurança $k$, this algorithm chooses a $k$-bit prime number $n$, bilinear map groups $(\G_1,\G_2,\G_T)$ of order $n$ supporting an efficiently computable, non-degenerate pairing $e: \G_1 \times \G_2 \rightarrow \G_T$, generators $P \in \G_1$, $Q \in \G_2$ and hash functions
+$h_0: \G_T \times \{0, 1\}^\ast \rightarrow \Z_n^\ast$,
+$h_1: \{0, 1\}^\ast \rightarrow \Z_n^\ast$.
+A master key $s \samples \Z_n^\ast$ is also chosen, to which the public key $P_{pub} = sP \in \G_1$ is associated. The generator $g = e(P, Q) \in \G_T$ is also included among the public parameters which are $\texttt{params} = (k, n, \G_1, \G_2, \G_T, P, Q, g, P_{pub}, e, h_0, h_1)$.
+
+\item \textbf{Private-Key-Extract:} takes as input entity $A$'s identifier $\ID_A \in \{0, 1\}^\ast$ and extracts $A$'s identity-based private key $Q_A \gets (h_1(\ID_A) + s)^{-1}Q \in \G_2$. Entity $A$ can verify the consistency of this key by checking that $e(h_1(\ID_A) P + P_{pub}, Q_A) = g$. This setting is called the Sakai-Kasahara key style~\cite{sakai-kasahara}.
+
+\item \textbf{Sign:} to sign $m \in \{0, 1\}^\ast$ under the private key $P_A$, the signer picks $u \samples \Z_n^\ast$ and computes
+\begin{enumerate}
+\item $r \gets g^u$
+\item $h \gets h_0(r, m)$
+\item $S \gets (u - h) Q_A$
+\end{enumerate}
+The signed message is the triple $(m, h, S) \in \{0, 1\}^\ast \times \Z_n^\ast \times \G_2$.
+
+\item \textbf{Verify:} given an identity $\ID_A$, upon reception of $(m, h, S)$ the verifier computes
+\begin{enumerate}
+\item $r \gets e(h_1(\ID_A) P + P_{pub}) g^h$
+\item $v \gets h_0(r, m)$
+\end{enumerate}
+The verifier accepts the signed message iff $v = h$.
+
+\end{itemize}
+
+This scheme can be shown to be existentially unforgeable under adaptively chosen message attacks (EUF-IBS-CMA for short) in the random oracle model under the $q$-SDHP assumption \cite[section~3.1]{barreto-libert-mccullagh-quisquater}. Notice that in this description we choose to define $P_{pub} \in \G_1$, $Q_A \in \G_2$ to avoid $\G_2$ arithmetic during verification, but an analogous description with $Q_{pub} \in \G_2$, $P_A \in \G_1$ and signed messages in $\{0, 1\}^\ast \times \Z_n^\ast \times \G_1$ would be equally secure, while keeping the signature as short as possible in practice.
+
+\section{BDCPS}
+
+O protocolo de segurança BDCPS \cite{bdcps} integra as assinaturas baseadas em identidades do BLMQ, assinaturas de Schnorr \cite{schnorr} e cifrassinatura de Zheng \cite{zheng} em um esquema isento de certificados conforme proposto por \cite{al-riyami-paterson}. Este protocolo foi criado para atender às necessiades deste projeto.
+
+O protocolo é composto pelos seguintes algoritmos:
+\begin{itemize}
+
+\item \textbf{Setup:} Algoritmo gerador do conjunto dos parâmetros públicos necessários. 
+O algoritmo escolhe um parâmetro de segurança $k$ e define:
+
+$n:$  Um inteiro primo de k bits. 
+
+$(\G_1,\G_2,\G_T)$ Grupos de mapeamento bilinear de ordem $n$  
+
+$e: \G_1 \times \G_2 \rightarrow \G_T$: Emparelhamento eficientemente computável e não-degradado.
+
+$P \in \G_1$, $Q \in \G_2$: Os pontos geradores dos grupos $\G_1$ e $\G_2$ respectivamente.
+
+Resumos criptográficos \emph{(hashes)} 
+
+$h_0: \G_T^2 \times \{0, 1\}^\ast \rightarrow \Z_n^\ast$,
+
+$h_1: \G_T \times \{0, 1\}^\ast \rightarrow \Z_n^\ast$, % id hash
+
+$h_2: \G_T \rightarrow \{0, 1\}^\ast$, % msg encryption hash
+
+$h_3: (\G_T \times \{0, 1\}^\ast)^3 \rightarrow \Z_n^\ast$. % msg auth hash
+
+Uma chave mestra $s \stackrel{R}{\gets} \Z_n^\ast$ também é escolhida, à qual a chave pública 
+$P_{pub} = sP \in \G_1$ é associada. 
+
+O gerador $g = e(P, Q) \in \G_T$ também é incluso entre os parâmetros públicos do sistema, $\texttt{params} = (k, n, \G_1, \G_2, \G_T, e, P, Q, g, P_{pub}, h_0, h_1, h_2, h_3)$.
+
+
+\item \textbf{Set-Secret-Value:} dados $\texttt{params}$, o algoritmo toma $x_A \stackrel{R}{\gets} \Z_n^\ast$ como o valor secreto da identidade $A$. O usuário $A$ pode definir $x_A$, sua chave parcial privada, independente do algoritmo e, neste caso, será usada como uma senha comum.
+
+\item \textbf{Set-Public-Value:} dado o valor secreto $x_A \in \Z_n^\ast$ da identidade $A$, computa $y_A \gets g^{x_A} \in \G_T$ como o valor público de $A$.
+
+\item \textbf{Private-Key-Extract:} Obtém $\ID_A \in \{0, 1\}^\ast$, o identificador de $A$  e  o valor público $y_A \in \G_T$, e calcula a chave privada baseada em identidade de $A$, $Q_A \gets (h_1(y_A, \ID_A) + s)^{-1}Q \in \G_2$. A entidade $A$ consegue verificar a consistência desta chave checando se $e(h_1(y_A, \ID_A)P + P_{pub}, Q_A) = g$. Esta configuração é denominada estilo de chave Sakai-Kasahara ~\cite{sakai-kasahara}.
+
+\item \textbf{Set-Private-Key:} dada a chave privada parcial da entidade $A$, $Q_A \in \G_2$ e o valor secreto $x_A \in \Z_n^\ast$, este algoritmo estabelece o par $(x_A, Q_A) \in \Z_n^\ast \times \G_2$ como o par completo da chave privada de $A$.
+
+\item \textbf{Set-Public-Key:} dada a chave privada parcial de $A$, $Q_A \in \G_2$, o valor secreto $x_A \in \Z_n^\ast$, e o correspondente valor público $y_A \in \G_T$, o assinante toma $u_A \stackrel{R}{\gets} \Z_n^\ast$ e calcula
+\begin{enumerate}
+\item $r_A \gets g^{u_A}$
+\item $h_A \gets h_0(r_A, y_A, \ID_A)$
+\item $T_A \gets (u_A - x_A h_A) Q_A$
+\end{enumerate}
+A chave pública completa da entidade $A$ é a tripla $(y_A, h_A, T_A) \in \G_T \times \Z_n^\ast \times \G_2$. Este configuração é uma combinação da assinatura de Schnorr (sob a chave $x_A$) com a assinatura BLMQ (sob a chave $Q_A$) no valor público $y_A$ e a identidade $\ID_A$. 
+% Na dúvida, comentei isso. Seria melhor se tivéssemos referências (de FAPIP, DLP)
+% O difícil problema da falsificação de tal assinatura é o FAPIP em vez do DLP como em Schnorr; em outras palavras, ele consiste em calcular $Q_A' := x_A Q_A$ dados $y_A := g^{x_A}$ e $P_A' := h_1(y_A, \ID_A)P + P_{pub}$. Perceba-se que é fácil calcular $y_A$ dados $Q_A'$ e $P_A'$, uma vez que equivale a calcular $e(P_A', Q_A')$ (e verificando que $P_A' = h_1(e(P_A', Q_A'), \ID_A)P + P_{pub}$).
+
+\item \textbf{Public-Key-Validate:} dada a chave pública completa da entidade $A$, $(y_A, h_A, T_A)$, este algoritmo verifica que $y_A$ tem ordem $n$ (i.e. que $y_A \neq 1$ mas $y_A^n = 1$) e calcula
+\begin{enumerate}
+\item $r_A \gets e(h_1(y_A, \ID_A)P + P_{pub}, T_A) y_A^{h_A}$
+\item $v_A \gets h_0(r_A, y_A, \ID_A)$
+\end{enumerate}
+O verificador aceita a mensagem se, e somente se $v_A = h_A$. O processo de validação combina a verificação da assinatura Schnorr com a verificação da assinatura BLMQ.
+
+\item \textbf{Signcrypt:} Para encriptar $m \in \{0, 1\}^\ast$ sob a chave pública do receptor $y_B \in \G_T$ previamente validade para a identidade $\ID_B$ e $P_{pub}$, e a chave privada do emissor $x_A \in \Z_n^\ast$, chave pública $y_A \in \G_T$ e a identidade $\ID_A$, o emissor toma $u \stackrel{R}{\gets} \Z_n^\ast$ e calcula
+\begin{enumerate}
+\item $r \gets y_B^u$
+\item $c \gets h_2(r) \oplus m$
+\item $h \gets h_3(r, m, y_A, \ID_A, y_B, \ID_B)$ \label{eq:auth}
+\item $z \gets u - x_A h$ \label{eq:sign}
+\end{enumerate}
+O criptograma de assinatura é a tripla $(c, h, z) \in \{0, 1\}^\ast \times \Z_n^2$. Comparado ao método de cifrassinatura de Zheng, as identidades de ambos o emissor e o destinatário são inclusas na equação de autenticação~\ref{eq:auth}, e a equação de assinatura~\ref{eq:sign} segue o estilo Schnorr em vez do dedicado, porém levemente mais complicado(devido à presença da inversão de campos), estilo Zheng, similar ao DSA \cite{nist-fips-186-2}.
+
+\item \textbf{Unsigncrypt:} dada a chave pública do emissor $y_A \in \G_T$ previamente validade para a identidade $\ID_A$ e $P_{pub}$, e a chave privada do receptor $x_B \in \Z_n^\ast$, a chave pública $y_B \in \G_T$ e a identidade $\ID_B$, sob a recepção da tripla $(c, h, z)$ o receptor verifica se $h, z \in \Z_n^\ast$ e calcula
+\begin{enumerate}
+\item $r \gets y_A^{h x_B} y_B^z$ \label{eq:nonce-rec}
+\item $m \gets h_2(r) \oplus c$
+\item $v \gets h_3(r, m, y_A, \ID_A, y_B, \ID_B)$
+\end{enumerate}
+O receptor aceita a mensagem se, e somente se, $v = h$. A equação \ref{eq:nonce-rec} é levemente mais simples que seu correlato em Zheng devido ao estilo Schnorr adotado para a cifrassinatura.
+
+\end{itemize}
+
+\chapter{Discussão}
+
+%TODO destacar os desafios tecnológicos que precisaram ser enfrentados e a originalidade da solução.
+
+\section{Escopo}
+%Falar aqui exatamente o que o sistema faz e o que ele não faz! Falar de problemas que existem, mas que ficam fora do nosso escopo.
+O software a ser desenvolvido será designado por "Sistema de SMS Seguro".
+O objetivo do software é prover uma camada de segurança a nível de aplicação para mensagens SMS em redes de telefonia móvel. O software deverá fornecer alguns serviços básicos de segurança como confidencialidade, integridade e autenticidade das mensagens SMS, permitindo ao usuário assinar, cifrar, decifrar e verificar mensagens enviadas por SMS. As soluções adotadas no projeto envolvem criptografia de chave pública, criptografia baseada em idententidade e também esquemas auto-certificados. Tal adoção deve deve dispensar a existência de um diretório de chaves públicas, uma vez que seria necessário o uso de certificados que ocupam muita banda do abiente restrito utilizado e encarece o processo.
+
+O software será aplicável em áreas que requeiram segurança da informação que trafega nas redes de telefonia móvel. Alguns exemplos são aplicações militares, bancárias, comunicação pessoal sigilosa e comércio eletrônico. Os principais benefícios do sistema são a sua flexibilidade, podendo ser adaptado às necessidades dos clientes, e leveza, já que sua arquitetura é restrita à camada de aplicação: o software opera sobre a camada de aplicação do modelo OSI, sendo transparente à arquitetura interna da rede móvel. Essas duas qualidades tornam possível sua viabilidade em diversos cenários.
+
+%
+O Sistema de SMS Seguro não é responsável pela confiabilidade e disponibilidade de entrega das mensagens independente de sua natureza, essa função é de responsabilidade do fornecedor da aplicação que utiliza o protocolo, no caso de mensagens SMS a responsabilidade de entrega será da operadora telefônica, no caso de serviços de e-mail a responsabilidade de entrega é conferida ao servidor que fornece o serviço, etc.
+
+No caso do serviço SMS, se houver qualquer tipo de clonagem de telefone o Sistema Seguro de SMS não mais se responsabiliza pelo serviço de segurança, uma vez que o número do telefone é o identificador do usuário e não mais poderá garantir a autenticidade do emissor das mensagens produzidas pelo dispositivo clonado. Porém, a vantagem do sistema é que ele é capaz de perceber a clonagem quando uma nova mensagem é enviada a partir do telefone clonado.
+
+Uma outra característica não tratada é a irretratabilidade, ou seja, o sistema não fornece este serviço, porém pode ser feita uma pesquisa de viabilidade futura para tornar possível implemetar o serviço de irretratabilidade.
+
+\section{Métricas}
+
+A seguir, definimos as métricas desejadas. % e suas limitações.
+
+\begin{itemize}
+
+\item Nível de segurança: Desejamos que o nível de segurança de nosso protocolo seja equiparável ao nível de segurança do RSA usando chaves de 1024 bits, que pode ser calculado como  2 a 1024. %TODO: fix essa gambi, e citar
+
+\item Tempo de espera: Consiste nos tempos para cifrassinar e vericifrar uma mensagem. Baseando-se em aplicações já existentes e satisfazendo os requisitos de usabilidade de nosso projeto, estimamos que um intervalo de espera para processamento de uma mensagem de no máximo 5 segundos seja tolerável pelo usuário.
+
+\item Tamanho máximo de mensagens do protocolo: Consiste da soma dos bytes úteis da mensagem com os bytes de controle do algoritmo. Implementações SMS baseadas em \emph{Sun Wireless Messaging API (WMA)} podem dividir uma única mensagem em, no máximo, 3 segmentos, totalizando 399 bytes binários \cite{ortiz}. Porém para evitar problemas devido à segmentação, decidimos que as mensagens do nosso protocolo deverão caber em apenas 1 segmento, o que nos dá um tamanho de 140 bytes binários para cada mensagem do protocolo.
+
+\item Tamanho das chaves privada/pública: Devido às limitações de banda, estabeleceu-se que cada o tamanho chave usada não deverá exceder 200 bits. No entanto, essa restrição não deve comprometer o nível de segurança desejado.
+
+\item Tamanho máximo de uma mensagem de texto a ser cifrassinada e enviada: Uma mensagem cifrassinada deverá caber em uma única mensagem do protocolo, cujo tamanho máixmo foi defindo em 140 bytes. Porém nem todos os bytes poderão ser usados para a mensagem, pois existirá um overhead do protocolo, devido à cabeçalhos e dados da assinatura. Estabelecemos então um tamanho máximo de 70 bytes para uma mensagem de texto. Desta forma, ficam reservados outros 70 bytes para o overhead e a assinatura.
+
+\item Tamanho do certificado: Devido às limitações de banda, estabeleceu-se que o tamanho do certificado de uma chave não deverá exceder 512 bits. Desejamos poder transferir o certificado em um único SMS, sem comprometer o espaço necessário para o overhead do protocolo. \footnote{Mais tarde o leitor verá que optamos por um esquema que não usa certificados, ou seja, esta métrica será atendida com 0 bits de tamanho de certificado}
+
+\end{itemize}
+
+%TODO: aqui ta tudo igual ao paper... alterar, enriquecer!
+
+Sabendo que um certificado digital típico ocupa entre 2KB e 4KB, nota-se aqui que uma solução baseada em infra-estrutura convencional de chaves públicas inviabilizaria completamente o sistema: antes de se enviar uma mensagem SMS segura para algum usuário, seria necessário receber o certificado desse usuário particionado em 15 a 30 mensagens SMS, além de enviar em resposta outro certificado em mais 15 a 30 mensagens SMS. Esse esforço precisaria ser efetuado novamente para cada novo destinatário a quem determinado usuário desejasse enviar mensagens, ou em cada caso de renovação ou revogação de certificado. Some-se a isto o espaço ocupado por uma única assinatura convencional, tipicamente de 128 bytes por estar baseada no algoritmo RSA com 1024 bits; este \emph{overhead} seria duplicado com o requisito de cifrar e assinar a mensagem, isto é, tomaria 256 bytes do espaço disponível. 
+
+Por outro lado, a manutenção de um diretório confiável de chaves públicas, típico de sistemas de criptografia convencionais, seria impraticável em uma rede de telefonia celular.  Uma solução tecnológica baseada em alternativas à criptografia convencional é, portanto, imprescindível.
+
+Sendo assim, foi considerado o uso de criptografia em curvas elípticas com assinatura baseada em identidades, de acordo com o conceito proposto inicialmente por Shamir \cite{shamir}. Aprofundando-se na especificação, percebeu-se ainda que a chave pública do usuário poderia ser estabelecida essencialmente a partir de sua identificação única no sistema, ou seja, seu próprio número de celular. Desse modo, a criptografia em curvas elípticas baseada em identidades com emparelhamentos bilineares parecia ser capaz de atender aos requisitos do nosso aplicativo.%. e foi inicialmente adotada na solução do projeto.
+
+
 
 \chapter{Análise de requisitos do sistema}
 
@@ -665,82 +788,6 @@ O esquema proposto integra esquemas preexistentes como as assinaturas BLMQ e Sch
 Por criptografia convencional entende-se o fato de o usuário poder escolher seu par de chaves não certificado, ou seja, ele escolhe apropriadamente uma chave privada e gera sua chave pública a partir dela. Desse modo, somente o usuário gerador de seu par de chaves convencional conhece sua chave privada, e este fato elimina a possibilidade de "Key Escrow", que é o comprometimento da chave e conseqüentemente das mensagens com ela encriptadas. 
 O par de chaves não certificado é combinado com a solução de criptografia baseada em identidades para que seja posteriormente validado por outro usuário do sistema.
 
-\subsection{Definições}
-%Definir o algoritmo
-O novo esquema consiste dos seguintes algoritmos: 
-
-\begin{itemize}
-
-\item \textbf{Setup:} Algoritmo gerador do conjunto dos parâmetros públicos necessários. 
-O algoritmo escolhe um parâmetro de segurança $k$ e define:
-
-$n:$  Um inteiro primo de k bits. 
-
-$(\G_1,\G_2,\G_T)$ Grupos de mapeamento bilinear de ordem $n$  
-
-$e: \G_1 \times \G_2 \rightarrow \G_T$: Emparelhamento eficientemente computável e não-degradado.
-
-$P \in \G_1$, $Q \in \G_2$: Os pontos geradores dos grupos $\G_1$ e $\G_2$ respectivamente.
-
-Resumos criptográficos \emph{(hashes)} 
-
-$h_0: \G_T^2 \times \{0, 1\}^\ast \rightarrow \Z_n^\ast$,
-
-$h_1: \G_T \times \{0, 1\}^\ast \rightarrow \Z_n^\ast$, % id hash
-
-$h_2: \G_T \rightarrow \{0, 1\}^\ast$, % msg encryption hash
-
-$h_3: (\G_T \times \{0, 1\}^\ast)^3 \rightarrow \Z_n^\ast$. % msg auth hash
-
-Uma chave mestra $s \stackrel{R}{\gets} \Z_n^\ast$ também é escolhida, à qual a chave pública 
-$P_{pub} = sP \in \G_1$ é associada. 
-
-O gerador $g = e(P, Q) \in \G_T$ também é incluso entre os parâmetros públicos do sistema, $\texttt{params} = (k, n, \G_1, \G_2, \G_T, e, P, Q, g, P_{pub}, h_0, h_1, h_2, h_3)$.
-
-
-\item \textbf{Set-Secret-Value:} dados $\texttt{params}$, o algoritmo toma $x_A \stackrel{R}{\gets} \Z_n^\ast$ como o valor secreto da identidade $A$. O usuário $A$ pode definir $x_A$, sua chave parcial privada, independente do algoritmo e, neste caso, será usada como uma senha comum.
-
-\item \textbf{Set-Public-Value:} dado o valor secreto $x_A \in \Z_n^\ast$ da identidade $A$, computa $y_A \gets g^{x_A} \in \G_T$ como o valor público de $A$.
-
-\item \textbf{Private-Key-Extract:} Obtém $\ID_A \in \{0, 1\}^\ast$, o identificador de $A$  e  o valor público $y_A \in \G_T$, e calcula a chave privada baseada em identidade de $A$, $Q_A \gets (h_1(y_A, \ID_A) + s)^{-1}Q \in \G_2$. A entidade $A$ consegue verificar a consistência desta chave checando se $e(h_1(y_A, \ID_A)P + P_{pub}, Q_A) = g$. Esta configuração é denominada estilo de chave Sakai-Kasahara ~\cite{sakai-kasahara}.
-
-\item \textbf{Set-Private-Key:} dada a chave privada parcial da entidade $A$, $Q_A \in \G_2$ e o valor secreto $x_A \in \Z_n^\ast$, este algoritmo estabelece o par $(x_A, Q_A) \in \Z_n^\ast \times \G_2$ como o par completo da chave privada de $A$.
-
-\item \textbf{Set-Public-Key:} dada a chave privada parcial de $A$, $Q_A \in \G_2$, o valor secreto $x_A \in \Z_n^\ast$, e o correspondente valor público $y_A \in \G_T$, o assinante toma $u_A \stackrel{R}{\gets} \Z_n^\ast$ e calcula
-\begin{enumerate}
-\item $r_A \gets g^{u_A}$
-\item $h_A \gets h_0(r_A, y_A, \ID_A)$
-\item $T_A \gets (u_A - x_A h_A) Q_A$
-\end{enumerate}
-A chave pública completa da entidade $A$ é a tripla $(y_A, h_A, T_A) \in \G_T \times \Z_n^\ast \times \G_2$. Este configuração é uma combinação da assinatura de Schnorr (sob a chave $x_A$) com a assinatura BLMQ (sob a chave $Q_A$) no valor público $y_A$ e a identidade $\ID_A$. 
-% Na dúvida, comentei isso. Seria melhor se tivéssemos referências (de FAPIP, DLP)
-% O difícil problema da falsificação de tal assinatura é o FAPIP em vez do DLP como em Schnorr; em outras palavras, ele consiste em calcular $Q_A' := x_A Q_A$ dados $y_A := g^{x_A}$ e $P_A' := h_1(y_A, \ID_A)P + P_{pub}$. Perceba-se que é fácil calcular $y_A$ dados $Q_A'$ e $P_A'$, uma vez que equivale a calcular $e(P_A', Q_A')$ (e verificando que $P_A' = h_1(e(P_A', Q_A'), \ID_A)P + P_{pub}$).
-
-\item \textbf{Public-Key-Validate:} dada a chave pública completa da entidade $A$, $(y_A, h_A, T_A)$, este algoritmo verifica que $y_A$ tem ordem $n$ (i.e. que $y_A \neq 1$ mas $y_A^n = 1$) e calcula
-\begin{enumerate}
-\item $r_A \gets e(h_1(y_A, \ID_A)P + P_{pub}, T_A) y_A^{h_A}$
-\item $v_A \gets h_0(r_A, y_A, \ID_A)$
-\end{enumerate}
-O verificador aceita a mensagem se, e somente se $v_A = h_A$. O processo de validação combina a verificação da assinatura Schnorr com a verificação da assinatura BLMQ.
-
-\item \textbf{Signcrypt:} Para encriptar $m \in \{0, 1\}^\ast$ sob a chave pública do receptor $y_B \in \G_T$ previamente validade para a identidade $\ID_B$ e $P_{pub}$, e a chave privada do emissor $x_A \in \Z_n^\ast$, chave pública $y_A \in \G_T$ e a identidade $\ID_A$, o emissor toma $u \stackrel{R}{\gets} \Z_n^\ast$ e calcula
-\begin{enumerate}
-\item $r \gets y_B^u$
-\item $c \gets h_2(r) \oplus m$
-\item $h \gets h_3(r, m, y_A, \ID_A, y_B, \ID_B)$ \label{eq:auth}
-\item $z \gets u - x_A h$ \label{eq:sign}
-\end{enumerate}
-O criptograma de assinatura é a tripla $(c, h, z) \in \{0, 1\}^\ast \times \Z_n^2$. Comparado ao método de cifrassinatura de Zheng, as identidades de ambos o emissor e o destinatário são inclusas na equação de autenticação~\ref{eq:auth}, e a equação de assinatura~\ref{eq:sign} segue o estilo Schnorr em vez do dedicado, porém levemente mais complicado(devido à presença da inversão de campos), estilo Zheng, similar ao DSA \cite{nist-fips-186-2}.
-
-\item \textbf{Unsigncrypt:} dada a chave pública do emissor $y_A \in \G_T$ previamente validade para a identidade $\ID_A$ e $P_{pub}$, e a chave privada do receptor $x_B \in \Z_n^\ast$, a chave pública $y_B \in \G_T$ e a identidade $\ID_B$, sob a recepção da tripla $(c, h, z)$ o receptor verifica se $h, z \in \Z_n^\ast$ e calcula
-\begin{enumerate}
-\item $r \gets y_A^{h x_B} y_B^z$ \label{eq:nonce-rec}
-\item $m \gets h_2(r) \oplus c$
-\item $v \gets h_3(r, m, y_A, \ID_A, y_B, \ID_B)$
-\end{enumerate}
-O receptor aceita a mensagem se, e somente se, $v = h$. A equação \ref{eq:nonce-rec} é levemente mais simples que seu correlato em Zheng devido ao estilo Schnorr adotado para a cifrassinatura.
-
-\end{itemize}
 
 %Como uma observação, notamos que o mecanismo de validação da chave pública(algoritmos \textbf{Set-Public-Key} e \textbf{Public-Key-Validate}), pela sua combinação de assinaturas convencionais Schnorr e assinaturas baseadas em identidade BLMQ, constitui-se de um esquema de assinatura sem certificado e portanto tem interesse independente.
 
