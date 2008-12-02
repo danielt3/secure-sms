@@ -218,8 +218,8 @@ Na figura \ref{fig:Canal_Inseguro}, as entidades $A$ (Alice) e $B$ (Bob) estão s
 
 Por exemplo, $A$ e $B$ poderiam ser 2 pessoas comunicando-se sobre uma rede de telefonia celular, e $E$ está tentando interceptar a comunicação. 
 
-Ou, $\sim A$ poderia ser um \emph{web browser} de um indivíduo $A$ que está em processo de compra de um produto de uma loja \emph{on-line} $\sim B$ representada por seu \emph{site} $B$. Neste cenário, o canal de comunicações é a \emph{Internet}. Um agressor $E$ poderia tentar ler o tráfego entre $A$ e $B$, portanto saber a informação sobre o cartão de crédito de $A$, ou poderia tentar personificar $A$ ou $B$ na transação. 
-Como um terceiro exemplo, considere a situação onde $A$ está enviando uma mensagem via \emph{e-mail} para $B$ sobre a Internet. Um agressor $E$ poderia tentar ler a mensagem, modificar pedaços selecionados, ou personificar $A$ enviando mensagens dela mesma para $B$. Finalmente, considere o cenário onde $A$ é um smart card que está em processo de autenticar seu possuidor $\sim A$ em um computador \emph{mainframe} $B$ em uma sala protegida do banco. Aqui, $E$ poderia tentar monitorar as comunicações para obter informações sobre a conta de $\sim A$ , ou poderia tentar personificar $\sim A$ para sacar fundos da conta de $\sim A$. Deveria ser evidente destes exemplos que uma entidade se comunicando não é necessariamente um humano, mas pode ser um computador, \emph{smart card}, ou um módulo de software agindo no lugar de um indivíduo ou uma organização tal como uma loja ou um banco.
+Ou, $\tilde{A}$ poderia ser um \emph{web browser} de um indivíduo $A$ que está em processo de compra de um produto de uma loja \emph{on-line} $\tilde{B}$ representada por seu \emph{site} $B$. Neste cenário, o canal de comunicações é a \emph{Internet}. Um agressor $E$ poderia tentar ler o tráfego entre $A$ e $B$, portanto saber a informação sobre o cartão de crédito de $A$, ou poderia tentar personificar $A$ ou $B$ na transação. 
+Como um terceiro exemplo, considere a situação onde $A$ está enviando uma mensagem via \emph{e-mail} para $B$ sobre a Internet. Um agressor $E$ poderia tentar ler a mensagem, modificar pedaços selecionados, ou personificar $A$ enviando mensagens dela mesma para $B$. Finalmente, considere o cenário onde $A$ é um smart card que está em processo de autenticar seu possuidor $\tilde{A}$ em um computador \emph{mainframe} $B$ em uma sala protegida do banco. Aqui, $E$ poderia tentar monitorar as comunicações para obter informações sobre a conta de $\tilde{A}$ , ou poderia tentar personificar $\tilde{A}$ para sacar fundos da conta de $\tilde{A}$. Deveria ser evidente destes exemplos que uma entidade se comunicando não é necessariamente um humano, mas pode ser um computador, \emph{smart card}, ou um módulo de software agindo no lugar de um indivíduo ou uma organização tal como uma loja ou um banco.\cite{menezes}
 
 \section{Objetivos}
 
@@ -270,7 +270,7 @@ Por exemplo, se confidencialidade fosse desejada e a chave secreta compartilhada
 
 A principal vantagem da criptografia de chave simétrica é a alta eficiência. Contudo, há significantes desvantagens nestes sistemas. Uma delas é o conhecido problema da distribuição de chaves - a necessidade de um canal que seja secreto e autenticado para a distribuição das chaves. Em algumas aplicações, esta distribuição pode ser convenientemente feita por usar um canal fisicamente seguro, tal como um emissário de confiança. Outra maneira é usar os serviços de uma terceira parte confiável \emph{on-line} que inicialmente estabelece chaves secretas com todas as entidades na rede. Essa entidade usa essas chaves para distribuir as informações de chaves para as entidades em comunicação quando requerido\footnote{Este modo de usar uma terceira parte centralizada para distribuir chaves para algoritmos de chave simétrica às partes conforme elas necessitarem é usado pelo protocolo de autenticação da rede \emph{Kerberos} para aplicações cliente/servidor.}. Soluções como esta podem ser bem apropriadas para ambientes onde há uma autoridade central aceitável e confiável, mas é claramente impraticável em aplicações tal como \emph{e-mail} na \emph{Internet}.
 
-Uma segunda desvantagem é o problema de administração de chaves. Em uma rede de $N$ entidades, cada entidade pode ter que manter diferentes informações de chaves com cada uma das $N-1$ entidades. Logo, seriam necessárias $N(N-1)/2$ chaves privadas em toda a rede, o que inviabiliza a administração ao passo que $N$ se torna grande. Este problema pode ser aliviado usando serviços de uma terceira parte \emph{on-line} que distribui as chaves conforme sãs requeridas, assim reduzindo a necessidade das entidades de armazenar múltiplas chaves seguramente. Novamente, contudo, tais soluções não são práticas em alguns cenários. Finalmente, uma vez que a informação sobre as chaves é compartilhada entre duas (ou mais) entidades, técnicas de chave simétrica não podem ser usadas para implementar esquemas de assinatura digital (DSS) elegantes que forneçam serviços de irretratabilidade. Isto porque é impossível distinguir entre as ações tomadas por diferentes detentores de uma chave secreta\footnote{Esquemas de assinaturas digitais podem ser implementados usando técnicas de chave simétrica; contudo, estes esquemas geralmente são geralmente impraticáveis quando for requerido o uso de uma terceira parte confiável on-line ou de novas chaves para cada assinatura.}.
+Uma segunda desvantagem é o problema de administração de chaves. Em uma rede de $N$ entidades, cada entidade pode ter que manter diferentes informações de chaves com cada uma das $N-1$ entidades. Logo, seriam necessárias $N(N-1)/2$ chaves privadas em toda a rede, o que inviabiliza a administração ao passo que $N$ se torna grande. Este problema pode ser aliviado usando serviços de uma terceira parte \emph{on-line} que distribui as chaves conforme sãs requeridas, assim reduzindo a necessidade das entidades de armazenar múltiplas chaves seguramente. Novamente, contudo, tais soluções não são práticas em alguns cenários. Finalmente, uma vez que a informação sobre as chaves é compartilhada entre duas (ou mais) entidades, técnicas de chave simétrica não podem ser usadas para implementar esquemas de assinatura digital (DSS) elegantes que forneçam serviços de irretratabilidade. Isto porque é impossível distinguir entre as ações tomadas por diferentes detentores de uma chave secreta\footnote{Esquemas de assinaturas digitais podem ser implementados usando técnicas de chave simétrica; contudo, estes esquemas geralmente são geralmente impraticáveis quando for requerido o uso de uma terceira parte confiável on-line ou de novas chaves para cada assinatura.}.\cite{menezes}
 
 \section{Criptografia de chave pública}
 
@@ -283,7 +283,7 @@ Se a entidade $A$ deseja enviar uma mensagem confidencial $m$ para uma entidade 
 
 \subsection{Irretratabilidade}
 
-Esquemas de assinatura digital podem ser desenvolvidos para autenticação da origem e integridade dos dados, e para facilitar o fornecimento de serviços de irretratabilidade. Uma entidade $A$ usaria o algoritmo de geração de assinatura $SIGN$ de um esquema de assinatura digital e sua chave privada $d_{A}$ para computar a assinatura da mensagem: $s = SIGN_{d_{A}}(m)$. Ao receber $m$ e $s$, uma entidade $B$ que tem uma cópia autentica da chave pública de $A$ $e_{A}$ usa um algoritmo de assinatura de verificação para confirmar que $s$ foi de fato gerado a partir de $m$ e $d_{A}$. Uma vez que $d_{A}$ é presumivelmente conhecido por $A$, $B$ está seguro de que a mensagem foi realmente originada por $A$. Ademais, uma vez que a verificação requer apenas quantidades não secretas $m$ e $e_{A}$, a assinatura $s$ para $m$ pode também ser verificada por uma terceira parte que poderia estabelecer contestações se $A$ negar ter assinado a mensagem $m$. Diferente das assinaturas escritas à mão, a assinatura $s$ de $A$ depende da mensagem $m$ sendo assinada, prevenindo um forjador de simplesmente acrescentar $s$ a uma mensagem $\sim m$ linha e afirmar que $A$ assinou $\sim m$. Mesmo embora não haja nenhuma necessidade de segredo com relação à chave pública $e_{A}$, é essencial que os verificadores usem uma cópia autêntica de $e_{A}$ quando verificarem assinaturas geradas por $A$.
+Esquemas de assinatura digital podem ser desenvolvidos para autenticação da origem e integridade dos dados, e para facilitar o fornecimento de serviços de irretratabilidade. Uma entidade $A$ usaria o algoritmo de geração de assinatura $SIGN$ de um esquema de assinatura digital e sua chave privada $d_{A}$ para computar a assinatura da mensagem: $s = SIGN_{d_{A}}(m)$. Ao receber $m$ e $s$, uma entidade $B$ que tem uma cópia autentica da chave pública de $A$ $e_{A}$ usa um algoritmo de assinatura de verificação para confirmar que $s$ foi de fato gerado a partir de $m$ e $d_{A}$. Uma vez que $d_{A}$ é presumivelmente conhecido por $A$, $B$ está seguro de que a mensagem foi realmente originada por $A$. Ademais, uma vez que a verificação requer apenas quantidades não secretas $m$ e $e_{A}$, a assinatura $s$ para $m$ pode também ser verificada por uma terceira parte que poderia estabelecer contestações se $A$ negar ter assinado a mensagem $m$. Diferente das assinaturas escritas à mão, a assinatura $s$ de $A$ depende da mensagem $m$ sendo assinada, prevenindo um forjador de simplesmente acrescentar $s$ a uma mensagem $\tilde{m}$ linha e afirmar que $A$ assinou $\tilde{m}$. Mesmo embora não haja nenhuma necessidade de segredo com relação à chave pública $e_{A}$, é essencial que os verificadores usem uma cópia autêntica de $e_{A}$ quando verificarem assinaturas geradas por $A$.
 
 Deste modo, a criptografia de chave pública fornece soluções elegantes para os três problemas com criptografia de chave simétrica: distribuição de chaves, administração de chaves e suporte à irretratabilidade. Deve-se notar que embora necessidade de um canal secreto para distribuição de chaves tenha sido eliminado, implementar uma infra-estrutura de chave pública (\emph{Public Key Infrastructure}, ou PKI) para distribuir e administrar chaves públicas pode ser um desafio formidável na prática. Também, operações em chave pública em geral são significativamente mais lentas do que seus respectivos na criptografia de chave simétrica. Portanto, sistemas híbridos que se beneficiam da eficiência dos algoritmos de chave simétrica e da funcionalidade dos algoritmos de chave pública são frequentemente usados.
 
@@ -292,7 +292,7 @@ Em um esquema de chave pública, um par de chaves é selecionado para que o proble
 \begin{itemize}
 \item O problema da \textbf{fatoração de inteiros}, cuja dificuldade é essencial para a segurança da encriptação \emph{RSA} e esquemas de assinatura.
 \item O problema do \textbf{logaritmo discreto}, cuja dificuldade é essencial para a segurança da encriptação de chave pública \emph{ElGamal} e esquemas de assinatura e suas variantes tais como o \emph{Digital Signature Algorithm} (DSA).
-\item O problema do \textbf{logaritmo discreto em curvas elípticas}, cuja dificuldade é essencial para a segurança de todos os esquemas baseados em curvas elípticas.
+\item O problema do \textbf{logaritmo discreto em curvas elípticas}, cuja dificuldade é essencial para a segurança de todos os esquemas baseados em curvas elípticas.\cite{menezes}
 \end{itemize}
 
 \section{Logaritmos Discretos}
@@ -304,8 +304,8 @@ O primeiro sistema baseado em logaritmo discreto foi o protocolo de troca de cha
 
 \subsection{Geração de chaves com Logaritmos Discretos}
 
-Em sistemas de logaritmos discretos, um par de chaves está associado com um conjunto de parâmetros públicos do domínio $(p,q,g)$. Aqui, $p$ é um primo, $q$ é um divisor primo de $p-1$, e $g \in [1,p-1]$ tem ordem $q$ (i.e., $t=q$ é o menor inteiro positivo satisfazendo $gt \equiv 1(mod p)$.
-Uma chave privada é um inteiro x que é selecionado uniformemente de modo aleatório no intervalo $[1,q-1]$ (esta operação é denotada $x \in [1,q-1]$, e a chave pública correspondente é $y=g^{x}mod p$. O problema de determinar $x$ dados os parâmetros do domínio $(p,q,g)$ e $y$ é o problema do logaritmo discreto (DLP).
+Em sistemas de logaritmos discretos, um par de chaves está associado com um conjunto de parâmetros públicos do domínio $(p,q,g)$. Aqui, $p$ é um primo, $q$ é um divisor primo de $p-1$, e $g \in [1,p-1]$ tem ordem $q$ (i.e., $t=q$ é o menor inteiro positivo satisfazendo $g^{t} \equiv 1 \pmod p)$.
+Uma chave privada é um inteiro x que é selecionado uniformemente de modo aleatório no intervalo $[1,q-1]$ (esta operação é denotada $x \in [1,q-1]$, e a chave pública correspondente é $y=g^{x}mod p$. O problema de determinar $x$ dados os parâmetros do domínio $(p,q,g)$ e $y$ é o problema do logaritmo discreto (DLP).\cite{menezes}
 
 
 \section{Curvas Elípticas}
@@ -332,13 +332,13 @@ Um grupo abeliano ($\G$,$*$) consiste de um conjunto $\G$ com uma operação binár
 
 A operação do grupo é geralmente chamada de adição ($+$) ou multiplicação ($*$). Em primeira instância, o grupo é chamado de grupo aditivo, o elemento (aditivo) identidade é normalmente denotado por $0$, e o inverso (aditivo) $d$ e $a$ é denotado por $-a$. Em uma segunda instância, o grupo é chamado de grupo multiplicativo, o elemento (multiplicativo) identidade é denotado por $1$ e o inverso (multiplicativo) de $a$ é denotado por $a^{-1}$ .
 O grupo é finito se $\G$ é um conjunto finito, no caso em que o número de elementos em $\G$ é chamado a ordem de $\G$.
-Por exemplo, seja p um numero primo, e $F_{p} = {0,1,2,...,p-1}$ denota o conjunto dos inteiros módulo $p$. Então $(F_{p},+)$, onde a operação $+$ é definida com a operação de adição de inteiros módulo $p$, é um grupo finito aditivo de ordem $p$ com elemento identidade (aditivo) $0$. Além isso, $(F^{*}_{p},\bullet)$, onde $F^{*}_{p}$ denota os elementos diferentes de zero em $F_{p}$ e a operação $\bullet$ é definida como a multiplicação de inteiros módulo $p$, é um grupo finito multiplicativo de ordem $p-1$ com elemento identidade (multiplicativo) $1$. A tripla $(F_{p}, + , \bullet)$ é um campo finito, denotado mais sucintamente por $F_{p}$.
+Por exemplo, seja p um numero primo, e $F_{p} = {0,1,2,...,p-1}$ denota o conjunto dos inteiros módulo $p$. Então $(F_{p},+)$, onde a operação $+$ é definida com a operação de adição de inteiros módulo $p$, é um grupo finito aditivo de ordem $p$ com elemento identidade (aditivo) $0$. Além isso, $(F^{*}_{p},\bullet)$, onde $F^{*}_{p}$ denota os elementos diferentes de zero em $F_{p}$ e a operação $\bullet$ é definida como a multiplicação de inteiros módulo $p$, é um grupo finito multiplicativo de ordem $p-1$ com elemento identidade (multiplicativo) $1$. A tripla $(F_{p}, + , \bullet)$ é um corpo finito, denotado mais sucintamente por $F_{p}$.
 
 Agora, se $\G$ é um grupo finito multiplicativo de ordem $n$ e $g \in \G$, então o menor inteiro positivo $t$ tal que $gt = 1$ é chamado de ordem de $g$; esse $t$ sempre existe e é divisor de $n$. O conjunto $<g> = {gi : 0 \leq i \leq t-1}$ de todas as potências de $g$ é ele próprio um grupo sobre a mesma operação como $\G$, e é chamado um subgrupo cíclico de $\G$ gerado por $\G$. Declarações análogas são verdadeiras se $\G$ é escrito aditivamente. Assim, a ordem de $g \in \G$ é o menor divisor positivo $t$ de $n$ tal que $tg = 0$, e $<g> = {ig : 0 \leq i \leq t-1}$. Aqui, tg denota o elemento obtido por adicionar t cópias de $g$. Se G tem um elemento $g$ de ordem $n$, então $G$ é dito ser um grupo cíclico e $g$ é um gerador de $\G$. Por exemplo, com o os parâmetros do DL $(p,q,g)$ definidos anteriormente, o grupo multiplicativo $(F^{*}_{p}, \bullet)$ é um grupo cíclico de ordem $p-1$. Ademais, $<g>$ é um subgrupo cíclico de ordem $q$.
 
 \subsection{Grupos em Curvas Elípticas}
 
-Seja $p$ um número primo, e $F_{p}$ o campo dos inteiros módulo $p$. Uma curva elíptica $E$ sobre $F_{p}$ é definida por uma equação da forma 
+Seja $p$ um número primo, e $F_{p}$ o corpo dos inteiros módulo $p$. Uma curva elíptica $E$ sobre $F_{p}$ é definida por uma equação da forma 
 \begin{equation}
 \label{eq:defcurvaeliptica}
 y^2= x^3+ ax+b
@@ -367,7 +367,7 @@ A regra de adição requer algumas operações aritméticas (adição, subtração, multi
 
 \subsection{Geração de chaves em curva elíptica}
 
-Seja $E$ uma curva elíptica definida sobre o campo finito $F_{p}$. Seja $P$ um ponto em $E(F_{p})$, e suponha que $P$ tenha ordem prima $n$. Então o subgrupo cíclico de $E(F_{p})$ gerado por $P$ é 
+Seja $E$ uma curva elíptica definida sobre o corpo finito $F_{p}$. Seja $P$ um ponto em $E(F_{p})$, e suponha que $P$ tenha ordem prima $n$. Então o subgrupo cíclico de $E(F_{p})$ gerado por $P$ é 
 
 \begin{equation}
 \label{eq:defcurvaeliptica3}
@@ -489,7 +489,7 @@ O verificador aceita a mensagem se, e somente se $v_A = h_A$. O processo de vali
 \item $h \gets h_3(r, m, y_A, \ID_A, y_B, \ID_B)$ \label{eq:auth}
 \item $z \gets u - x_A h$ \label{eq:sign}
 \end{enumerate}
-O criptograma de assinatura é a tripla $(c, h, z) \in \{0, 1\}^\ast \times \Z_n^2$. Comparado ao método de cifrassinatura de Zheng, as identidades de ambos o emissor e o destinatário são inclusas na equação de autenticação~\ref{eq:auth}, e a equação de assinatura~\ref{eq:sign} segue o estilo Schnorr em vez do dedicado, porém levemente mais complicado(devido à presença da inversão de campos), estilo Zheng, similar ao DSA ~\cite{nist-fips-186-2}.
+O criptograma de assinatura é a tripla $(c, h, z) \in \{0, 1\}^\ast \times \Z_n^2$. Comparado ao método de cifrassinatura de Zheng, as identidades de ambos o emissor e o destinatário são inclusas na equação de autenticação~\ref{eq:auth}, e a equação de assinatura~\ref{eq:sign} segue o estilo Schnorr em vez do dedicado, porém levemente mais complicado(devido à presença da inversão de corpos), estilo Zheng, similar ao DSA ~\cite{nist-fips-186-2}.
 
 \item \textbf{Unsigncrypt:} dada a chave pública do emissor $y_A \in \G_T$ previamente validade para a identidade $\ID_A$ e $P_{pub}$, e a chave privada do receptor $x_B \in \Z_n^\ast$, a chave pública $y_B \in \G_T$ e a identidade $\ID_B$, sob a recepção da tripla $(c, h, z)$ o receptor verifica se $h, z \in \Z_n^\ast$ e calcula
 \begin{enumerate}
@@ -520,8 +520,6 @@ A seguir, definimos as métricas e restrições do sistema. % e suas limitações.
 
 \begin{itemize}
 
-\item Nível de segurança: Desejamos que o nível de segurança de nosso protocolo seja equiparável ao nível de segurança do RSA usando chaves de 1024 bits, que pode ser calculado como $2^{1024}$ \cite{rsalabs}.
-
 \item Tempo de espera: Consiste nos tempos para cifrassinar e vericifrar uma mensagem. Baseando-se em aplicações já existentes e satisfazendo os requisitos de usabilidade de nosso projeto, estimamos que um intervalo de espera para processamento de uma mensagem de no máximo 5 segundos seja tolerável pelo usuário.
 
 \item Tamanho máximo de mensagens do protocolo: Consiste no número de bytes ocupados por dados de controle do algoritmo. Estabelecemos que este \emph{overhead} não deve ultrapassar 25\% do espaço total da mensagem.
@@ -544,6 +542,48 @@ Um certificado digital típico ocupa entre 2KB e 4KB, e uma solução baseada em in
 Por outro lado, a manutenção de um diretório confiável de chaves públicas, típico de sistemas de criptografia convencionais, seria impraticável em uma rede de telefonia celular.  Uma solução tecnológica baseada em alternativas à criptografia convencional é, portanto, imprescindível. Sendo assim, foi considerado o uso de criptografia em curvas elípticas com assinatura baseada em identidades. Aprofundando-se na especificação, percebeu-se ainda que a chave pública do usuário poderia ser estabelecida essencialmente a partir de sua identificação única no sistema, ou seja, seu próprio número de celular. Desse modo, a criptografia em curvas elípticas baseada em identidades com emparelhamentos bilineares parecia, inicialmente, ser capaz de atender aos requisitos do sistema.
 
 \chapter{Análise de requisitos do sistema}
+
+\section{Requisitos funcionais}
+
+ Após a análise do escopo e das restrições do sistema, foram levantados os seguintes requisitos funcionais:
+ 
+\subsection{Cifrassinatura de mensagem}
+\textbf{Introdução/Propósito} O sistema deverá fornecer serviço de confidencialidade através da funcionalidade de cifrassinatura das mensagens SMS, ou seja, as mensagens, para trafegar na rede GSM deverão estar encriptadas e assinadas.
+
+\textbf{Estímulo/Resposta} O estímulo neste caso provém do usuário ao requisitar o serviço de cifrassinatura e a resposta do sistema é realizar o serviço enviando a mensagem cifrassinada.
+
+\subsection{Vericifração de mensagem}
+\textbf{Introdução/Propósito} O sistema deverá fornecer ao usuário o serviço de ele poder verificar o autor de uma mensagem recebida como o de ler seu conteúdo.
+
+\textbf{Estímulo/Resposta} O usuário requisita ao sistema a vericifração de uma determinada mensagem e o sistema processa a mensagem devolvendo a veracidade de sua validade e seu conteúdo.
+
+\subsection{Envio de mensagem}
+\textbf{Introdução/Propósito}: O sistema deve fornecer ao usuário o serviço de envio de uma mensagem para o destinatário desejado.
+	
+\textbf{Estímulo/Resposta}: Usuário deseja enviar uma mensagem SMS criptografada e requisita o serviço ao sistema que efetua o envio.
+
+
+\subsection{Geração de chave privada}
+\textbf{Introdução/Propósito}: O sistema deve fornecer para um novo usuário o serviço gerar sua chave privada e entregá-lo de forma segura. O Key Generation Bureau possui essa responsabilidade.
+	
+\textbf{Estímulo/Resposta}: Novo usuário requisita ao sistema a geração de sua chave privada. A requisição chega até o KGB que gera a chave privada do usuário
+ e a retorna por meio de uma mensagem segura.
+
+\section{Requisitos não-funcionais}
+\subsection{Usabilidade}
+O tamanho da chave privada não deve prejudicar a usabilidade do software. O método de entrada das mensagens deve ser semelhante ao dos aparelhos celulares convencionais.
+\subsection{Desempenho}
+A aplicação deve ser capaz de cifrar ou decifrar uma mensagem em menos de 5 segundos.
+\subsection{Confiabilidade}
+O software deverá apresentar \emph{MTTF} de 1 ano. Entende-se como falha a parada do software pela subida de uma exceção não tratada. Essa medida ignora falhas de componentes externos ao software (hardware do celular, plataforma Java).
+\subsection{Disponibilidade}
+O software deverá apresentar disponibilidade de 99\%. Entende-se como disponibilidade a razão entre as tentativas bem sucedidas de acessar o software e o total de tentativas. Ou seja, a cada 100 tentativas de acessar o software apenas uma não terá sucesso.
+\subsection{Compatibilidade}
+O software deverá ser compatível com todos os dispositivos celulares equipados com a plataforma Java ME (Micro Edition), desde que estejam desbloqueados, e com a configuração CLDC.
+\subsection{Portabilidade}
+O software deverá ser portável para a plataforma Java SE (Standard Edition) tendo em vista o uso da aplicação como interface com web services.
+\subsection{Segurança}
+O software deve garantir que o destinatário da mensagem e apenas ele, além do remetente, tenha acesso ao seu conteúdo em tempo viável. O software também deve garantir a integridade da mensagem em relação a corrupções maliciosas ou acidentais durante o tráfego.
 
 \section{Casos de uso}
 
@@ -689,48 +729,6 @@ Nas seções abaixo detalharemos cada caso de uso do sistema, representados sucint
 		\item \textbf{Pós-Condição:} Sistema exibindo mensagem clara para o usuário.
 		\end{enumerate}
 
-
-\section{Requisitos funcionais}
-
- Após a análise do escopo e das restrições do sistema, foram levantados os seguintes requisitos funcionais:
- 
-\subsection{Cifrassinatura de mensagem}
-\textbf{Introdução/Propósito} O sistema deverá fornecer serviço de confidencialidade através da funcionalidade de cifrassinatura das mensagens SMS, ou seja, as mensagens, para trafegar na rede GSM deverão estar encriptadas e assinadas.
-
-\textbf{Estímulo/Resposta} O estímulo neste caso provém do usuário ao requisitar o serviço de cifrassinatura e a resposta do sistema é realizar o serviço enviando a mensagem cifrassinada.
-
-\subsection{Vericifração de mensagem}
-\textbf{Introdução/Propósito} O sistema deverá fornecer ao usuário o serviço de ele poder verificar o autor de uma mensagem recebida como o de ler seu conteúdo.
-
-\textbf{Estímulo/Resposta} O usuário requisita ao sistema a vericifração de uma determinada mensagem e o sistema processa a mensagem devolvendo a veracidade de sua validade e seu conteúdo.
-
-\subsection{Envio de mensagem}
-\textbf{Introdução/Propósito}: O sistema deve fornecer ao usuário o serviço de envio de uma mensagem para o destinatário desejado.
-	
-\textbf{Estímulo/Resposta}: Usuário deseja enviar uma mensagem SMS criptografada e requisita o serviço ao sistema que efetua o envio.
-
-
-\subsection{Geração de chave privada}
-\textbf{Introdução/Propósito}: O sistema deve fornecer para um novo usuário o serviço gerar sua chave privada e entregá-lo de forma segura. O Key Generation Bureau possui essa responsabilidade.
-	
-\textbf{Estímulo/Resposta}: Novo usuário requisita ao sistema a geração de sua chave privada. A requisição chega até o KGB que gera a chave privada do usuário
- e a retorna por meio de uma mensagem segura.
-
-\section{Requisitos não-funcionais}
-\subsection{Usabilidade}
-O tamanho da chave privada não deve prejudicar a usabilidade do software. O método de entrada das mensagens deve ser semelhante ao dos aparelhos celulares convencionais.
-\subsection{Desempenho}
-A aplicação deve ser capaz de cifrar ou decifrar uma mensagem em menos de 5 segundos.
-\subsection{Confiabilidade}
-O software deverá apresentar \emph{MTTF} de 1 ano. Entende-se como falha a parada do software pela subida de uma exceção não tratada. Essa medida ignora falhas de componentes externos ao software (hardware do celular, plataforma Java).
-\subsection{Disponibilidade}
-O software deverá apresentar disponibilidade de 99\%. Entende-se como disponibilidade a razão entre as tentativas bem sucedidas de acessar o software e o total de tentativas. Ou seja, a cada 100 tentativas de acessar o software apenas uma não terá sucesso.
-\subsection{Compatibilidade}
-O software deverá ser compatível com todos os dispositivos celulares equipados com a plataforma Java ME (Micro Edition), desde que estejam desbloqueados, e com a configuração CLDC.
-\subsection{Portabilidade}
-O software deverá ser portável para a plataforma Java SE (Standard Edition) tendo em vista o uso da aplicação como interface com web services.
-\subsection{Segurança}
-O software deve garantir que o destinatário da mensagem e apenas ele, além do remetente, tenha acesso ao seu conteúdo em tempo viável. O software também deve garantir a integridade da mensagem em relação a corrupções maliciosas ou acidentais durante o tráfego.
 
 \chapter{Escolha do um esquema criptográfico}
 
@@ -1029,8 +1027,13 @@ O \emph{Floggy} é um \emph{framework} de persistência de dados em ambiente \emph
 
 \section{Escolha de parâmetros}
 
-\subsection{Escolha do tamanho de chave padrão}
-Como inicialmente desejávamos um nível de segurança equiparável ao do RSA, foi escolhido o número 176 como tamanho de chave, pois este fornece um nível de segurança de $176/2 = 88$ bits\footnote{Apesar de termos escolhido este valor padrão, a aplicação pode ser facilmente alterada para trabalhar com outros valores permitidos pela curva escolhida. }, ou seja, um pouco superior ao nível de segurança do RSA-1024, que tem o valor $80$ bits. \cite{menezes} %TODO: colocar o valor, e citar. Geovs tem o link, acho...
+\subsection{Escolha do tamanho de chave}\label{sec:escolhatamanhochave}
+
+Nossa aplicação é capaz de trabalhar com um tamanho de chave de $k$ bits, se $k \in \{80, 96, 104, 112, 117, 127, 142, 160, 176, 187, 256, 272, 313\}$. Não podemos simplesmente usar qualquer valor, pois é necessário o uso de uma curva adequada (MNT4) para cada valor. Nem sempre é possível encontrar uma curva adequada para um dado tamanho em bits, assim ficamos limitados a usar valores que têm curvas conhecidas associadas a ele. Nota-se um grande intervalo entre os valores 187 e 256, pois não foi possível encontrar curvas adequadas no inteiror deste intervalo.
+
+Na escolha do valor ideal, é preciso considerar o tamanho que os parâmetros irão consumir no espaço útil da mensagem, além do nível de segurança.
+
+Foi escolhido o número 176 como tamanho de chave padrão\footnote{O valor pode ser facilmente alterado para qualquer um dos valores suportados sem a necessidade de grande alteração no código do sistema}, pois este fornece um nível de segurança equivalente ao do RSA com 704 bits, o que já representa um nível de segurança adequado para nossa aplicação. Por outro lado, não é um valor tão grande que chega a ocupar muitos bytes da mensagem, cada parâmetro enviado terá 176 bits (22 bytes), ocupando apenas $15,7\%$ do tamanho de um segmento SMS (que comporta no máximo 140 bytes).%TODO: colocar o valor, e citar. Geovs tem o link, acho...
 \subsection{Escolha da porta SMS}
 Quando se envia um SMS, associa-se a ele uma porta. A porta é um valor inteiro entre 0 e 65535 que serve para que o receptor encaminhe a mensagem recebida a uma aplicação específica. No caso de um SMS de texto normal, o valor da porta é 0. Quando um sistema operacional de um telefone móvel recebe uma mensagem com o valor de porta 0 ele aciona as rotinas do próprio sistema operacional para tratá-la, como armazená-la na caixa de entrada e tocar um som de alerta para o usuário. No caso de a porta ser diferente de 0, o sistema operacional procura numa área chamada \emph{PushRegistry} por algum aplicativo instalado que deseja receber mensagens nesta porta (é como se o aplicativo estivesse escutando a porta) e assim executa aplicativo registrado, que irá tratar a mensagem recebida\footnote{Em alguns celulares, o sistema operacional pode pedir uma confirmação do usuário antes de executar a aplicação automaticamente.}.
 
@@ -1046,7 +1049,7 @@ Após implementado, o sistema foi testado usando diferentes celulares e diferente
 
 Foram executados testes de desempenho com a versão final do sistema. Na tabela \ref{tab:bdcps176final} podemos observar os tempos das operações usando chaves de 176 bits.
 
-No apêndice \ref{app:desempenho} acrescentamos gráficos demonstrando como estes tempos variam de acordo com o tamanho da chave usado, além de um gráfico demonstrando como o tempo da operação de cifrassinar uma mensagem varia conforme o tamanho da mensagem.
+No apêndice \ref{app:desempenho} apresentamos um gráfico demonstrando como o tempo da operação de cifrassinatura varia conforme o tamanho da mensagem. Também acrescentamos gráficos demonstrando como estes tempos variam de acordo com o tamanho de chave usado. Neste teste, foram utilizados os valores de chave suportados pela aplicação, explicitados na seção \ref{sec:escolhatamanhochave}
 
 \begin{table}[h]\centering
 \caption{Testes com a implementação final (chaves de 176 bits)} \label{tab:bdcps176final}
@@ -1086,8 +1089,6 @@ Ao longo do trabalho, foi possível observar que a criptografia em curvas elíptic
 
 \section{Análise dos resultados}
 O sistema de modo geral funcionou de acordo com o esperado, satisfazendo os requisitos e métricas propostos. Os resultados apresentados mostram tempos excelentes, atingindo assim as métricas de usabilidade desejadas, e comprovam a adequação do protocolo de segurança.
-
-Além disto, o nível de segurança desejado também foi alcançado. Com uma chave de 176 bits, obtivemos um nível de segurança equivalente ao do RSA com 1024 bits, conforme previsto.
 
 \section{Perspectivas futuras}
 Apesar de já termos apresentado um sistema de segurança funcional, pronto para o uso, existem ainda pontos em que ele pode ser aperfeiçoado. Especificamente, o protocolo de segurança utilizado não fornece os serviços de irretratabilidade e revogação de chaves. O serviço de irretratabilidade poderia ser implantado com o uso de outros protocolos de cifrassinatura, no entanto ao custo de degradação do desempenho devido ao uso mais extenso de emparelhamentos \cite[section~3]{bdcps}.
@@ -1186,7 +1187,7 @@ No decorrer do desenvolvimento deste trabalho, superamos as dificuldades tecnoló
 \begin{table}[h]\centering
 \caption{Medida de tempo de Signcrypt x tamanho da mensagem} \label{tab:signxmsgfinal}
 \begin{tabular}{cccccc}\hline
-Tam. Msg (bytes)	&Emulador(ms)	&Nokia E51(ms)	&Nokia 6275(ms)\\hline
+Tam. Msg (bytes)	&Emulador(ms)	&Nokia E51(ms)	&Nokia 6275(ms)\\\hline
 8	& 387,3	& 183,0	& 1440,8\\\hline
 28	& 393,6	& 144,8	& 1383,9\\\hline
 48	& 396,4	& 167,8	& 1369,6\\\hline
@@ -1207,6 +1208,7 @@ Tam. Msg (bytes)	&Emulador(ms)	&Nokia E51(ms)	&Nokia 6275(ms)\\hline
 348	& 395,5	& 189,7	& 1409,9\\\hline
 \end{tabular}
 \end{table}
+
 
 \begin{sidewaysfigure}[h]
 	\centering
