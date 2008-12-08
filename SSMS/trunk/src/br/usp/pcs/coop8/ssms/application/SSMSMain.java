@@ -18,7 +18,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  */
-
 package br.usp.pcs.coop8.ssms.application;
 
 import br.usp.pcs.coop8.ssms.util.Output;
@@ -235,9 +234,9 @@ public class SSMSMain extends MIDlet implements CommandListener {
     public List getListaInicial() {
         if (listaInicial == null) {
             // write pre-init user code here
-            listaInicial = new List("SMS Seguro", Choice.IMPLICIT);            
+            listaInicial = new List("SMS Seguro", Choice.IMPLICIT);
             listaInicial.append("Enviar torpedo", null);
-            listaInicial.append("Ver mensagens", null);            
+            listaInicial.append("Ver mensagens", null);
             listaInicial.append("Autenticar Contato", null);
             listaInicial.append("Primeiro uso", null);
             listaInicial.append("Executar testes", null);
@@ -420,10 +419,13 @@ public class SSMSMain extends MIDlet implements CommandListener {
             Controller.firstTimeUse(txtXAFirstTime1.getString(), txtMyId.getString());
             switchDisplayable(null, getListaInicial());
         // write post-action user code here
-        } else {
+        } else if (txtXAFirstTime1.getString() == null ||
+                txtXAFirstTime1.getString().length() < 8) {
             // write pre-action user code here
-            switchDisplayable(null, getAlert4());
+            switchDisplayable(null, getAlert4("A senha n\u00E3o atende os requisitos de seguran\u00E7a da aplica\u00E7\u00E3o. Digite outra senha"));
         // write post-action user code here
+        } else {
+            switchDisplayable(null, getAlert4("Os números devem conter 10 dígitos cada."));
         }
     // enter post-if user code here
     }
@@ -434,13 +436,15 @@ public class SSMSMain extends MIDlet implements CommandListener {
      * Returns an initiliazed instance of alert4 component.
      * @return the initialized component instance
      */
-    public Alert getAlert4() {
+    public Alert getAlert4(String texto) {        
         if (alert4 == null) {
             // write pre-init user code here
-            alert4 = new Alert("Alerta", "A senha n\u00E3o atende os requisitos de seguran\u00E7a da aplica\u00E7\u00E3o. Digite outra senha", null, null);
+            alert4 = new Alert("Alerta", texto, null, null);
             alert4.setTimeout(Alert.FOREVER);
         // write post-init user code here
-        }
+        } else {
+            alert4.setString(texto);
+        }        
         return alert4;
     }
     //</editor-fold>                        

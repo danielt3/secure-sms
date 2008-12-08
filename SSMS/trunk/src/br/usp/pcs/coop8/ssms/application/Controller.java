@@ -35,6 +35,7 @@ import br.usp.pcs.coop8.ssms.protocol.exception.CipherException;
 import br.usp.pcs.coop8.ssms.protocol.exception.InvalidMessageException;
 import br.usp.pcs.coop8.ssms.util.FileWriter;
 import br.usp.pcs.coop8.ssms.util.Output;
+import javax.microedition.lcdui.Display;
 import net.sourceforge.floggy.persistence.Filter;
 import net.sourceforge.floggy.persistence.FloggyException;
 import net.sourceforge.floggy.persistence.ObjectSet;
@@ -75,6 +76,10 @@ public abstract class Controller {
 
         Controller.receiveSMS();
         PrivateData.getInstance();
+    }
+    
+    public static Display getDisplay() {
+        return ssmsApp.getDisplay();
     }
 
     /**

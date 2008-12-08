@@ -18,10 +18,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  */
-
 package br.usp.pcs.coop8.ssms.messaging;
 
 import br.usp.pcs.coop8.ssms.application.Configuration;
+import br.usp.pcs.coop8.ssms.application.Controller;
 import br.usp.pcs.coop8.ssms.application.KeyGenerationBureau;
 import br.usp.pcs.coop8.ssms.data.Contact;
 import br.usp.pcs.coop8.ssms.data.PrivateData;
@@ -31,6 +31,7 @@ import br.usp.pcs.coop8.ssms.util.Output;
 import br.usp.pcs.coop8.ssms.util.Util;
 import java.util.Date;
 import javax.microedition.io.Connector;
+import javax.microedition.lcdui.AlertType;
 import javax.wireless.messaging.BinaryMessage;
 import javax.wireless.messaging.MessageConnection;
 import javax.wireless.messaging.MessageListener;
@@ -135,7 +136,7 @@ public class SmsListener
                             //Desse jeito vem 10 dígitos
                             String telRemetente;
                             if (binMsg.getAddress().startsWith("sms://+55")) {
-                                
+
                                 telRemetente = binMsg.getAddress().substring(9, 19);
                             } else {
                                 telRemetente = binMsg.getAddress().substring(7, 17);
@@ -234,9 +235,11 @@ public class SmsListener
 
                     perMan.save(contact);
                     Output.println("Chave pública recebida e validada. " + contact.getPhone() + " está autenticado.");
+                    AlertType.INFO.playSound(Controller.getDisplay());
                     return;
                 } else {
                     Output.println("Chave pública recebida não é válida. Ignora o mentiroso.");
+                    AlertType.ERROR.playSound(Controller.getDisplay());
                     //Não é válido, é algum mentiroso!                    
                     //Mantém tudo nulo, ignora a mensagem que chegou
                     return;
@@ -258,6 +261,7 @@ public class SmsListener
 
         if (!msg.getSender().equals(myPrivData.getKgbPhone())) {
             Output.println("QA recebido de alguém diferente da KGB. Ignordado. Recebido de: " + msg.getSender());
+            AlertType.ERROR.playSound(Controller.getDisplay());
             return;
         } else if (myPrivData.getQA() != null || myPrivData.getEncryptedQA_c() != null) {
             Output.println("QA recebido da KGB, porém já havia sido recebido anterioriormente. Ignorado.");
@@ -276,6 +280,9 @@ public class SmsListener
                 ex.printStackTrace();
             }
             Output.println("Recebido meu QA cifrado.");
+
+            AlertType.INFO.playSound(Controller.getDisplay());
+            return;
         }
 
     //Chegou o QA, precisamos decriptá-lo
@@ -302,6 +309,8 @@ public class SmsListener
         } catch (FloggyException ex) {
             ex.printStackTrace();
         }
+
+        AlertType.INFO.playSound(Controller.getDisplay());
     }
 }
 
