@@ -1,10 +1,14 @@
-This is pdfTeX, Version 3.1415926-1.40.8-alpha-20080323 (MiKTeX 2.7) (preloaded format=pdflatex 2008.11.26)  9 DEC 2008 14:00
+This is pdfTeX, Version 3.1415926-1.40.8-beta-20080627 (MiKTeX 2.7) (preloaded format=pdflatex 2008.11.28)  9 DEC 2008 14:13
 entering extended mode
-**C:/workpf/Doc/Presentations/Apresentação*Banca/final.tex
-("C:/workpf/Doc/Presentations/Apresentação Banca/final.tex"
+**F:/Users/Vando/Desktop/Quinto*Ano/Projeto*de*Formatura/Documentos*de*Apoio/SV
+N/Doc/Presentations/Apresentação*Banca/final.tex
+
+("F:/Users/Vando/Desktop/Quinto Ano/Projeto de Formatura/Documentos de Apoio/SV
+N/Doc/Presentations/Apresentação Banca/final.tex"
 LaTeX2e <2005/12/01>
 Babel <v3.8j> and hyphenation patterns for english, dumylang, nohyphenation, ge
-rman, ngerman, french, portuguese, loaded.
+rman, ngerman, german-x-2008-06-18, ngerman-x-2008-06-18, french, portuguese, l
+oaded.
 ("C:\Arquivos de programas\MiKTeX 2.7\tex\latex\beamer\base\beamer.cls"
 ("C:\Arquivos de programas\MiKTeX 2.7\tex\latex\beamer\base\beamerbasercs.sty"
 Package: beamerbasercs 2007/01/28 (rcs-revision 1.4)
@@ -831,8 +835,8 @@ LaTeX Font Warning: Font shape `OT1/cmss/m/n' in size <4> not available
 
 [1
 
-{C:/Documents and Settings/All Users/Dados de aplicativos/MiKTeX/2.7/pdftex/con
-fig/pdftex.map}] (final.toc) [2
+{C:/Documents and Settings/All Users.WINDOWSN/Dados de aplicativos/MiKTeX/2.7/p
+dftex/config/pdftex.map}] (final.toc) [2
 
 ] [3
 
@@ -848,12 +852,12 @@ fig/pdftex.map}] (final.toc) [2
 
 ] [9
 
-] [10
+]
+[10
 
 ] [11
 
-]
-[12
+] [12
 
 ] [13
 
@@ -873,12 +877,12 @@ fig/pdftex.map}] (final.toc) [2
 
 ] [21
 
-] [22
+]
+[22
 
 ] [23
 
-]
-[24
+] [24
 
 ] [25
 
@@ -890,7 +894,7 @@ fig/pdftex.map}] (final.toc) [2
 
 ] [29
 
-] [30
+] (final.toc) [30
 
 ] [31
 
@@ -898,18 +902,18 @@ fig/pdftex.map}] (final.toc) [2
 
 ] [33
 
-] (final.toc) [34
+]
+[34
 
 ] [35
 
-]
-[36
+] [36
 
 ] [37
 
 ] [38
 
-] [39
+] (final.toc) [39
 
 ] [40
 
@@ -917,50 +921,42 @@ fig/pdftex.map}] (final.toc) [2
 
 ] [42
 
-] (final.toc) [43
-
-] [44
-
-] [45
-
-] [46
-
-] [47
+] [43
 
 ]
-<figuras/class_diagram.PNG, id=1307, 1134.2375pt x 1036.87375pt>
+<figuras/class_diagram.PNG, id=1203, 1134.2375pt x 1036.87375pt>
 File: figuras/class_diagram.PNG Graphic file (type png)
 
 <use figuras/class_diagram.PNG>
-Overfull \vbox (8.32204pt too high) detected at line 193
+Overfull \vbox (8.32204pt too high) detected at line 191
  []
 
-[48
+[44
 
  <figuras/class_diagram.PNG>]
-LaTeX Font Info:    Try loading font information for U+msa on input line 211.
+LaTeX Font Info:    Try loading font information for U+msa on input line 209.
 
 ("C:\Arquivos de programas\MiKTeX 2.7\tex\latex\amsfonts\umsa.fd"
 File: umsa.fd 2002/01/19 v2.2g AMS font definitions
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 211.
+LaTeX Font Info:    Try loading font information for U+msb on input line 209.
 
 ("C:\Arquivos de programas\MiKTeX 2.7\tex\latex\amsfonts\umsb.fd"
 File: umsb.fd 2002/01/19 v2.2g AMS font definitions
 )
-Overfull \hbox (3.57567pt too wide) in paragraph at lines 211--211
+Overfull \hbox (3.57567pt too wide) in paragraph at lines 209--209
  [] 
  []
 
-[49
+[45
 
-] (final.toc) [50
+] (final.toc) [46
 
-] [51
+] [47
 
-] [52
+] [48
 
-] [53
+] [49
 
 ]
 \tf@nav=\write6
@@ -973,21 +969,21 @@ LaTeX Font Warning: Size substitutions with differences
 
  ) 
 Here is how much of TeX's memory you used:
- 13213 strings out of 95317
- 229013 string characters out of 1183489
- 311384 words of memory out of 1500000
- 15964 multiletter control sequences out of 110000
+ 13201 strings out of 95284
+ 229091 string characters out of 1182395
+ 314427 words of memory out of 1500000
+ 15977 multiletter control sequences out of 110000
  11071 words of font info for 41 fonts, out of 1200000 for 2000
  16 hyphenation exceptions out of 8191
- 47i,16n,77p,360b,683s stack positions out of 5000i,500n,10000p,200000b,5000s
+ 47i,16n,77p,429b,683s stack positions out of 5000i,500n,10000p,200000b,5000s
 <C:/Arquivos de programas/MiKTeX 2.7/fonts/type1/bluesky/cm/cmss10.pfb><C:/Ar
 quivos de programas/MiKTeX 2.7/fonts/type1/bluesky/cm/cmss12.pfb><C:/Arquivos d
 e programas/MiKTeX 2.7/fonts/type1/bluesky/cm/cmss8.pfb><C:/Arquivos de program
 as/MiKTeX 2.7/fonts/type1/bluesky/cm/cmssbx10.pfb><C:/Arquivos de programas/MiK
 TeX 2.7/fonts/type1/bluesky/cm/cmssi10.pfb>
-Output written on final.pdf (53 pages, 417101 bytes).
+Output written on final.pdf (49 pages, 393497 bytes).
 PDF statistics:
- 1518 PDF objects out of 1728 (max. 8388607)
- 114 named destinations out of 1000 (max. 131072)
+ 1411 PDF objects out of 1440 (max. 8388607)
+ 105 named destinations out of 1000 (max. 131072)
  142 words of extra memory for PDF output out of 10000 (max. 10000000)
 
