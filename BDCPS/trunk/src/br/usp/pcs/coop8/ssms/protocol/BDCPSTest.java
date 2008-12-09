@@ -21,10 +21,10 @@
 
 package br.usp.pcs.coop8.ssms.protocol;
 
+import br.usp.larc.pbarreto.jaes.AES;
+import br.usp.larc.pbarreto.jaes.CMAC;
 import br.usp.pcs.coop8.ssms.protocol.exception.CipherException;
 import br.usp.pcs.coop8.ssms.protocol.exception.InvalidMessageException;
-import org.bouncycastle.crypto.Digest;
-import org.bouncycastle.crypto.digests.SHA1Digest;
 
 /**
  * @author rodrigo
@@ -37,11 +37,7 @@ public class BDCPSTest {
      */
     public static void main(String[] args) {
 
-        Digest sha = null;
-
-        sha = new SHA1Digest();
-
-
+      
         int bits = 176;
 
         String masterKey = "honnisoitquimalypense";
@@ -52,23 +48,30 @@ public class BDCPSTest {
         String id_b = "551188884321";
         String id_auth = "thegodfather";
 
-        byte[] s = new byte[20];
-        byte[] xa_alice = new byte[20];
-        byte[] xb_bob = new byte[20];
+        byte[] s = new byte[16];
+        byte[] xa_alice = new byte[16];
+        byte[] xb_bob = new byte[16];
+        
+        AES aes = new AES();
+        byte[] key = new byte[16];
+        for (int i = 0; i < 16; i++) {
+            key[i] = (byte) 0x00;
+        }
+        aes.makeKey(
+                key, 16, AES.DIR_ENCRYPT);
+        CMAC cmac = new CMAC(aes);
+        
+        cmac.init();
+        cmac.update(masterKey.getBytes());
+        cmac.getTag(s);
+        
+        cmac.init();
+        cmac.update(aliceKey.getBytes());
+        cmac.getTag(xa_alice);
 
-
-        sha.update(masterKey.getBytes(), 0, masterKey.getBytes().length);
-        sha.doFinal(s, 0);
-
-        sha.reset();
-
-        sha.update(aliceKey.getBytes(), 0, aliceKey.getBytes().length);
-        sha.doFinal(xa_alice, 0);
-
-        sha.reset();
-
-        sha.update(bobKey.getBytes(), 0, bobKey.getBytes().length);
-        sha.doFinal(xb_bob, 0);
+        cmac.init();
+        cmac.update(bobKey.getBytes());
+        cmac.getTag(xb_bob);
 
         BDCPSAuthority auth = new BDCPSAuthority(bits, s, id_auth.getBytes());
         BDCPSClient alice = new BDCPSClient(bits, auth.getPublicPoint(), id_a.getBytes());

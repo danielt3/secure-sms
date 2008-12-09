@@ -18,7 +18,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  */
-
 package br.usp.pcs.coop8.ssms.protocol;
 
 
@@ -35,14 +34,6 @@ import br.usp.pcs.coop8.ssms.protocol.exception.CipherException;
 //import javax.crypto.ShortBufferException;
 import pseudojava.BigInteger;
 import pseudojava.SecureRandom;
-import org.bouncycastle.crypto.Digest;
-import org.bouncycastle.crypto.digests.SHA1Digest;
-import org.bouncycastle.crypto.modes.SICBlockCipher;
-import org.bouncycastle.crypto.engines.AESEngine;
-import org.bouncycastle.crypto.PBEParametersGenerator;
-import org.bouncycastle.crypto.generators.PKCS5S2ParametersGenerator;
-import org.bouncycastle.crypto.params.KeyParameter;
-import org.bouncycastle.crypto.params.ParametersWithIV;
 
 /**
  * @author rodrigo
@@ -50,58 +41,78 @@ import org.bouncycastle.crypto.params.ParametersWithIV;
  */
 public class BDCPSUtil {
 
-    private static final String HASH_ALGORITHM = "SHA-1";
-    private static final Digest sha;
+    private static final CMAC cmac;
     private static final SecureRandom rnd;
     private static final String hex = "0123456789abcdef";
 
     static {
+        AES aes = new AES();
+        byte[] key = new byte[16];
+        for (int i = 0; i < 16; i++) {
+            key[i] = (byte) 0x00;
+        }
+        aes.makeKey(
+                key, 16, AES.DIR_ENCRYPT);
+        cmac = new CMAC(aes);
 
-        sha = new SHA1Digest();
 
         //Pseudo Random Number Generator
-        byte[] randSeed = new byte[20];
+        byte[] randSeed = new byte[16];
         (new SecureRandom()).nextBytes(randSeed);
         rnd = new SecureRandom(randSeed);
     }
 
     protected static final BigInteger h0(SMSField4 r, SMSField4 y, byte[] id, BigInteger n) {
-        sha.reset();
-        sha.update(r.toByteArray(), 0, r.toByteArray().length);
-        sha.update(y.toByteArray(), 0, y.toByteArray().length);
-        sha.update(id, 0, id.length);
+        cmac.init();
+        cmac.update(r.toByteArray());
+        cmac.update(y.toByteArray());
+        cmac.update(id);
 
-        byte[] hash0 = new byte[20];
+        byte[] hash0 = new byte[16];
 
-        sha.doFinal(hash0, 0);
+        cmac.getTag(hash0);
 
         return new BigInteger(hash0).mod(n);
     }
 
     protected static final BigInteger h1(SMSField4 y, byte[] id, BigInteger n) {
 
-        sha.reset();
-        sha.update(y.toByteArray(), 0, y.toByteArray().length);
-        sha.update(id, 0, id.length);
+        cmac.init();
+        cmac.update(y.toByteArray());
+        cmac.update(id);
 
-        byte[] hash1 = new byte[20];
-        sha.doFinal(hash1, 0);
+        byte[] hash1 = new byte[16];
+        cmac.getTag(hash1);
 
         return (new BigInteger(hash1)).mod(n);
 
     }
 
     protected static final BigInteger h3(SMSField4 r, byte[] m, SMSField4 y_A, byte[] id_A, SMSField4 y_B, byte[] id_B, BigInteger n) {
-        sha.reset();
-        sha.update(r.toByteArray(), 0, r.toByteArray().length);
-        sha.update(y_A.toByteArray(), 0, y_A.toByteArray().length);
-        sha.update(id_A, 0, id_A.length);
-        sha.update(y_B.toByteArray(), 0, y_B.toByteArray().length);
-        sha.update(id_B, 0, id_B.length);
-        sha.update(m, 0, m.length);
+        cmac.init();
 
-        byte[] hash3 = new byte[20];
-        sha.doFinal(hash3, 0);
+        System.out.println("r = " + byteArrayToDebugableString(r.toByteArray()));
+        cmac.update(r.toByteArray());
+
+        System.out.println("y_A = " + byteArrayToDebugableString(y_A.toByteArray()));
+        cmac.update(y_A.toByteArray());
+
+        System.out.println("id_A = " + byteArrayToDebugableString(id_A));
+        cmac.update(id_A);
+
+        System.out.println("y_B = " + byteArrayToDebugableString(y_B.toByteArray()));
+        cmac.update(y_B.toByteArray());
+
+        System.out.println("id_B = " + byteArrayToDebugableString(id_B));
+        cmac.update(id_B);
+
+        System.out.println("m = " + byteArrayToDebugableString(m));
+        cmac.update(m);
+
+        byte[] hash3 = new byte[16];
+        cmac.getTag(hash3);
+
+        System.out.println("hash3 = " + byteArrayToDebugableString(hash3));
 
         return (new BigInteger(hash3)).mod(n);
     }
@@ -109,129 +120,33 @@ public class BDCPSUtil {
     protected static final byte[] h2(SMSField4 y, byte[] message, String mode) throws CipherException {
         //TODO: fix this. I am emulating a null cipher to check the signature.
         //return message;
-        return CTR_AES(y.toByteArray(), message, mode, rnd);
+        return CTR_AES(y.toByteArray(), message);
     }
 
-    /**
-     * This method calls the CMAC authentication code from pbarreto libs. Given a data chunk it returns a fixed size hash
-     * 
-     * @param data	the data to hash
-     * @param bits	the block size in bits
-     * @return		the fixed size hash
-     * @author 		rodrigo
-     */
-    private static final byte[] CMAC(byte[] data, int bits) {
-        byte[] tag = new byte[16];
-        byte[] key = new byte[16];
-        for (int i = 0; i < key.length; i++) {
-            key[i] = 0;
-        }
 
-        AES cipher = new AES();
-        cipher.makeKey(key, bits, BlockCipher.DIR_ENCRYPT);
-        CMAC cmac = new CMAC(cipher);
+    private static final byte[] CTR_AES(byte[] r, byte[] data) throws CipherException {
+
+        AES aes = new AES();
+
+        byte[] r_normalizado = new byte[16];
+
         cmac.init();
-        cmac.update(data);
-        cmac.finish(false);
-        cmac.getTag(tag, cipher.blockSize());
-        return tag;
-    }
+        cmac.update(r);
+        cmac.getTag(r_normalizado);
 
-    private static final byte[] CTR_AES(byte[] r, byte[] data, String mode, SecureRandom rnd) throws CipherException {
+        aes.makeKey(r_normalizado, r_normalizado.length, AES.DIR_ENCRYPT);
 
-        PBEParametersGenerator generator = new PKCS5S2ParametersGenerator();
-
-        byte[] iv = new byte[16];
+        CTR ctr = new CTR(aes);
+        //Só 4 ints.. PB justificou
+        int[] iv = new int[4];
         for (int i = 0; i < iv.length; i++) {
-            //Acho que o IV não pode ser nulo! Pergunte-me por quê... Ass: Eduardo
-            //http://en.wikipedia.org/wiki/Cipher_block_chaining#Counter_.28CTR.29
             iv[i] = (byte) 0;
         }
 
-        byte encryptionkey[] = new byte[16];
-        byte[] ret;// = new byte[data.lenght];
-        //int _mode;
+        ctr.init(iv);
 
-
-
-        //Here we map r to a fixed size hash that will be used as a 128-bit key to AES
-        encryptionkey = CMAC(r, 128);
-
-
-        generator.init(encryptionkey, iv, 1000);
-
-
-
-        //Cipher cipher = null;
-        SICBlockCipher cipher2 = null;
-
-        try {
-            //cipher = Cipher.getInstance("AES/CTR/NoPadding");
-            cipher2 = new SICBlockCipher(new AESEngine());
-
-        } catch (/*NoSuchAlgorithm*/Exception e) {
-            System.out.println("BDCPS: Invalid algorithm.");
-            e.printStackTrace();
-            throw new CipherException("BDCPS: Invalid algorithm.");
-        }
-
-        //lgorithmParameterSpec paramSpec = new IvParameterSpec(iv, 0, iv.length);
-        //SecretKeySpec secretKeySpec = new  SecretKeySpec(key, 0, key.length, "AES");
-        KeyParameter keyparam = new KeyParameter(encryptionkey);
-        ParametersWithIV paramwithiv = new ParametersWithIV(keyparam, iv);
-
-        /*
-        if (mode.equals("ENC")) {
-        _mode = Cipher.ENCRYPT_MODE;
-        } else if (mode.equals("DEC")) {
-        _mode = Cipher.DECRYPT_MODE;
-        } else {
-        throw new IllegalArgumentException("BDCPS: Unknown mode: " + mode);
-        }
-         */
-
-        //cipher.init(_mode, secretKeySpec, paramSpec);
-        cipher2.init(true, paramwithiv);
-
-
-
-        ret = new byte[data.length];
-        //cipher.doFinal(data, 0, data.length, ret, 0);
-
-        int numberOfBlocks = data.length / cipher2.getBlockSize();
-        if ((data.length % cipher2.getBlockSize()) > 0) {
-            numberOfBlocks++;
-        }
-
-
-        for (int blockNumber = 0;
-                blockNumber < numberOfBlocks;
-                blockNumber++) {
-            byte[] blockIn = new byte[cipher2.getBlockSize()];
-            byte[] blockOut = new byte[cipher2.getBlockSize()];
-
-
-            int effectiveCurrentBlockSize;
-            //Verifica se é o último bloco e é incompleto
-            if (blockNumber == numberOfBlocks - 1) {
-                // É o último...
-                effectiveCurrentBlockSize = data.length % cipher2.getBlockSize();
-
-                //Se o resto da divisão deu 0, o último bloco é completo =)
-                if (effectiveCurrentBlockSize == 0) {
-                    effectiveCurrentBlockSize = cipher2.getBlockSize();
-                }
-
-            } else {
-                //Não é o último, logo o blockIn terá todos os bytes efetivos
-                effectiveCurrentBlockSize = cipher2.getBlockSize();
-            }
-
-            System.arraycopy(data, blockNumber * cipher2.getBlockSize(), blockIn, 0, effectiveCurrentBlockSize);
-            cipher2.processBlock(blockIn, 0, blockOut, 0);
-            System.arraycopy(blockOut, 0, ret, blockNumber * cipher2.getBlockSize(), effectiveCurrentBlockSize);
-
-        }
+        byte[] ret = new byte[data.length];
+        ctr.update(data, data.length, ret, null);
 
         return ret;
     }
@@ -246,5 +161,25 @@ public class BDCPSUtil {
             ret += hex.charAt((array[i] & 0xff) >>> 4) + hex.charAt(array[i] & 15) + " ";
         }
         return ret + " ]";
+    }
+
+    /**
+     * Retorna uma string representando o byte array para ser impressa, para
+     * fins de debug.
+     */
+    public static String byteArrayToDebugableString(byte[] ba) {
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < ba.length; i++) {
+            int byteAsInt = (int) ba[i];
+            if (byteAsInt < 0) {
+                byteAsInt = 256 + byteAsInt;
+            }
+            String strByte = Integer.toHexString(byteAsInt);
+            if (strByte.length() == 1) {
+                strByte = "0" + strByte;
+            }
+            sb.append(strByte);
+        }
+        return sb.toString();
     }
 }
