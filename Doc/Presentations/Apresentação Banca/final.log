@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.8-alpha-20080323 (MiKTeX 2.7) (preloaded format=pdflatex 2008.11.26)  9 DEC 2008 13:19
+This is pdfTeX, Version 3.1415926-1.40.8-alpha-20080323 (MiKTeX 2.7) (preloaded format=pdflatex 2008.11.26)  9 DEC 2008 14:00
 entering extended mode
 **C:/workpf/Doc/Presentations/Apresentação*Banca/final.tex
 ("C:/workpf/Doc/Presentations/Apresentação Banca/final.tex"
@@ -928,9 +928,31 @@ fig/pdftex.map}] (final.toc) [2
 ] [47
 
 ]
+<figuras/class_diagram.PNG, id=1307, 1134.2375pt x 1036.87375pt>
+File: figuras/class_diagram.PNG Graphic file (type png)
+
+<use figuras/class_diagram.PNG>
+Overfull \vbox (8.32204pt too high) detected at line 193
+ []
+
 [48
 
-] [49
+ <figuras/class_diagram.PNG>]
+LaTeX Font Info:    Try loading font information for U+msa on input line 211.
+
+("C:\Arquivos de programas\MiKTeX 2.7\tex\latex\amsfonts\umsa.fd"
+File: umsa.fd 2002/01/19 v2.2g AMS font definitions
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 211.
+
+("C:\Arquivos de programas\MiKTeX 2.7\tex\latex\amsfonts\umsb.fd"
+File: umsb.fd 2002/01/19 v2.2g AMS font definitions
+)
+Overfull \hbox (3.57567pt too wide) in paragraph at lines 211--211
+ [] 
+ []
+
+[49
 
 ] (final.toc) [50
 
@@ -939,8 +961,6 @@ fig/pdftex.map}] (final.toc) [2
 ] [52
 
 ] [53
-
-] [54
 
 ]
 \tf@nav=\write6
@@ -953,11 +973,11 @@ LaTeX Font Warning: Size substitutions with differences
 
  ) 
 Here is how much of TeX's memory you used:
- 13141 strings out of 95317
- 227710 string characters out of 1183489
+ 13213 strings out of 95317
+ 229013 string characters out of 1183489
  311384 words of memory out of 1500000
- 15915 multiletter control sequences out of 110000
- 6409 words of font info for 23 fonts, out of 1200000 for 2000
+ 15964 multiletter control sequences out of 110000
+ 11071 words of font info for 41 fonts, out of 1200000 for 2000
  16 hyphenation exceptions out of 8191
  47i,16n,77p,360b,683s stack positions out of 5000i,500n,10000p,200000b,5000s
 <C:/Arquivos de programas/MiKTeX 2.7/fonts/type1/bluesky/cm/cmss10.pfb><C:/Ar
@@ -965,9 +985,9 @@ quivos de programas/MiKTeX 2.7/fonts/type1/bluesky/cm/cmss12.pfb><C:/Arquivos d
 e programas/MiKTeX 2.7/fonts/type1/bluesky/cm/cmss8.pfb><C:/Arquivos de program
 as/MiKTeX 2.7/fonts/type1/bluesky/cm/cmssbx10.pfb><C:/Arquivos de programas/MiK
 TeX 2.7/fonts/type1/bluesky/cm/cmssi10.pfb>
-Output written on final.pdf (54 pages, 376214 bytes).
+Output written on final.pdf (53 pages, 417101 bytes).
 PDF statistics:
- 1539 PDF objects out of 1728 (max. 8388607)
+ 1518 PDF objects out of 1728 (max. 8388607)
  114 named destinations out of 1000 (max. 131072)
- 137 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 142 words of extra memory for PDF output out of 10000 (max. 10000000)
 

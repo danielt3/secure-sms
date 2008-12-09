@@ -169,9 +169,9 @@ Ao longo do trabalho, foi bolado um esquema de segurança inovador
 %TODO: colar o diag de arquitetura
 \end{frame}
 
-\section{Implementa\c{c}\~{a}o}
+\section{Implementação}
 
-\begin{frame}{Classes}
+\begin{frame}{Implementação}
 \begin{itemize}[<+->]
 \item Esquema implementado em J2ME
 \item Testes de viabilidade: OK
@@ -182,8 +182,10 @@ Ao longo do trabalho, foi bolado um esquema de segurança inovador
 
 \begin{frame}{Classes}
 
-\begin{figure}[h]
-	\centering		\includegraphics[width=1.00\textwidth]{figuras/class_diagram.PNG}
+
+
+\begin{figure}
+	\includegraphics[width=0.65\textwidth]{figuras/class_diagram.PNG}
 	\caption{Diagrama de classes do sistema}
 	\label{fig:class_diagram}
 \end{figure}
@@ -192,15 +194,20 @@ Ao longo do trabalho, foi bolado um esquema de segurança inovador
 
 %\subsection{Resultados}
 \begin{frame}{Resultados}
-\begin{tabular}{lcccc}\hline
-Operaï¿½ï¿½o                          & Nokia 6275 (s)   &  Sony Ericsson W200i (s) \\\hline
-Private-Key-Extract               & 2,63                   &  0,93                          \\\hline
-Validação de chave pública        & 10,50                  &  3,35                          \\\hline
-Encripta\c{c}\~{a}o               & 0,57                   &  0,21                          \\\hline
-Decripta\c{c}\~{a}o               & 0,80                   &  0,29                          \\\hline
-Private RSA-508                   & 1,05                   &  0,39                          \\\hline
-Public RSA-508                    & 0,03                   &  0,02                          \\\hline
+
+\begin{table}[h]\centering
+\caption{Testes com a implementação final (chaves de 176 bits)} \label{tab:bdcps176final}
+\begin{tabular}{cccccc}\hline
+Operação                   & Nokia E51(ms)   &  Nokia 6275(ms) & Emulador(ms)\\\hline
+Set-Public-Value	&	66,9	& 750,6  & 204,5	 \\\hline
+Private-Key-Extract &	379,0 &	4381,7 &	1033,9 \\\hline
+Check-Private-Key	& 1164,9	& 12171,1  & 3209,9	 \\\hline
+Set-Public-Key	& 379,5 &	4332,4 &	1013,3 \\\hline
+Public-Key-Validate	&	1192,6 &	13112,0 & 3455,8 \\\hline
+Signcryption	&302,4 &	1633,5 & 	428,8 \\\hline
+Unsigncryption	&	266,7 &	1957,0 & 492,2 \\\hline
 \end{tabular}
+\end{table}
 \end{frame}
 
 
@@ -216,10 +223,11 @@ Public RSA-508                    & 0,03                   &  0,02              
 
 \end{frame}
 
+%??? adeus
 %\subsection{Aplica\c{c}\~{a}o}
-\begin{frame}
-aplic
-\end{frame}
+%\begin{frame}
+%aplic
+%\end{frame}
 
 \begin{frame}{Contato}
 

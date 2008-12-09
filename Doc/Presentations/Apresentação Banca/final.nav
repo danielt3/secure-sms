@@ -34,7 +34,7 @@
 \headcommand {\beamer@framepages {35}{41}}
 \headcommand {\slideentry {3}{0}{13}{42/42}{}{0}}
 \headcommand {\beamer@framepages {42}{42}}
-\headcommand {\sectionentry {4}{Implementa\c {c}\~{a}o}{43}{Implementa\c {c}\~{a}o}{0}}
+\headcommand {\sectionentry {4}{Implementa\c c\~ao}{43}{Implementa\c c\~ao}{0}}
 \headcommand {\beamer@sectionpages {34}{42}}
 \headcommand {\beamer@subsectionpages {34}{42}}
 \headcommand {\slideentry {4}{0}{14}{43/43}{}{0}}
@@ -54,10 +54,8 @@
 \headcommand {\beamer@framepages {51}{52}}
 \headcommand {\slideentry {5}{0}{20}{53/53}{}{0}}
 \headcommand {\beamer@framepages {53}{53}}
-\headcommand {\slideentry {5}{0}{21}{54/54}{}{0}}
-\headcommand {\beamer@framepages {54}{54}}
-\headcommand {\beamer@partpages {1}{54}}
-\headcommand {\beamer@subsectionpages {50}{54}}
-\headcommand {\beamer@sectionpages {50}{54}}
-\headcommand {\beamer@documentpages {54}}
-\headcommand {\def \inserttotalframenumber {21}}
+\headcommand {\beamer@partpages {1}{53}}
+\headcommand {\beamer@subsectionpages {50}{53}}
+\headcommand {\beamer@sectionpages {50}{53}}
+\headcommand {\beamer@documentpages {53}}
+\headcommand {\def \inserttotalframenumber {20}}
