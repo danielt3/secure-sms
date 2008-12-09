@@ -1,14 +1,10 @@
-This is pdfTeX, Version 3.1415926-1.40.8-beta-20080627 (MiKTeX 2.7) (preloaded format=pdflatex 2008.11.28)  9 DEC 2008 11:21
+This is pdfTeX, Version 3.1415926-1.40.8-alpha-20080323 (MiKTeX 2.7) (preloaded format=pdflatex 2008.11.26)  9 DEC 2008 13:19
 entering extended mode
-**F:/Users/Vando/Desktop/Quinto*Ano/Projeto*de*Formatura/Documentos*de*Apoio/SV
-N/Doc/Presentations/Apresentação*Banca/final.tex
-
-("F:/Users/Vando/Desktop/Quinto Ano/Projeto de Formatura/Documentos de Apoio/SV
-N/Doc/Presentations/Apresentação Banca/final.tex"
+**C:/workpf/Doc/Presentations/Apresentação*Banca/final.tex
+("C:/workpf/Doc/Presentations/Apresentação Banca/final.tex"
 LaTeX2e <2005/12/01>
 Babel <v3.8j> and hyphenation patterns for english, dumylang, nohyphenation, ge
-rman, ngerman, german-x-2008-06-18, ngerman-x-2008-06-18, french, portuguese, l
-oaded.
+rman, ngerman, french, portuguese, loaded.
 ("C:\Arquivos de programas\MiKTeX 2.7\tex\latex\beamer\base\beamer.cls"
 ("C:\Arquivos de programas\MiKTeX 2.7\tex\latex\beamer\base\beamerbasercs.sty"
 Package: beamerbasercs 2007/01/28 (rcs-revision 1.4)
@@ -835,8 +831,8 @@ LaTeX Font Warning: Font shape `OT1/cmss/m/n' in size <4> not available
 
 [1
 
-{C:/Documents and Settings/All Users.WINDOWSN/Dados de aplicativos/MiKTeX/2.7/p
-dftex/config/pdftex.map}] (final.toc) [2
+{C:/Documents and Settings/All Users/Dados de aplicativos/MiKTeX/2.7/pdftex/con
+fig/pdftex.map}] (final.toc) [2
 
 ] [3
 
@@ -852,18 +848,18 @@ dftex/config/pdftex.map}] (final.toc) [2
 
 ] [9
 
-]
-[10
+] [10
 
 ] [11
 
-] [12
+]
+[12
 
 ] [13
 
-] (final.toc) [14
+] [14
 
-] [15
+] (final.toc) [15
 
 ] [16
 
@@ -877,12 +873,12 @@ dftex/config/pdftex.map}] (final.toc) [2
 
 ] [21
 
-]
-[22
+] [22
 
 ] [23
 
-] [24
+]
+[24
 
 ] [25
 
@@ -900,14 +896,14 @@ dftex/config/pdftex.map}] (final.toc) [2
 
 ] [32
 
-] (final.toc) [33
+] [33
 
-]
-[34
+] (final.toc) [34
 
 ] [35
 
-] [36
+]
+[36
 
 ] [37
 
@@ -919,24 +915,24 @@ dftex/config/pdftex.map}] (final.toc) [2
 
 ] [41
 
-] (final.toc) [42
+] [42
 
-] [43
+] (final.toc) [43
 
 ] [44
 
 ] [45
 
-]
-[46
+] [46
 
 ] [47
 
-] [48
+]
+[48
 
 ] [49
 
-] [50
+] (final.toc) [50
 
 ] [51
 
@@ -945,41 +941,6 @@ dftex/config/pdftex.map}] (final.toc) [2
 ] [53
 
 ] [54
-
-] [55
-
-] [56
-
-] [57
-
-] [58
-
-] [59
-
-] [60
-
-]
-[61
-
-] [62
-
-] [63
-
-] [64
-
-] [65
-
-] [66
-
-] [67
-
-] [68
-
-] [69
-
-] [70
-
-] [71
 
 ]
 \tf@nav=\write6
@@ -992,21 +953,21 @@ LaTeX Font Warning: Size substitutions with differences
 
  ) 
 Here is how much of TeX's memory you used:
- 13202 strings out of 95284
- 228894 string characters out of 1182395
- 317427 words of memory out of 1500000
- 15961 multiletter control sequences out of 110000
- 6703 words of font info for 24 fonts, out of 1200000 for 2000
+ 13141 strings out of 95317
+ 227710 string characters out of 1183489
+ 311384 words of memory out of 1500000
+ 15915 multiletter control sequences out of 110000
+ 6409 words of font info for 23 fonts, out of 1200000 for 2000
  16 hyphenation exceptions out of 8191
- 47i,16n,77p,429b,683s stack positions out of 5000i,500n,10000p,200000b,5000s
+ 47i,16n,77p,360b,683s stack positions out of 5000i,500n,10000p,200000b,5000s
 <C:/Arquivos de programas/MiKTeX 2.7/fonts/type1/bluesky/cm/cmss10.pfb><C:/Ar
 quivos de programas/MiKTeX 2.7/fonts/type1/bluesky/cm/cmss12.pfb><C:/Arquivos d
 e programas/MiKTeX 2.7/fonts/type1/bluesky/cm/cmss8.pfb><C:/Arquivos de program
 as/MiKTeX 2.7/fonts/type1/bluesky/cm/cmssbx10.pfb><C:/Arquivos de programas/MiK
 TeX 2.7/fonts/type1/bluesky/cm/cmssi10.pfb>
-Output written on final.pdf (71 pages, 472336 bytes).
+Output written on final.pdf (54 pages, 376214 bytes).
 PDF statistics:
- 1982 PDF objects out of 2073 (max. 8388607)
- 147 named destinations out of 1000 (max. 131072)
- 141 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1539 PDF objects out of 1728 (max. 8388607)
+ 114 named destinations out of 1000 (max. 131072)
+ 137 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -1,6 +1,7 @@
 \beamer@endinputifotherversion {3.07pt}
 \select@language {brazil}
 \beamer@sectionintoc {1}{Introdu\c {c}\~{a}o}{2}{0}{1}
-\beamer@sectionintoc {2}{Necessidade}{14}{0}{2}
-\beamer@sectionintoc {3}{Solu\c {c}\~{a}o}{33}{0}{3}
-\beamer@sectionintoc {4}{Conclus\~{a}o}{42}{0}{4}
+\beamer@sectionintoc {2}{Necessidade}{15}{0}{2}
+\beamer@sectionintoc {3}{Solu\c {c}\~{a}o}{34}{0}{3}
+\beamer@sectionintoc {4}{Implementa\c {c}\~{a}o}{43}{0}{4}
+\beamer@sectionintoc {5}{Conclus\~{a}o}{50}{0}{5}
