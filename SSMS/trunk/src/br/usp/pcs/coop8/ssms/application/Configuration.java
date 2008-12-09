@@ -18,9 +18,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  */
-
 package br.usp.pcs.coop8.ssms.application;
 
+import br.usp.larc.pbarreto.jaes.AES;
 import br.usp.pcs.coop8.ssms.protocol.BDCPSParameters;
 
 /**
@@ -29,11 +29,10 @@ import br.usp.pcs.coop8.ssms.protocol.BDCPSParameters;
  * @author Administrador
  */
 public final class Configuration {
-    
+
     //TODO: Para v2.0, implementar algum arquivo de configuaração alterável,
     //de forma que seja possível alterar estes parâmetros sem precisar
     //recompilar o código.
-
     /**
      * Não instanciável
      */
@@ -42,7 +41,7 @@ public final class Configuration {
     /**
      * Número de bits do primo N
      */
-    public static final int K = 176;    
+    public static final int K = 176;
     ///**
     // * O telefone da KGB
     // */
@@ -51,9 +50,22 @@ public final class Configuration {
      * Porta a ser usada para envio de SMS
      */
     public static final int SMS_PORT = 50001;
-    
     /**
      * Os parâmetros BDCPS para o K dado.
      */
     private static final BDCPSParameters BDCPS_PARAMS = BDCPSParameters.getInstance(K);
+
+    /**
+     * Retorna uma instância do AES com chave nula.
+     */
+    public static final AES getAes() {
+        AES aes = new AES();
+        byte[] key = new byte[16];
+        for (int i = 0; i < 16; i++) {
+            key[i] = (byte) 0x00;
+        }
+        aes.makeKey(
+                key, 16, AES.DIR_ENCRYPT);
+        return aes;
+    }
 }

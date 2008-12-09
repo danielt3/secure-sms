@@ -20,6 +20,8 @@
  */
 package br.usp.pcs.coop8.ssms.messaging;
 
+import br.usp.larc.pbarreto.jaes.AES;
+import br.usp.larc.pbarreto.jaes.CMAC;
 import br.usp.pcs.coop8.ssms.application.Configuration;
 import br.usp.pcs.coop8.ssms.application.Controller;
 import br.usp.pcs.coop8.ssms.application.KeyGenerationBureau;
@@ -40,7 +42,6 @@ import net.sourceforge.floggy.persistence.FloggyException;
 import net.sourceforge.floggy.persistence.ObjectSet;
 import net.sourceforge.floggy.persistence.Persistable;
 import net.sourceforge.floggy.persistence.PersistableManager;
-import org.bouncycastle.crypto.digests.SHA1Digest;
 
 /**
  *
@@ -207,17 +208,18 @@ public class SmsListener
                 //Ainda não conheciamos os parâmetros públicos.. vamos validá-los.
 
                 PrivateData myData = PrivateData.getInstance();
-                byte[] hashMyId = new byte[20];
-                byte[] hashIdB = new byte[20];
-                SHA1Digest sha = new SHA1Digest();
+                byte[] hashMyId = new byte[16];
+                byte[] hashIdB = new byte[16];
+                
+                CMAC cmac = new CMAC(Configuration.getAes());
 
-                sha.reset();
-                sha.update(myData.getIdA().getBytes(), 0, myData.getIdA().getBytes().length);
-                sha.doFinal(hashMyId, 0);
+                cmac.init();
+                cmac.update(myData.getIdA().getBytes());
+                cmac.getTag(hashMyId);
 
-                sha.reset();
-                sha.update(senderPhone.getBytes(), 0, senderPhone.getBytes().length);
-                sha.doFinal(hashIdB, 0);
+                cmac.init();
+                cmac.update(senderPhone.getBytes());
+                cmac.getTag(hashIdB);
 
                 BDCPSClient bdcps = new BDCPSClient(Configuration.K, BDCPSParameters.getInstance(Configuration.K).PPubBytes, hashMyId);
 

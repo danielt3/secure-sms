@@ -20,6 +20,8 @@
  */
 package br.usp.pcs.coop8.ssms.application;
 
+import br.usp.larc.pbarreto.jaes.AES;
+import br.usp.larc.pbarreto.jaes.CMAC;
 import br.usp.pcs.coop8.ssms.tests.IntegrationTests;
 import br.usp.pcs.coop8.ssms.data.Contact;
 import br.usp.pcs.coop8.ssms.data.PrivateData;
@@ -33,15 +35,14 @@ import br.usp.pcs.coop8.ssms.protocol.BDCPSClient;
 import br.usp.pcs.coop8.ssms.protocol.BDCPSParameters;
 import br.usp.pcs.coop8.ssms.protocol.exception.CipherException;
 import br.usp.pcs.coop8.ssms.protocol.exception.InvalidMessageException;
-import br.usp.pcs.coop8.ssms.util.FileWriter;
 import br.usp.pcs.coop8.ssms.util.Output;
+import br.usp.pcs.coop8.ssms.util.Util;
 import javax.microedition.lcdui.Display;
 import net.sourceforge.floggy.persistence.Filter;
 import net.sourceforge.floggy.persistence.FloggyException;
 import net.sourceforge.floggy.persistence.ObjectSet;
 import net.sourceforge.floggy.persistence.Persistable;
 import net.sourceforge.floggy.persistence.PersistableManager;
-import org.bouncycastle.crypto.digests.SHA1Digest;
 
 /**
  * Executa funcionalidades a partir do menu
@@ -72,6 +73,7 @@ public abstract class Controller {
      */
     public static void startApplication(SSMSMain ssmsApp) {
 
+        
         Controller.ssmsApp = ssmsApp;
 
         Controller.receiveSMS();
@@ -89,25 +91,25 @@ public abstract class Controller {
     public static void firstTimeUse(String xA, String id) {
 
 
-        byte[] hashDoXa = new byte[20];
-        byte[] hashDoId = new byte[20];
-        byte[] hashDoTelKgb = new byte[20];
+        byte[] hashDoXa = new byte[16];
+        byte[] hashDoId = new byte[16];
+        byte[] hashDoTelKgb = new byte[16];
 
         PrivateData myData = PrivateData.getInstance();
 
         {
-            SHA1Digest sha = new SHA1Digest();
-            sha.reset();
-            sha.update(xA.getBytes(), 0, xA.getBytes().length);
-            sha.doFinal(hashDoXa, 0);
+            CMAC cmac = new CMAC(Configuration.getAes());
+            cmac.init();
+            cmac.update(xA.getBytes());
+            cmac.getTag(hashDoXa);
 
-            sha.reset();
-            sha.update(id.getBytes(), 0, id.getBytes().length);
-            sha.doFinal(hashDoId, 0);
+            cmac.init();
+            cmac.update(id.getBytes());
+            cmac.getTag(hashDoId);
 
-            sha.reset();
-            sha.update(myData.getKgbPhone().getBytes(), 0, myData.getKgbPhone().getBytes().length);
-            sha.doFinal(hashDoTelKgb, 0);
+            cmac.init();
+            cmac.update(myData.getKgbPhone().getBytes());
+            cmac.getTag(hashDoTelKgb);
         }
 
         BDCPSClient bdcps = new BDCPSClient(Configuration.K, BDCPSParameters.getInstance(Configuration.K).PPubBytes, hashDoId);
@@ -141,24 +143,27 @@ public abstract class Controller {
 
         PrivateData myPrivData = PrivateData.getInstance();
 
-        byte[] hashDoXa = new byte[20];
-        byte[] hashDoId = new byte[20];
-        byte[] hashIdKgb = new byte[20];
+        byte[] hashDoXa = new byte[16];
+        byte[] hashDoId = new byte[16];
+        byte[] hashIdKgb = new byte[16];
 
         {
 
-            SHA1Digest sha = new SHA1Digest();
-            sha.reset();
-            sha.update(xA.getBytes(), 0, xA.getBytes().length);
-            sha.doFinal(hashDoXa, 0);
+            CMAC cmac = new CMAC(Configuration.getAes());
+            cmac.init();
+            cmac.update(xA.getBytes());
+            cmac.getTag(hashDoXa);
+            
+            cmac.init();
+            cmac.update(myPrivData.getIdA().getBytes());
+            Output.println("id meu no unsign:" + Util.byteArrayToDebugableString(myPrivData.getIdA().getBytes()));
+            cmac.getTag(hashDoId);
+                    
 
-            sha.reset();
-            sha.update(myPrivData.getIdA().getBytes(), 0, myPrivData.getIdA().getBytes().length);
-            sha.doFinal(hashDoId, 0);
-
-            sha.reset();
-            sha.update(myPrivData.getKgbPhone().getBytes(), 0, myPrivData.getKgbPhone().getBytes().length);
-            sha.doFinal(hashIdKgb, 0);
+            cmac.init();
+            cmac.update(myPrivData.getKgbPhone().getBytes());
+            Output.println("id kgb no unsign:" + Util.byteArrayToDebugableString(myPrivData.getKgbPhone().getBytes()));
+            cmac.getTag(hashIdKgb);
         }
 
 
@@ -167,7 +172,12 @@ public abstract class Controller {
         bdcps.setPublicValue(myPrivData.getYA());
         byte[] myQa;
         try {
-            myQa = bdcps.unsigncrypt(new byte[][]{myPrivData.getEncryptedQA_c(), myPrivData.getEncryptedQA_h(), myPrivData.getEncryptedQA_z()}, hashIdKgb, BDCPSParameters.getInstance(Configuration.K).yKgbBytes);
+            myQa = bdcps.unsigncrypt(new byte[][]{
+                myPrivData.getEncryptedQA_c(), 
+                myPrivData.getEncryptedQA_h(),
+                myPrivData.getEncryptedQA_z()},
+                hashIdKgb, 
+                BDCPSParameters.getInstance(Configuration.K).yKgbBytes);
         } catch (InvalidMessageException ex) {
             ex.printStackTrace();
             Output.println("Erro, assinatura da KGB é inválida, QA é invalido.");
@@ -260,24 +270,24 @@ public abstract class Controller {
 
         PrivateData myPrivData = PrivateData.getInstance();
 
-        byte[] hashDoXa = new byte[20];
-        byte[] hashDoIdA = new byte[20];
-        byte[] hashDoIdB = new byte[20];
+        byte[] hashDoXa = new byte[16];
+        byte[] hashDoIdA = new byte[16];
+        byte[] hashDoIdB = new byte[16];
 
         {
 
-            SHA1Digest sha = new SHA1Digest();
-            sha.reset();
-            sha.update(password.getBytes(), 0, password.getBytes().length);
-            sha.doFinal(hashDoXa, 0);
+            CMAC cmac = new CMAC(Configuration.getAes());
+            cmac.init();
+            cmac.update(password.getBytes());
+            cmac.getTag(hashDoXa);
 
-            sha.reset();
-            sha.update(myPrivData.getIdA().getBytes(), 0, myPrivData.getIdA().getBytes().length);
-            sha.doFinal(hashDoIdA, 0);
+            cmac.init();
+            cmac.update(myPrivData.getIdA().getBytes());
+            cmac.getTag(hashDoIdA);
 
-            sha.reset();
-            sha.update(selectedContact.getPhone().getBytes(), 0, selectedContact.getPhone().getBytes().length);
-            sha.doFinal(hashDoIdB, 0);
+            cmac.init();
+            cmac.update(selectedContact.getPhone().getBytes());
+            cmac.getTag(hashDoIdB);
         }
 
 
@@ -304,24 +314,24 @@ public abstract class Controller {
 
         PrivateData myPrivData = PrivateData.getInstance();
 
-        byte[] hashDoXa = new byte[20];
-        byte[] hashDoIdA = new byte[20];
-        byte[] hashDoIdB = new byte[20];
+        byte[] hashDoXa = new byte[16];
+        byte[] hashDoIdA = new byte[16];
+        byte[] hashDoIdB = new byte[16];
 
         {
 
-            SHA1Digest sha = new SHA1Digest();
-            sha.reset();
-            sha.update(password.getBytes(), 0, password.getBytes().length);
-            sha.doFinal(hashDoXa, 0);
+            CMAC cmac = new CMAC(Configuration.getAes());
+            cmac.init();
+            cmac.update(password.getBytes());
+            cmac.getTag(hashDoXa);
 
-            sha.reset();
-            sha.update(myPrivData.getIdA().getBytes(), 0, myPrivData.getIdA().getBytes().length);
-            sha.doFinal(hashDoIdA, 0);
+            cmac.init();
+            cmac.update(myPrivData.getIdA().getBytes());
+            cmac.getTag(hashDoIdA);
 
-            sha.reset();
-            sha.update(selectedMessage.getSender().getBytes(), 0, selectedMessage.getSender().getBytes().length);
-            sha.doFinal(hashDoIdB, 0);
+            cmac.init();
+            cmac.update(selectedMessage.getSender().getBytes());
+            cmac.getTag(hashDoIdB);
         }
 
 

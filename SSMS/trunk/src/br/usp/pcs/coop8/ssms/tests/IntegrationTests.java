@@ -20,6 +20,8 @@
  */
 package br.usp.pcs.coop8.ssms.tests;
 
+import br.usp.larc.pbarreto.jaes.AES;
+import br.usp.larc.pbarreto.jaes.CMAC;
 import br.usp.pcs.coop8.ssms.application.*;
 import br.usp.larc.pbarreto.smspairing.SMSCurve;
 import br.usp.larc.pbarreto.smspairing.SMSCurve2;
@@ -36,8 +38,6 @@ import br.usp.pcs.coop8.ssms.protocol.exception.CipherException;
 import br.usp.pcs.coop8.ssms.protocol.exception.InvalidMessageException;
 import br.usp.pcs.coop8.ssms.util.Output;
 import br.usp.pcs.coop8.ssms.util.Util;
-import org.bouncycastle.crypto.Digest;
-import org.bouncycastle.crypto.digests.SHA1Digest;
 import pseudojava.BigInteger;
 import pseudojava.SecureRandom;
 
@@ -230,14 +230,13 @@ public class IntegrationTests {
     public static void implBenchmark(int bits, int iteractions) {
 
         // Declaring
-        Digest sha = null;
-        sha = new SHA1Digest();
+        CMAC cmac = new CMAC(Configuration.getAes());
         //int bits = 176;
         long elapsed;
 
         byte[] s;
-        byte[] xa_alice = new byte[20];
-        byte[] xb_bob = new byte[20];
+        byte[] xa_alice = new byte[16];
+        byte[] xb_bob = new byte[16];
 
         Output.println("\n======== bits: " + bits);
 
@@ -257,15 +256,14 @@ public class IntegrationTests {
         // Hashing keys
         try {
 
-            sha.reset();
+            cmac.init();
 
-            sha.update(aliceKey.getBytes(), 0, aliceKey.getBytes().length);
-            sha.doFinal(xa_alice, 0);
+            cmac.update(aliceKey.getBytes());
+            cmac.getTag(xa_alice);
 
-            sha.reset();
-
-            sha.update(bobKey.getBytes(), 0, bobKey.getBytes().length);
-            sha.doFinal(xb_bob, 0);
+            cmac.init();
+            cmac.update(bobKey.getBytes());
+            cmac.getTag(xb_bob);
 
         } catch (/*Digest*/Exception ex) {
             Output.println("BDCPS: Digest exception.");

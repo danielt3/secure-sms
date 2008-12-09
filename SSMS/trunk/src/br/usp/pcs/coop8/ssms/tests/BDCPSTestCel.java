@@ -21,11 +21,12 @@
 
 package br.usp.pcs.coop8.ssms.tests;
 
+import br.usp.larc.pbarreto.jaes.AES;
+import br.usp.larc.pbarreto.jaes.CMAC;
+import br.usp.pcs.coop8.ssms.application.Configuration;
 import br.usp.pcs.coop8.ssms.protocol.exception.CipherException;
 import br.usp.pcs.coop8.ssms.protocol.exception.InvalidMessageException;
 import br.usp.pcs.coop8.ssms.protocol.*;
-import org.bouncycastle.crypto.Digest;
-import org.bouncycastle.crypto.digests.SHA1Digest;
 
 /**
  *
@@ -34,10 +35,10 @@ import org.bouncycastle.crypto.digests.SHA1Digest;
 public class BDCPSTestCel {
 
     public static void test() {
-        Digest sha = null;
+        CMAC cmac = null;
 
         try {
-            sha = new SHA1Digest();
+            cmac = new CMAC(Configuration.getAes());
         } catch (/*NoSuchAlgorithm*/Exception e) {
             System.out.println("BDCPS: Hash Algorithm not found.");
             e.printStackTrace();
@@ -54,22 +55,21 @@ public class BDCPSTestCel {
         String id_b = "551188884321";
         String id_auth = "thegodfather";
 
-        byte[] s = new byte[20];
-        byte[] xa_alice = new byte[20];
-        byte[] xb_bob = new byte[20];
+        byte[] s = new byte[16];
+        byte[] xa_alice = new byte[16];
+        byte[] xb_bob = new byte[16];
 
-        sha.update(masterKey.getBytes(), 0, masterKey.getBytes().length);
-        sha.doFinal(s, 0);
+        cmac.init();        
+        cmac.update(masterKey.getBytes());
+        cmac.getTag(s);
 
-        sha.reset();
+        cmac.init();
+        cmac.update(aliceKey.getBytes());
+        cmac.getTag(xa_alice);
 
-        sha.update(aliceKey.getBytes(), 0, aliceKey.getBytes().length);
-        sha.doFinal(xa_alice, 0);
-
-        sha.reset();
-
-        sha.update(bobKey.getBytes(), 0, bobKey.getBytes().length);
-        sha.doFinal(xb_bob, 0);
+        cmac.init();
+        cmac.update(bobKey.getBytes());
+        cmac.getTag(xb_bob);
 
         BDCPS auth = new BDCPSAuthority(bits, s, id_auth.getBytes());
         BDCPS alice = new BDCPSClient(bits, auth.getPublicPoint(), id_a.getBytes());

@@ -21,6 +21,8 @@
 
 package br.usp.pcs.coop8.ssms.application;
 
+import br.usp.larc.pbarreto.jaes.AES;
+import br.usp.larc.pbarreto.jaes.CMAC;
 import br.usp.pcs.coop8.ssms.data.PrivateData;
 import br.usp.pcs.coop8.ssms.messaging.SignupResponse;
 import br.usp.pcs.coop8.ssms.messaging.SecureMessage;
@@ -30,7 +32,7 @@ import br.usp.pcs.coop8.ssms.protocol.BDCPSAuthority;
 import br.usp.pcs.coop8.ssms.protocol.BDCPSParameters;
 import br.usp.pcs.coop8.ssms.protocol.exception.CipherException;
 import br.usp.pcs.coop8.ssms.util.Output;
-import org.bouncycastle.crypto.digests.SHA1Digest;
+import br.usp.pcs.coop8.ssms.util.Util;
 import pseudojava.BigInteger;
 
 /**
@@ -57,18 +59,19 @@ public class KeyGenerationBureau {
     public static void returnQaMessage(SignupMessage rmqam, String id) {
 
 
-        byte[] hashIdA = new byte[20];
-        byte[] hashKgbId = new byte[20];
+        byte[] hashIdA = new byte[16];
+        byte[] hashKgbId = new byte[16];
         
         {
-            SHA1Digest sha = new SHA1Digest();
-            sha.reset();
-            sha.update(id.getBytes(), 0, id.getBytes().length);
-            sha.doFinal(hashIdA, 0);
-
-            sha.reset();
-            sha.update(PrivateData.getInstance().getIdA().getBytes(), 0, PrivateData.getInstance().getIdA().getBytes().length);
-            sha.doFinal(hashKgbId, 0);
+            CMAC cmac = new CMAC(Configuration.getAes());
+            cmac.init();
+            cmac.update(id.getBytes());
+            Output.println("id_A no sign:" + Util.byteArrayToDebugableString(id.getBytes()));
+            cmac.getTag(hashIdA);
+            
+            cmac.init();
+            cmac.update(PrivateData.getInstance().getIdA().getBytes());
+            cmac.getTag(hashKgbId);
         }
 
         byte[] yA = rmqam.getYA();
