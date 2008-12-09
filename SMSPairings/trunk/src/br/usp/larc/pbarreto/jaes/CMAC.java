@@ -72,6 +72,11 @@ public final class CMAC extends MAC {
         state = 0; // initialized
     }
 
+    //Eu (Eduardo) que fiz esse atalinho:    
+    public void update(byte[] M) {
+        this.update(M, M.length, true);
+    }
+    
     public void update(byte[] M, int m, boolean aad) {
         if (state != 0) {
             throw new RuntimeException("wrong order of operations");
@@ -111,9 +116,10 @@ public final class CMAC extends MAC {
         //assert(m == 0 || t < block_size); // m == 0 here only occurs if m == 0 from the very beginning
     }
 
-    public void update(byte[] M) {
-        update(M, block_size, false);
-    }
+    //Tirei o atalhinho que tinha (tava errado?)
+    //public void update(byte[] M) {
+    //    update(M, block_size, false);
+    //}
 
     public void finish(boolean aad) {
         if (state != 0) {
@@ -150,6 +156,10 @@ public final class CMAC extends MAC {
             finish(false);
         }
         System.arraycopy(T, 0, tag, 0, (t < block_size) ? t : block_size);
+    }
+    
+    public void getTag(byte[] tag) {
+        this.getTag(tag, this.block_size);
     }
 
     public void doFinalize() {
