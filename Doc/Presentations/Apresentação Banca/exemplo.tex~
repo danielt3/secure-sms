@@ -1,0 +1,60 @@
+% Layout Options
+%
+% [slidestop] puts frame titles & contents on the top left corner (default = [slidescentered])
+% [compress] makes all navigation bars as small as possible (bad for multi-line navigation bars)
+% [red] changes navigation bars and title to reddish color (default = blue; others = red,brown,blackandwhite)
+%
+% Font options 
+% 
+% [mathserif] use serif fonts for representing formulas instead of sans serif (default = mathsans)
+%
+% Note options
+% [notes] adds notes to PDF screen
+% [notesonly] make only notes
+\documentclass[notes,blue,mathserif]{beamer}
+%\documentclass[slidestop,blue,mathserif]{beamer}
+
+\usepackage{graphicx}
+\usepackage{fancybox}
+
+% This package enables us to use special letters (with accents, cedillas, etc).
+% You can discard this command when the presentation is in English.
+\usepackage[latin1]{inputenc}
+
+
+% in \begin{document} .. \end{document}
+%\mode{\usepackage{fullpage}}
+
+% in \begin{frame} .. \end{frame}
+\mode
+{
+%\usetheme{Warsaw}
+\usetheme{Berlin}
+%\usetheme{Malmoe}
+%\usetheme{Antibes}
+%\usetheme{Berkeley}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+
+% The default font theme installs a sans serif for all text of the presentation
+\usefonttheme{default}
+
+% Using default block style
+%\setbeamertemplate{blocks}[default]
+
+% Background colors
+% solid style
+%\beamertemplatesolidbackgroundcolor{gray}
+% gradient style
+%\beamertemplateshadingbackground{blue!5}{yellow!10}
+%\beamertemplateshadingbackground{blue!10}{yellow!5}
+\beamertemplateshadingbackground{yellow!5}{blue!10}
+% grid style
+%\beamertemplategridbackground[0.5in]
+}
+
+\title{Title of Presentation}
+\author{Name of Author}
+\institute{Institute of Chemistry, Academia Sinica}
+%\date{\today}
+\date{December 12, 2007}

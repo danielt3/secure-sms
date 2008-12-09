@@ -1,0 +1,49 @@
+
+\documentclass[notes,blue,mathserif]{beamer}
+
+\usepackage[latin1]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage{graphicx}
+\usepackage{fancybox}
+
+
+\usetheme{Boadilla}
+
+% The default font theme installs a sans serif for all text of the presentation
+%\usefonttheme{default}
+
+% Using default block style
+%\setbeamertemplate{blocks}[default]
+
+% Background colors
+% solid style
+%\beamertemplatesolidbackgroundcolor{gray}
+% gradient style
+%\beamertemplateshadingbackground{blue!5}{yellow!10}
+%\beamertemplateshadingbackground{blue!10}{yellow!5}
+\beamertemplateshadingbackground{yellow!10}{blue!5}
+%\beamertemplateshadingbackground{yellow!5}{blue!10}
+% grid style
+\beamertemplategridbackground[0.8in]
+
+
+\title[SMS Seguro]{Sistema de SMS Seguro\\PCS2050 - Projeto de Formatura II \\ Apresenta\c{c}\~{a}o Final}
+
+\author[Cruz, Pereira, Silva]{Eduardo de Souza Cruz\\
+					Geovandro Carlos Crepaldi Firmino Pereira\\
+					Rodrigo Rodrigues da Silva\\ 
+					Orientador: Prof. Dr. Paulo S. L. M. Barreto
+\institute[PCS/EPUSP]{Departamento de Engenharia de Computa\c{c}\~{a}o e Sistemas Digitais \\ Escola Polit\'{e}cnica \\ Universidade de S\~{a}o Paulo}
+\date{S\~{a}o Paulo, 08/12/2008}
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+
+\begin{frame}{Introduction}
+This is a short introduction to Beamer class.
+\end{frame}
+
+\end{document}
