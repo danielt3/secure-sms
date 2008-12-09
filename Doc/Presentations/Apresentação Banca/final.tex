@@ -1,11 +1,10 @@
-
 \documentclass[notes,blue,mathserif]{beamer}
 
 \usepackage[latin1]{inputenc}
 \usepackage[brazil]{babel}
 \usepackage{graphicx}
 \usepackage{fancybox}
-\usepackage{hyperref}
+%\usepackage{hyperref}
 
 
 \usetheme{Boadilla}
@@ -57,44 +56,58 @@
 
 \section{Introdu\c{c}\~{a}o}
 
-\subsection{Motiva\c{c}\~{a}o}
+%%\subsection{Motiva\c{c}\~{a}o e Cen\'{a}rio}
 
-\begin{frame}{Motiva\c{c}\~{a}o}
-Motiva√ß√£o
-\begin{itemize}
-\item SMS armazenado em aberto nas integradoras\/Operadoras
-\item Algoritmo A5 quebrado da rede GSM
-\item Poucas soluÁıes no mercado
-\item Possibilidade de transformar em produto
+\begin{frame}{Motiva\c{c}\~{a}o e Cen\'{a}rio}
+\begin{itemize}[<+->]
+\item Crescimento do uso do SMS no mundo: 
+\begin{description}
+\item 2,3 trilh\~{o}es de mensagens em 2010 (previs\~{a}o)
+\end{description}
+\item Plataforma leve e barata, com grande base de usu\'{a}rios:
+\begin{description}
+\item[]2,4 bilh\~{o}es de pessoas
+\end{description}
+\item Diversas oportunidades econ\^{o}micas: 
+\begin{description}
+\item72,5 bilh\~{o}es de d\'{o}lares para operadoras em 2006
+\end{description}
+\item Possibilidade de produzir pesquisa: inova\c{c}\~{a}o
 \end{itemize}
 \end{frame}
 
-\subsection{Objetivos}
+%%\subsection{Objetivos}
+
 \begin{frame}{Objetivos}
-Objetivos
+\begin{block}
+"Projetar, implementar e implantar um sistema capaz de prover confidencialidade, integridade e autenticidade ao servi\c{c}o de \emph{SMS} sem extrapolar as limita\c{c}\~{o}es de recursos t\'{i}picas do ambiente."
+\end{block}
 \end{frame}
 
-\subsection{Cen\'{a}rio}
-\begin{frame}{Cen\'{a}rio}
-Cen√°rio
- \begin{itemize}[<+->]
- \item Recursos Limitados
-		\begin{itemize}
-		\item Processamento
-	  \item memÛria
-	  \item Largura de banda
-	  \end{itemize}
+%%\subsection{Metodologia}
+
+\begin{frame}{Metodologia}
+\begin{itemize}[<+->]
+\item Estudo do cen\'{a}rio, detalhamento do problema e levantamento de requisitos
+\item Estudo de esquemas de seguran√ßa em busca de uma solu\c{c}\~{a}oo adequada ao problema
+\item Projeto, implementa\c{c}\~{a}o e testes
+\end{itemize}
 \end{frame}
 
 \section{Necessidade}
 
-\subsection{Aplica\c{c}\~{o}es Potenciais}
+%\subsection{Aplica\c{c}\~{o}es Potenciais}
 
 \begin{frame}{Aplica\c{c}\~{o}es Potenciais}
-
+\begin{itemize}[<+->]
+\item Comunica\c{c}\~{a}o interpessoal
+\item Transa\c{c}\~{o}es banc\'{a}rias e pagamentos
+\item Comunica\c{c}\~{a}o corporativa e governamental sigilosa
+\item Monitora\c{c}\~{a}o remota
+\end{itemize}
 \end{frame}
 
-\subsection{Servi\c{c}os de Seguran\c{c}a}
+%\subsection{Servi\c{c}os de Seguran\c{c}a}
 
 \begin{frame}{Servi\c{c}os de Seguran\c{c}a}
 \begin{itemize}[<+->]
@@ -105,41 +118,54 @@ Cen√°rio
 \end{itemize}
 \end{frame}
 
-\subsection{M\'{e}tricas e Requisitos}
+%\subsection{Defini\c{c}\~{a}o do Problema}
+
+\begin{frame}{Defini\c{c}\~{a}o do Problema}
+\begin{itemize}[<+->]
+\item SMS armazenado em aberto nas integradoras\/ e operadoras
+\item Recursos limitados: processamento, mem\'{o}ria, largura de banda
+\item Algoritmo \emph{A5} da rede \emph{GSM} quebrado
+\item Poucas solu\c{c}\~{o}es de seguran\c{c}a no mercado
+\item \emph{RSA}: cerca de \textit{15 mensagens} para trocar \textit{um} certificado
+\item Algoritmos sim\'{e}tricos: grande quantidade de senhas
+\end{itemize}
+\end{frame}
+
+%\subsection{M\'{e}tricas e Requisitos}
+
 \begin{frame}{M\'{e}tricas e Requisitos}
 \begin{itemize}[<+->]
 \item Tempo de espera
-\item Espa√ßo √∫til da mensagem
+\item Espa\c{c}o \'{u}til da mensagem
 \item Tamanho da chave
 \item \textit{Overhead} do protocolo
 \end{itemize}
 \end{frame}
-\note[itemize]{\item Notes content}
 
 \section{Solu\c{c}\~{a}o}
 
-\subsection{Especifica\c{c}\~{a}o}
+%\subsection{Especifica\c{c}\~{a}o}
 \begin{frame}{Especifica\c{c}\~{a}o}
 Especificacao
 \end{frame}
 
-\subsection{Arquitetura}
+%\subsection{Arquitetura}
 \begin{frame}{Arquitetura}
 Arquitetura
 \end{frame}
 
-\subsection{Implementa\c{c}\~{a}o}
+%\subsection{Implementa\c{c}\~{a}o}
 \begin{frame}{Implementa\c{c}\~{a}o}
 	\begin{itemize}[<+->]
-	\item Curvas ElÌpticas 
-	\item	Chaves menores
+	\item Curvas el\'{i}pticas
+	\item Chaves menores
 	\item Criptografia auto-certificada
-	\item Criptografia baseada em Identidades
-	\itemGerenciamento de chaves simplificado
-	\itemIrretratabilidade
+	\item Criptografia baseada em identidades
+	\item Gerenciamento de chaves simplificado
+\end{itemize}
 \end{frame}
 
-\subsection{Resultados}
+%\subsection{Resultados}
 \begin{frame}{Resultados}
 res
 \end{frame}
@@ -150,17 +176,17 @@ res
 concl
 \end{frame}
 
-\subsection{Aplica\c{c}\~{a}o}
+%\subsection{Aplica\c{c}\~{a}o}
 \begin{frame}
 aplic
 \end{frame}
 
-\subsection{Pesquisa}
+%\subsection{Pesquisa}
 \begin{frame}
 pesq
 \end{frame}
 
-\subsection{Desenvolvimentos futuros}
+%\subsection{Desenvolvimentos futuros}
 \begin{frame}{Desenvolvimentos futuros}
 fut
 \end{frame}
