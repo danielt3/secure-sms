@@ -66,7 +66,6 @@ public class KeyGenerationBureau {
             CMAC cmac = new CMAC(Configuration.getAes());
             cmac.init();
             cmac.update(id.getBytes());
-            Output.println("id_A no sign:" + Util.byteArrayToDebugableString(id.getBytes()));
             cmac.getTag(hashIdA);
             
             cmac.init();

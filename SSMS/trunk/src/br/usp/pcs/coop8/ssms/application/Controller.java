@@ -20,7 +20,6 @@
  */
 package br.usp.pcs.coop8.ssms.application;
 
-import br.usp.larc.pbarreto.jaes.AES;
 import br.usp.larc.pbarreto.jaes.CMAC;
 import br.usp.pcs.coop8.ssms.tests.IntegrationTests;
 import br.usp.pcs.coop8.ssms.data.Contact;
@@ -36,7 +35,6 @@ import br.usp.pcs.coop8.ssms.protocol.BDCPSParameters;
 import br.usp.pcs.coop8.ssms.protocol.exception.CipherException;
 import br.usp.pcs.coop8.ssms.protocol.exception.InvalidMessageException;
 import br.usp.pcs.coop8.ssms.util.Output;
-import br.usp.pcs.coop8.ssms.util.Util;
 import javax.microedition.lcdui.Display;
 import net.sourceforge.floggy.persistence.Filter;
 import net.sourceforge.floggy.persistence.FloggyException;
@@ -156,13 +154,15 @@ public abstract class Controller {
             
             cmac.init();
             cmac.update(myPrivData.getIdA().getBytes());
-            Output.println("id meu no unsign:" + Util.byteArrayToDebugableString(myPrivData.getIdA().getBytes()));
             cmac.getTag(hashDoId);
+            
+            cmac.init();
+            cmac.update(myPrivData.getIdA().getBytes());
+            cmac.getTag(hashDoId);           
                     
 
             cmac.init();
-            cmac.update(myPrivData.getKgbPhone().getBytes());
-            Output.println("id kgb no unsign:" + Util.byteArrayToDebugableString(myPrivData.getKgbPhone().getBytes()));
+            cmac.update(myPrivData.getKgbPhone().getBytes());            
             cmac.getTag(hashIdKgb);
         }
 
