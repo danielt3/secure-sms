@@ -89,31 +89,19 @@ public class BDCPSUtil {
     }
 
     protected static final BigInteger h3(SMSField4 r, byte[] m, SMSField4 y_A, byte[] id_A, SMSField4 y_B, byte[] id_B, BigInteger n) {
+        
         cmac.init();
-
-        System.out.println("r = " + byteArrayToDebugableString(r.toByteArray()));
         cmac.update(r.toByteArray());
-
-        System.out.println("y_A = " + byteArrayToDebugableString(y_A.toByteArray()));
         cmac.update(y_A.toByteArray());
-
-        System.out.println("id_A = " + byteArrayToDebugableString(id_A));
         cmac.update(id_A);
-
-        System.out.println("y_B = " + byteArrayToDebugableString(y_B.toByteArray()));
         cmac.update(y_B.toByteArray());
-
-        System.out.println("id_B = " + byteArrayToDebugableString(id_B));
         cmac.update(id_B);
-
-        System.out.println("m = " + byteArrayToDebugableString(m));
         cmac.update(m);
-
+        
         byte[] hash3 = new byte[16];
         cmac.getTag(hash3);
 
-        System.out.println("hash3 = " + byteArrayToDebugableString(hash3));
-
+        //return hash3;
         return (new BigInteger(hash3)).mod(n);
     }
 
