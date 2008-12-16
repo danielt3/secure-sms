@@ -17,6 +17,9 @@
 \usepackage{graphics}
 \usepackage{rotating}
 
+
+
+
 \fontfamily{arial}\selectfont
 \renewcommand{\rmdefault}{arial}
 
@@ -29,6 +32,8 @@
 \newcommand{\samples}{\mathop{\stackrel{\,_\$}{\gets}}}
 
 \sloppy
+
+
 
 \begin{document}
 
@@ -122,23 +127,21 @@ Ao Felipe Sanches, por ter criado o ícone do aplicativo.
 \end{agradecimentos}
 
 \begin{resumo}
-Este trabalho consiste na especificação, projeto e implementação de um sistema que garanta serviços de segurança na troca de mensagens \emph{SMS} entre aparelhos de telefonia celular. 
+Este trabalho consistiu na especificação, projeto e implementação de um sistema que garante serviços de segurança na troca de mensagens \emph{SMS} entre aparelhos de telefonia celular. 
 
-A necessidade da implementação de mais uma camada de segurança sobre a rede de telefonia celular \emph{GSM} justifica-se pelo fato de as mensagens trafegarem pela rede interna da operadora sem qualquer mecanismo de segurança, deixando-a vulnerável a quaisquer atacantes que comprometam o sistema e tenham acesso à sua base de dados SMS, incluindo funcionários mal intencionados. Desse modo, aplicações que requeiram segurança ficam impossibilitadas de se aproveitar das qualidades desse meio: mobilidade, leveza e baixo custo.
+A necessidade da implementação de mais uma camada de segurança sobre a rede de telefonia celular \emph{GSM} justifica-se pelo fato de as mensagens trafegarem pela rede interna da operadora sem qualquer mecanismo de segurança, deixando-a vulnerável a quaisquer atacantes que possam comprometer o sistema e obter acesso à sua base de dados SMS, incluindo funcionários mal intencionados. Desse modo, aplicações que requeirem segurança ficam impossibilitadas de se aproveitar das qualidades deste meio: mobilidade, leveza e baixo custo.
 
-Os paradigmas de segurança atualmente empregados na \emph{Internet} não são adequados a esse cenário, uma vez que há grandes limitações de banda e poder de processamento. Analisamos os conceitos relativamente recentes de Criptografia de Curvas Elípticas e Criptografia Baseada em Identidades, chegando a um esquema híbrido entre essas e a criptografia de chave pública convencional que atende aos requisitos estabelecidos.
+Os paradigmas de segurança atualmente empregados na \emph{Internet} não são adequados a esse cenário, uma vez que há grandes limitações de banda e poder de processamento. Analisamos  conceitos relativamente recentes de Criptografia de Curvas Elípticas e Criptografia Baseada em Identidades, chegando a um esquema híbrido entre essas técnicas e a criptografia de chave pública convencional que atende aos requisitos estabelecidos.
 
-Ao longo da monografia, apresentaremos aspectos da nossa solução, métricas, detalhes do protocolo criptográfico que viabilizou a implementação, especificação do sistema e resultados de testes de desempenho do sistema implementado.
 \end{resumo}
 
 \begin{abstract}
-This work consists of the specification, design and implementation of a system that guarantees security services to the mobile Short Message Service (\emph{SMS}). 
+This work consisted of the specification, design and implementation of a system that guarantees security services to the mobile Short Message Service (\emph{SMS}). 
 
 The need of an extra security layer onto the \emph{GSM} network resides on the fact that short messages are exchanged through the carrier's internal network as plain text, vulnerable to any attacker that manages to compromise the system and gain access to the SMS database, including malicious employees. Therefore, security-sensitive applications remain unable to take advantage from this media's best features: mobility, lightness and low cost.
 
-The security paradigms currently adopted on the Internet don't fulfill this background's requirements, since there are strong bandwidth and processing restrictions. The analysis of the relatively recent concepts of Elliptic Curve Cryptography and Identity-Based Cryptography lead us to a hybrid scheme that assembles the best qualities of these and Public Key Cryptography and fulfills the established requirements.
+The security paradigms currently adopted on the Internet don't fulfill this background's requirements, since there are strong bandwidth and processing restrictions. The analysis of the relatively recent concepts of Elliptic Curve Cryptography and Identity-Based Cryptography lead us to a hybrid scheme that assembles the best qualities of these techniques and Public Key Cryptography and fulfills the established requirements.
 
-Throughout this monograph, we are going to present aspects of our solution, metrics, details of the adopted cryptographic scheme, a system specification and performance test results.
 \end{abstract}
 
 \tableofcontents
@@ -147,6 +150,7 @@ Throughout this monograph, we are going to present aspects of our solution, metr
 
 \listoftables
 
+
 %TOLERADO: \sigla não funciona!!!
 %To fazendo a lista de siglas na mão... consertar depois talvez
 \listadesiglas{
@@ -154,13 +158,16 @@ Throughout this monograph, we are going to present aspects of our solution, metr
 \emph{\textbf{AES} - Advanced Encryption Standard}\\
 \emph{\textbf{API} - Applicaiton Programming Interface}\\
 \emph{\textbf{CLDC} - Connected Limited Device Configuration}\\
+\emph{\textbf{CMA} - Chosen-message attack}\\
 \emph{\textbf{DES} - Data Encryption Standard}\\
 \emph{\textbf{DSA} - Digital Signature Algorithm}\\
 \emph{\textbf{DSS} - Digital Signature System}\\
 \emph{\textbf{DL} - Discrete Logarithm}\\
 \emph{\textbf{ECC} - Elliptic Curve Cryptography}\\
 \emph{\textbf{ECDLP} - Elliptic Curve Discrete Logarithm Problem}\\
+\emph{\textbf{EUF} - Existential unforgeability}\\
 \emph{\textbf{GSM} - Global System for Mobile Comunnication}\\
+\emph{\textbf{IBS} - ID-based signature}\\
 \emph{\textbf{IDE} - Integrated Development Environment}\\
 \emph{\textbf{J2ME} - Java 2, Micro Edition}\\
 \emph{\textbf{KGB} - Key Generation Bureau}\\
@@ -185,7 +192,7 @@ Throughout this monograph, we are going to present aspects of our solution, metr
 
 O Serviço de Mensagens Curtas (\emph{Short Message Service}, ou SMS) é um serviço oferecido por operadoras de telefonia celular para que seus usuários troquem mensagens curtas de texto com outros usuários da rede ou com serviços da Internet. Atualmente, cerca de 2.4 bilhões de pessoas utilizam o SMS no mundo.
 
-Comercialmente, as mensagens SMS moveram uma massiva indústria em 2006, com cerca de 81 bilhões de dólares no mundo. Mensagens SMS tem um preço médio global de 0.11 dólares e mantém uma margem de lucro de quase 90\%. Em 2010 cerca de 2.3 trilhões de mensagens de texto serão enviadas no mundo, gerando 72.5 bilhões de dólares para as operadoras de celular, de acordo com previsões realizadas no ano de 2006 pela Gartner Dataquest. A maioria deles transformam-se em lucro, porque a margem de lucro em mensagens de texto flutua em cerca de 90\%, mais que o dobro do que as operadoras obtêm com serviços de voz. \cite{sylvers}
+Comercialmente, as mensagens SMS moveram uma massiva indústria em 2006, com cerca de 81 bilhões de dólares no mundo. Em 2010 cerca de 2.3 trilhões de mensagens de texto serão enviadas no mundo, gerando 72.5 bilhões de dólares para as operadoras de celular, de acordo com previsões realizadas no ano de 2006 pela Gartner Dataquest. A maioria deles transformam-se em lucro, porque a margem de lucro em mensagens de texto flutua em cerca de 90\%, mais que o dobro do que as operadoras obtêm com serviços de voz. \cite{sylvers}
 
 
 A rede GSM (Global System for Mobile Comunnication), sobre a qual as mensagens SMS trafegam, usa o mecanismo \emph{store-and-forward}, que é similar ao serviço SMTP de correio eletrônico. Em vez de servidores de \emph{e-mail}, são usados centros de SMS (SMSC) que armazenam as mensagens SMS antes de serem enviadas para o fornecedor de serviços (operadora) ou para outro SMSC.
@@ -222,7 +229,7 @@ Como um terceiro exemplo, considere a situação onde $A$ está enviando uma mensag
 
 \section{Objetivos}
 
-O ambiente em questão não se mostra muito propício para práticas criptográficas. A largura de banda é muito pequena, visto que em cada mensagem SMS podem ser trafegados apenas 140 bytes binários \cite{ortiz}.
+O ambiente em questão não se mostra muito propício para práticas criptográficas. A largura de banda é muito pequena, visto que em cada mensagem SMS podem ser trafegados apenas 140 bytes binários \footnote{Bytes de 8 bits. Essa diferenciação é feita pois o protocolo SMS original trabalha com bytes de 7 bits.} \cite{ortiz}.
 Além disto, existem limitações de processamento no dispositivo celular, que podem comprometer a usabilidade de um esquema criptográfico tradicional \cite{loon}.
 
 Devido a estas dificuldades tecnológicas, o cenário atual não apresenta uma grande variedade de soluções abrangendo os problemas de segurança supracitados. Desse modo, nos propomos a projetar, e implantar um sistema capaz de prover confidencialidade, integridade e autenticidade a mensagens SMS (\emph{Short Message Service}) sem extrapolar as limitações de recursos computacionais e de ocupação de banda típicas desse ambiente.
@@ -236,9 +243,9 @@ Posteriormente, realizamos o estudo de esquemas de criptografia de modo a buscar
 Por último, realizamos a implementação do sistema conforme sua especificação e realizamos testes de modo a confrontar os dados obtidos em um ambiente real com as previsões feitas na fase anterior.
 
 \section{Organização}
-O restante desta monografia organiza-se como se segue. No capítulo 2 apresentamos algumas preliminares teóricas necessárias ao desenvolvimento de nossa pesquisa e essenciais ao entendimento deste trabalho. O capítulo 3 aprofunda a discussão do tema, delineando o escopo do sistema e definindo métricas de avaliação das soluções estudadas. Os capítulos 4 a 7 apresentam a análise de requisitos e dos casos de uso do sistema e justificam as decisões de projeto e implementação tomadas com base nessa análise. Em seguida, apresentamos os resultados obtidos e finalmente concluímos o trabalho.
+O restante desta monografia organiza-se como se segue. No capítulo \ref{cap:PRETEOR} apresentamos algumas preliminares teóricas necessárias ao desenvolvimento de nossa pesquisa e essenciais ao entendimento deste trabalho. O capítulo \ref{cap:DISCUSSAO} aprofunda a discussão do tema, delineando o escopo do sistema e definindo métricas de avaliação das soluções estudadas. Os capítulos \ref{cap:ANALISEREQUISITOS} a \ref{cap:IMPLEMENTACAO} apresentam a análise de requisitos e dos casos de uso do sistema e justificam as decisões de projeto e implementação tomadas com base nessa análise. Em seguida, apresentamos os resultados obtidos e finalmente concluímos o trabalho.
 
-\chapter{Preliminares teóricas}% (assunto geral: curvas elípticas, emparelhamento, identidadesz protocolos, conceitos, etc)
+\chapter{Preliminares teóricas} \label{cap:PRETEOR}% (assunto geral: curvas elípticas, emparelhamento, identidadesz protocolos, conceitos, etc)
 
 \section{Serviços de Segurança}
 
@@ -267,7 +274,7 @@ Por exemplo, se confidencialidade fosse desejada e a chave secreta compartilhada
 
 \subsection{Administração e distribuição de chaves}
 
-A principal vantagem da criptografia de chave simétrica é a alta eficiência. Contudo, há significantes desvantagens nestes sistemas. Uma delas é o conhecido problema da distribuição de chaves - a necessidade de um canal que seja secreto e autenticado para a distribuição das chaves. Em algumas aplicações, esta distribuição pode ser convenientemente feita por usar um canal fisicamente seguro, tal como um emissário de confiança. Outra maneira é usar os serviços de uma terceira parte confiável \emph{on-line} que inicialmente estabelece chaves secretas com todas as entidades na rede. Essa entidade usa essas chaves para distribuir as informações de chaves para as entidades em comunicação quando requerido\footnote{Este modo de usar uma terceira parte centralizada para distribuir chaves para algoritmos de chave simétrica às partes conforme elas necessitarem é usado pelo protocolo de autenticação da rede \emph{Kerberos} para aplicações cliente/servidor.}. Soluções como esta podem ser bem apropriadas para ambientes onde há uma autoridade central aceitável e confiável, mas é claramente impraticável em aplicações tal como \emph{e-mail} na \emph{Internet}.
+A principal vantagem da criptografia de chave simétrica é a alta eficiência. Contudo, há significantes desvantagens nestes sistemas. Uma delas é o conhecido problema da distribuição de chaves - a necessidade de um canal que seja secreto e autenticado para a distribuição das chaves. Em algumas aplicações, esta distribuição pode ser convenientemente feita por usar um canal fisicamente seguro, tal como um emissário de confiança. Outra maneira é usar os serviços de uma terceira parte confiável \emph{on-line} que inicialmente estabelece chaves secretas com todas as entidades na rede. Essa entidade usa essas chaves para distribuir as informações de chaves para as entidades em comunicação quando requerido\footnote{Este modo de usar uma terceira parte centralizada para distribuir chaves para algoritmos de chave simétrica às partes conforme elas necessitarem é usado pelo protocolo de autenticação da rede \emph{Kerberos} para aplicações cliente/servidor.}. Soluções como esta podem ser bem apropriadas para ambientes onde há uma autoridade central aceitável e confiável, mas é claramente intratável em aplicações tal como \emph{e-mail} na \emph{Internet}.
 
 Uma segunda desvantagem é o problema de administração de chaves. Em uma rede de $N$ entidades, cada entidade pode ter que manter diferentes informações de chaves com cada uma das $N-1$ entidades. Logo, seriam necessárias $N(N-1)/2$ chaves privadas em toda a rede, o que inviabiliza a administração ao passo que $N$ se torna grande. Este problema pode ser aliviado usando serviços de uma terceira parte \emph{on-line} que distribui as chaves conforme sãs requeridas, assim reduzindo a necessidade das entidades de armazenar múltiplas chaves seguramente. Novamente, contudo, tais soluções não são práticas em alguns cenários. Finalmente, uma vez que a informação sobre as chaves é compartilhada entre duas (ou mais) entidades, técnicas de chave simétrica não podem ser usadas para implementar esquemas de assinatura digital (DSS) elegantes que forneçam serviços de irretratabilidade. Isto porque é impossível distinguir entre as ações tomadas por diferentes detentores de uma chave secreta\footnote{Esquemas de assinaturas digitais podem ser implementados usando técnicas de chave simétrica; contudo, estes esquemas geralmente são geralmente impraticáveis quando for requerido o uso de uma terceira parte confiável on-line ou de novas chaves para cada assinatura.}.\cite{menezes}
 
@@ -282,7 +289,7 @@ Se a entidade $A$ deseja enviar uma mensagem confidencial $m$ para uma entidade 
 
 \subsection{Irretratabilidade}
 
-Esquemas de assinatura digital podem ser desenvolvidos para autenticação da origem e integridade dos dados, e para facilitar o fornecimento de serviços de irretratabilidade. Uma entidade $A$ usaria o algoritmo de geração de assinatura $SIGN$ de um esquema de assinatura digital e sua chave privada $d_{A}$ para computar a assinatura da mensagem: $s = SIGN_{d_{A}}(m)$. Ao receber $m$ e $s$, uma entidade $B$ que tem uma cópia autentica da chave pública de $A$ $e_{A}$ usa um algoritmo de assinatura de verificação para confirmar que $s$ foi de fato gerado a partir de $m$ e $d_{A}$. Uma vez que $d_{A}$ é presumivelmente conhecido por $A$, $B$ está seguro de que a mensagem foi realmente originada por $A$. Ademais, uma vez que a verificação requer apenas quantidades não secretas $m$ e $e_{A}$, a assinatura $s$ para $m$ pode também ser verificada por uma terceira parte que poderia estabelecer contestações se $A$ negar ter assinado a mensagem $m$. Diferente das assinaturas escritas à mão, a assinatura $s$ de $A$ depende da mensagem $m$ sendo assinada, prevenindo um forjador de simplesmente acrescentar $s$ a uma mensagem $\tilde{m}$ linha e afirmar que $A$ assinou $\tilde{m}$. Mesmo embora não haja nenhuma necessidade de segredo com relação à chave pública $e_{A}$, é essencial que os verificadores usem uma cópia autêntica de $e_{A}$ quando verificarem assinaturas geradas por $A$.
+Esquemas de assinatura digital podem ser desenvolvidos para autenticação da origem e integridade dos dados, e para facilitar o fornecimento de serviços de irretratabilidade. Uma entidade $A$ usaria o algoritmo de geração de assinatura $SIGN$ de um esquema de assinatura digital e sua chave privada $d_{A}$ para computar a assinatura da mensagem: $s = SIGN_{d_{A}}(m)$. Ao receber $m$ e $s$, uma entidade $B$ que tem uma cópia autentica da chave pública de $A$ $e_{A}$ usa um algoritmo de verificação de assinatura para confirmar que $s$ foi de fato gerado a partir de $m$ e $d_{A}$. Uma vez que $d_{A}$ é presumivelmente conhecido por $A$, $B$ está seguro de que a mensagem foi realmente originada por $A$. Ademais, uma vez que a verificação requer apenas quantidades não secretas $m$ e $e_{A}$, a assinatura $s$ para $m$ pode também ser verificada por uma terceira parte que poderia estabelecer contestações se $A$ negar ter assinado a mensagem $m$. Diferente das assinaturas escritas à mão, a assinatura $s$ de $A$ depende da mensagem $m$ sendo assinada, prevenindo um forjador de simplesmente acrescentar $s$ a uma mensagem $\tilde{m}$ linha e afirmar que $A$ assinou $\tilde{m}$. Mesmo embora não haja nenhuma necessidade de segredo com relação à chave pública $e_{A}$, é essencial que os verificadores usem uma cópia autêntica de $e_{A}$ quando verificarem assinaturas geradas por $A$.
 
 Deste modo, a criptografia de chave pública fornece soluções elegantes para os três problemas com criptografia de chave simétrica: distribuição de chaves, administração de chaves e suporte à irretratabilidade. Deve-se notar que embora necessidade de um canal secreto para distribuição de chaves tenha sido eliminado, implementar uma infra-estrutura de chave pública (\emph{Public Key Infrastructure}, ou PKI) para distribuir e administrar chaves públicas pode ser um desafio formidável na prática. Também, operações em chave pública em geral são significativamente mais lentas do que seus respectivos na criptografia de chave simétrica. Portanto, sistemas híbridos que se beneficiam da eficiência dos algoritmos de chave simétrica e da funcionalidade dos algoritmos de chave pública são frequentemente usados.
 
@@ -500,7 +507,7 @@ O receptor aceita a mensagem se, e somente se, $v = h$. A equação \ref{eq:nonce-
 
 \end{itemize}
 
-\chapter{Discussão}
+\chapter{Discussão} \label{cap:DISCUSSAO}
 
 \section{Escopo}
 %Falar aqui exatamente o que o sistema faz e o que ele não faz! Falar de problemas que existem, mas que ficam fora do nosso escopo.
@@ -540,7 +547,7 @@ Um certificado digital típico ocupa entre 2KB e 4KB, e uma solução baseada em in
 
 Por outro lado, a manutenção de um diretório confiável de chaves públicas, típico de sistemas de criptografia convencionais, seria impraticável em uma rede de telefonia celular.  Uma solução tecnológica baseada em alternativas à criptografia convencional é, portanto, imprescindível. Sendo assim, foi considerado o uso de criptografia em curvas elípticas com assinatura baseada em identidades. Aprofundando-se na especificação, percebeu-se ainda que a chave pública do usuário poderia ser estabelecida essencialmente a partir de sua identificação única no sistema, ou seja, seu próprio número de celular. Desse modo, a criptografia em curvas elípticas baseada em identidades com emparelhamentos bilineares parecia, inicialmente, ser capaz de atender aos requisitos do sistema.
 
-\chapter{Análise de requisitos do sistema}
+\chapter{Análise de requisitos do sistema} \label{cap:ANALISEREQUISITOS}
 
 \section{Requisitos funcionais}
 
@@ -640,12 +647,12 @@ Nas seções abaixo detalharemos cada caso de uso do sistema, representados sucint
 			\item Usuário insere o número do telefone do novo contato e seleciona \emph{OK}.
 			\item Sistema exibe notificação de envio de SMS para o contato informado.
 			\item Usuário confirma o envio da mensagem SMS.
-			\item Sistema envia requisição de autenticação para o novo contato.
+			\item \label{uc:ANCSER} Sistema envia requisição de autenticação para o novo contato.
 		\end{enumerate}
     \item \textbf{Pós-Condição:} Sistema volta para a tela inicial.
 		\item \textbf{Extensões:} 
 		\begin{enumerate}
-			\item Sistema exibe notificação de erro no envio da mensagem caso o serviço de envio esteja indisponível. (Passo v).
+			\item Sistema exibe notificação de erro no envio da mensagem caso o serviço de envio esteja indisponível. (Passo \ref{uc:ANCSER}).
 		\end{enumerate}
 		\end{enumerate}
 	
@@ -661,18 +668,18 @@ Nas seções abaixo detalharemos cada caso de uso do sistema, representados sucint
 		\item Sistema exige que o usuário indique o destinatário da mensagem.
 		\item Usuário seleciona o destino da lista de contatos exibida.
 		\item Usuário compõe a mensagem a ser enviada
-		\item	Usuário confirma o envio da mensagem para o destinatário escolhido.
+		\item	\label{uc:EVMUCO} Usuário confirma o envio da mensagem para o destinatário escolhido.
 		\item Sistema exibe notificação de envio da mensagem.
 		\end{enumerate}
 	  \item \textbf{Pós-Condição:} A notificação de mensagem enviada é exibida e o sistema retorna à tela inicial.
 		\item \textbf{Extensões:} 
 		\begin{enumerate}
-		\item Sistema exibe notificação de erro no envio da mensagem caso o serviço de envio esteja indisponível. (Passo v).
+		\item Sistema exibe notificação de erro no envio da mensagem caso o serviço de envio esteja indisponível. (Passo \ref{uc:EVMUCO}).
 		\end{enumerate}
 		\item \textbf{Inclusões:}
 		\begin{enumerate}
 		\item Sistema busca todos os contatos da lista de contatos do celular para exibi-los.
-		\item	Caso de uso 4.
+		\item	Caso de uso \ref{uc:EAM}.
 		\end{enumerate}
 		\end{enumerate}
 
@@ -686,19 +693,19 @@ Nas seções abaixo detalharemos cada caso de uso do sistema, representados sucint
 	\begin{enumerate}
 	\item Celular recebe a nova mensagem e a coloca na fila.
 	\item	Sistema operacional do celular capta a mensagem e requisita ao usuário que inicialize a aplicação caso ela não esteja em execução.
-	\item	O sistema identifica a primitiva da mensagem e trata de forma correspondente.
+	\item	 \label{uc:RDMOSI} O sistema identifica a primitiva da mensagem e trata de forma correspondente.
 	\end{enumerate}
 	\item \textbf{Pós-Condição:} a mensagem está processada e o sistema está exibindo a tela inicial.
 	\item \textbf{Extensões:} 
 	\begin{enumerate}
-	\item	Sistema trata mensagem cifrada e assinada. (Passo iii)
-	\item	Sistema trata mensagem de autenticação de usuário.(Passo iii)
-	\item	Sistema trata mensagem de pedido da chave privada. (Passo iii)
-	\item	Sistema trata mensagem de entrega de chave privada. (Passo iii)
+	\item	Sistema trata mensagem cifrada e assinada. (Passo \ref{uc:RDMOSI})
+	\item	Sistema trata mensagem de autenticação de usuário.(Passo \ref{uc:RDMOSI})
+	\item	Sistema trata mensagem de pedido da chave privada. (Passo \ref{uc:RDMOSI})
+	\item	Sistema trata mensagem de entrega de chave privada. (Passo \ref{uc:RDMOSI})
 	\end{enumerate}
 \end{enumerate}
 
-\subsection{Encriptar/Assinar Mensagem}
+\subsection{Encriptar/Assinar Mensagem} \label{uc:EAM}
 		\begin{enumerate}
 		\item \textbf{Descrição:} Usuário escreveu uma mensagem para alguém e deseja cifrá-la e assiná-la.
 		\item \textbf{Evento Iniciador:} Usuário requisita envio de mensagem cifrada e assinada ao sistema.
@@ -999,7 +1006,7 @@ A partir do byte 8, ocorre o armazenamento dinâmico dos parâmetros. É reservado 
 	\label{fig:signcryptedmessage}
 \end{figure}
 
-\chapter{Implementação}
+\chapter{Implementação} \label{cap:IMPLEMENTACAO}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % IMPLEMENTAÇÃO
@@ -1085,9 +1092,21 @@ Este problema ocorre devido às implementações internas das integrações entre as 
 
 \chapter{Conclusão}
 Ao longo do trabalho, foi possível observar que a criptografia em curvas elípticas (\emph{ECC}) já é uma alternativa viável em ambientes com restrições, principalmente de banda, como os serviços de telefonia móvel, apesar de sua considerável exigência de poder computacional. No entanto, o uso de esquemas híbridos, como o aqui proposto, alia as melhores qualidades dos dois paradigmas, possibilitando a implantação imediata de sistemas de segurança completos no contexto de dispositivos e aplicações móveis.
+Como resultado deste trabalho, obteve-se um esquema eficiente de criptografia de chave pública auto-certificado, baseado em identidades, onde os próprios usuários podem se autenticar na rede sem a necessidade de um dirétório de chaves públicas, que era utilizado em criptografia de chave pública.
 
 \section{Análise dos resultados}
-O sistema de modo geral funcionou de acordo com o esperado, satisfazendo os requisitos e métricas propostos. Os resultados apresentados mostram tempos excelentes, atingindo assim as métricas de usabilidade desejadas, e comprovam a adequação do protocolo de segurança.
+
+A partir das implementações e testes dos algoritmos BLMQ e BDCPS, pudemos constatar resultados importantes que nos levaram a desistir da primeira solução e desenvolver a segunda. A seguir são enumerados resultados importantes que justificaram a escolha e desistência da primeira solução e a necessidade do desenvolvimento da segunda:
+
+O BLMQ oferecia vantagens como a dispensa de um dirétorio \emph{online} de chaves públicas, chaves de tamanho reduzido, no caso 160 bits, e a facilidade de validação de chaves públicas. Porém não se mostrou eficiente em aparelhos celular. As metas que não obtiveram sucesso são listadas a seguir:
+\begin{itemize}
+\item Tempo de inicialização: O tempo para inicialização das curvas e geração dos parâmetros no celular foi da ordem de 2 minutos deveria ser aguardado quando a aplicação fosse utilizada pela primeira vez.
+\item Tempo de emparelhamento: As implementações de emparelhamento adotadas ETA e ATE gastaram, cada uma, tempos próximos a 4 segundos no celular. Devido ao fato do método de verificação utilizar duas vezes a custosa função de emparelhamento, tínhamos tempo de verificação de pelo menos 8 segundos, desviando a solução da meta estabelecida para verificação de uma mensagem.
+\end {itemize}
+
+Já os resultados obtidos a partir dos testes com o BDCPS foram positivos em relação às metas. Dois celulares foram testados, sendo que um deles, o \emph{Nokia 6275}, tem um processador 12 vezes mais lento que o outro, o \emph{Nokia E51}. Em ambos os testes, as metas de tempo de assinatura e de verificação foram obedecidas com tempos gastos menores que 2 segundos para as duas principais operações. Além disso, as chaves também possuíam tamanho reduzido, de 176 bits, obedecendo à meta de ocupação de espaço útil da mensagem.
+
+
 
 \section{Perspectivas futuras}
 Apesar de já termos apresentado um sistema de segurança funcional, pronto para o uso, existem ainda pontos em que ele pode ser aperfeiçoado. Especificamente, o protocolo de segurança utilizado não fornece os serviços de irretratabilidade e revogação de chaves. O serviço de irretratabilidade poderia ser implantado com o uso de outros protocolos de cifrassinatura, no entanto ao custo de degradação do desempenho devido ao uso mais extenso de emparelhamentos \cite[section~3]{bdcps}.
@@ -1100,6 +1119,20 @@ No decorrer do desenvolvimento deste trabalho, superamos as dificuldades tecnoló
 \bibliography{Monografia}
 
 \appendix
+
+\chapter{Glossário}
+
+\begin{itemize}
+\item \textbf{Autenticidade} Garantia de que a entidade com que está-se comunicando é realmente a entidade desejada.
+\item \textbf{Cifrassinatura} Operação que combina assinatura e encriptação de uma mensagem em um único passo.
+\item \textbf{Confidencialidade} Garantia de que apenas os indivíduos permitidos tenham acesso à uma determinada informação.
+\item \textbf{Criptograma} Bloco de dados resultante da saída de algum processo criptográfico.
+\item \textbf{Emparelhamento} Função matemática bilinear que permite troca de posição das constantes que multiplicam os parâmetros sem que o resultado da função se altere.
+\item \textbf{Integridade} Garantia de que uma mensagem recebida não foi alterada no meio do caminho.
+\item \textbf{Irretratabilidade} Possibilidade de ciclano convencer por exemplo um juiz de que fulano lhe assinou uma mensagem eletrônica.
+\item \textbf{Vericifração} Operação que combina verificação e decriptação de uma mensagem em um único passo.
+\end{itemize}
+
 
 \chapter{Diagramas de classe detalhados}\label{app:classe_detalhados}
 
