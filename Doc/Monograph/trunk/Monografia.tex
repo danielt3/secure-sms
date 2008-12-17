@@ -891,7 +891,7 @@ A figura \ref{fig:class_diagram} apresenta um diagrama de classes simplificado d
 %Falar das nossas primitivas, como é feita serialização dos bytes em cada mensagem, etc
 %Deixa que eu faço (Eduardo)
 
-O intercâmbio de mensagens entre clientes, ou entre um cliente e a autoridade de confiança, se dá através do envio de mensagens  binárias de SMS. Em nosso sistema existem 4 tipos de mensagens (4 primitivas). Nesta seção apresentamos como é feita a divisão de bytes em cada tipo de mensagem \footnote{Os bytes de uma mensagem serão numerados iniciando de 1.}. A figura \ref{fig:SequenceDiagramKGB} ilustra o fluxo de estabelecimento da chave privada de um usuário com a autoridade certificadora. O figura \ref{fig:SequenceDiagramClient} ilustra o fluxo de autenticação e troca de mensagens entre dois usuários. As seções seguintes especificam o formato de cada primitiva do sistema.
+O intercâmbio de mensagens entre clientes, ou entre um cliente e a autoridade de confiança, se dá através do envio de mensagens  binárias de SMS. Em nosso sistema existem 4 tipos de mensagens (4 primitivas). Nesta seção apresentamos como é feita a divisão de bytes em cada tipo de mensagem \footnote{Os bytes de uma mensagem serão numerados iniciando de 1.}. A figura \ref{fig:SequenceDiagramKGB} ilustra o fluxo de estabelecimento da chave privada de um usuário com a autoridade certificadora. A figura \ref{fig:SequenceDiagramClient} ilustra o fluxo de autenticação e troca de mensagens entre dois usuários. As seções seguintes especificam o formato de cada primitiva do sistema.
 
 \begin{figure}[h]
 	\centering		\includegraphics[width=1.00\textwidth]{figuras/SequenceDiagramKGB.png}
@@ -983,6 +983,13 @@ A partir do byte 8, ocorre o armazenamento dinâmico dos parâmetros. É reservado 
 \subsection{SigncryptedMessage}
 Representa uma mensagem cifrassinada a ser trocada entre usuários.
 
+\begin{figure}[htp]
+	\centering
+		\includegraphics{figuras/signcryptedmessage.PNG}
+	\caption{SigncryptedMessage}
+	\label{fig:signcryptedmessage}
+\end{figure}
+
 \begin{itemize}
 	\item Byte 1: Byte fixo que identifica uma mensagem do nosso protocolo. Valor $0x42$.
 	\item Byte 2: Byte fixo, identifica a primitiva \textbf{SigncryptedMessage}. Valor $0x03$.
@@ -999,12 +1006,6 @@ A partir do byte 8, ocorre o armazenamento dinâmico dos parâmetros. É reservado 
 	\item Parâmetro 3: Parâmetro $z$, parte do criptograma.	
 \end{itemize}
 
-\begin{figure}[h]
-	\centering
-		\includegraphics{figuras/signcryptedmessage.PNG}
-	\caption{SigncryptedMessage}
-	\label{fig:signcryptedmessage}
-\end{figure}
 
 \chapter{Implementação} \label{cap:IMPLEMENTACAO}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1089,6 +1090,7 @@ Este problema ocorre devido às implementações internas das integrações entre as 
 
 \chapter{Conclusão}
 Ao longo do trabalho, foi possível observar que a criptografia em curvas elípticas (\emph{ECC}) já é uma alternativa viável em ambientes com restrições, principalmente de banda, como os serviços de telefonia móvel, apesar de sua considerável exigência de poder computacional. No entanto, o uso de esquemas híbridos, como o aqui proposto, alia as melhores qualidades dos dois paradigmas, possibilitando a implantação imediata de sistemas de segurança completos no contexto de dispositivos e aplicações móveis.
+
 Como resultado deste trabalho, obteve-se um esquema eficiente de criptografia de chave pública auto-certificado, baseado em identidades, onde os próprios usuários podem se autenticar na rede sem a necessidade de um dirétório de chaves públicas, que era utilizado em criptografia de chave pública.
 
 \section{Análise dos resultados}
