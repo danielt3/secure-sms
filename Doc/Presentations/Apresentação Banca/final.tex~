@@ -60,26 +60,28 @@
 
 \begin{frame}{Motiva\c{c}\~{a}o e Cen\'{a}rio}
 \begin{itemize}[<+->]
-\item Crescimento do uso do SMS no mundo: 
-\begin{description}
-\item 2,3 trilh\~{o}es de mensagens em 2010 (previs\~{a}o)
-\end{description}
 \item Plataforma leve e barata, com grande base de usu\'{a}rios:
 \begin{description}
 \item[]2,4 bilh\~{o}es de pessoas
 \end{description}
 \item Diversas oportunidades econ\^{o}micas: 
 \begin{description}
-\item72,5 bilh\~{o}es de d\'{o}lares para operadoras em 2006
+\item 72,5 bilh\~{o}es de d\'{o}lares para operadoras em 2006
 \end{description}
+\item Crescimento do uso do SMS no mundo: 
+\begin{description}
+\item 2,3 trilh\~{o}es de mensagens em 2010 (previs\~{a}o)
+\end{description}
+\item Aus\^{e}ncia de uma solu\c{c}\~{a}o criptogr\'{a}fica universalmente adotada.
 \item Possibilidade de produzir pesquisa: inova\c{c}\~{a}o
 \end{itemize}
 \end{frame}
 
 %%\subsection{Objetivos}
 
-\begin{frame}{Objetivos}
+\begin{frame}{Objetivo}
 \begin{block}
+
 "Projetar, implementar e implantar um sistema capaz de prover confidencialidade, integridade e autenticidade ao servi\c{c}o de \emph{SMS} sem extrapolar as limita\c{c}\~{o}es de recursos t\'{i}picas do ambiente."
 \end{block}
 \end{frame}
@@ -89,7 +91,7 @@
 \begin{frame}{Metodologia}
 \begin{itemize}[<+->]
 \item Estudo do cen\'{a}rio, detalhamento do problema e levantamento de requisitos
-\item Estudo de esquemas de segurança em busca de uma solu\c{c}\~{a}oo adequada ao problema
+\item Estudo de esquemas de seguran\c{c}a em busca de uma solu\c{c}\~{a}o adequada ao problema
 \item Projeto, implementa\c{c}\~{a}o e testes
 \end{itemize}
 \end{frame}
@@ -103,20 +105,26 @@
 \item Comunica\c{c}\~{a}o interpessoal
 \item Transa\c{c}\~{o}es banc\'{a}rias e pagamentos
 \item Comunica\c{c}\~{a}o corporativa e governamental sigilosa
-\item Monitora\c{c}\~{a}o remota
 \end{itemize}
+
+\begin{figure}
+	\centering
+		\includegraphics[width=0.50\textwidth]{figuras/aplicacoes.png}
+	\label{fig:aplicacoes}
+\end{figure}
+
 \end{frame}
 
 %\subsection{Servi\c{c}os de Seguran\c{c}a}
 
-\begin{frame}{Servi\c{c}os de Seguran\c{c}a}
-\begin{itemize}[<+->]
-\item Confidencialidade
-\item Integridade
-\item Autenticidade
-\item Irretratabilidade
-\end{itemize}
-\end{frame}
+%\begin{frame}{Servi\c{c}os de Seguran\c{c}a}
+%\begin{itemize}[<+->]
+%\item Confidencialidade
+%\item Integridade
+%\item Autenticidade
+%\item Irretratabilidade
+%\end{itemize}
+%\end{frame}
 
 %\subsection{Defini\c{c}\~{a}o do Problema}
 
@@ -126,9 +134,65 @@
 \item Recursos limitados: processamento, mem\'{o}ria, largura de banda
 \item Algoritmo \emph{A5} da rede \emph{GSM} quebrado
 \item Poucas solu\c{c}\~{o}es de seguran\c{c}a no mercado
-\item \emph{RSA}: cerca de \textit{15 mensagens} para trocar \textit{um} certificado
-\item Algoritmos sim\'{e}tricos: grande quantidade de senhas
+\item \emph{RSA}: cerca de \textit{20 mensagens} para trocar \textit{um} certificado
+\item Algoritmos sim\'{e}tricos: Dificuldade em gerenciar as chaves
 \end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{figure}
+	\centering
+		\includegraphics[width=0.85\textwidth]{figuras/1.png}
+	\label{fig:arq1}
+\end{figure}
+\end{frame}
+
+\begin{frame}{}
+\begin{figure}
+	\centering
+		\includegraphics[width=0.85\textwidth]{figuras/2.png}
+	\label{fig:arq2}
+\end{figure}
+\end{frame}
+
+\begin{frame}{}
+\begin{figure}
+	\centering
+		\includegraphics[width=0.85\textwidth]{figuras/3.png}
+	\label{fig:arq3}
+\end{figure}
+\end{frame}
+
+\begin{frame}{}
+\begin{figure}
+	\centering
+		\includegraphics[width=0.85\textwidth]{figuras/4.png}
+	\label{fig:arq4}
+\end{figure}
+\end{frame}
+
+\begin{frame}{}
+\begin{figure}
+	\centering
+		\includegraphics[width=0.85\textwidth]{figuras/5.png}
+	\label{fig:arq5}
+\end{figure}
+\end{frame}
+
+\begin{frame}{}
+\begin{figure}
+	\centering
+		\includegraphics[width=0.85\textwidth]{figuras/6.png}
+	\label{fig:arq6}
+\end{figure}
+\end{frame}
+
+\begin{frame}{}
+\begin{figure}
+	\centering
+		\includegraphics[width=0.85\textwidth]{figuras/7.png}
+	\label{fig:arq7}
+\end{figure}
 \end{frame}
 
 %\subsection{M\'{e}tricas e Requisitos}
@@ -136,7 +200,7 @@
 \begin{frame}{M\'{e}tricas e Requisitos}
 \begin{itemize}[<+->]
 \item Tempo de espera
-\item Espaço útil da mensagem
+\item Espa\c{c}o \'{u}til da mensagem
 \item Tamanho da chave
 \item \textit{Overhead} do protocolo
 \end{itemize}
@@ -145,55 +209,101 @@
 \section{Solu\c{c}\~{a}o}
 
 %\subsection{Especifica\c{c}\~{a}o}
-\begin{frame}{Especifica\c{c}\~{a}o}
-Especificacao
+\begin{frame}{Esquema de seguran\c{c}a desenvolvido}
+
+Ao longo do trabalho, foi bolado um esquema de seguran\c{c}a inovador
+
+\begin{itemize}[<+->]
+\item Curvas el\'{i}pticas
+\item Chaves menores para um n\'{i}vel de seguran\c{c}a compat\'{i}vel
+\item Criptografia auto-certificada
+\item Criptografia baseada em identidades
+\item Publica\c{c}\~{a}o de artigo no SBSEG'08 definindo o novo esquema
+\item Publica\c{c}\~{a}o de artigo no WTICG'08 sobre o nosso projeto de formatura (men\c{c}\~{a}o honrosa)
+\end{itemize}
+
 \end{frame}
 
 %\subsection{Arquitetura}
 \begin{frame}{Arquitetura}
-Arquitetura
+\begin{figure}
+	\centering
+		\includegraphics[width=1.00\textwidth]{figuras/arq.png}
+	\label{fig:arq}
+\end{figure}
+
+
 \end{frame}
 
-%\subsection{Implementa\c{c}\~{a}o}
+\section{Implementa\c{c}\~{a}o}
+
 \begin{frame}{Implementa\c{c}\~{a}o}
-	\begin{itemize}[<+->]
-	\item Curvas el\'{i}pticas
-	\item Chaves menores
-	\item Criptografia auto-certificada
-	\item Criptografia baseada em identidades
-	\item Gerenciamento de chaves simplificado
+\begin{itemize}[<+->]
+\item Esquema implementado em J2ME
+\item Testes de viabilidade: OK
+\item Implementa\c{c}\~{a}o de protocolo de mensagens
+\item Implementa\c{c}\~{a}o de persist\^{e}ncia: Floggy
+\item Implementa\c{c}\~{a}o da interface gr\'{a}fica
 \end{itemize}
+\end{frame}
+
+\begin{frame}{Classes}
+
+
+\begin{figure}
+	\includegraphics[width=0.65\textwidth]{figuras/class_diagram.PNG}
+	\caption{Diagrama de classes do sistema}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}{Troca de Mensagens}
+
+
+\begin{figure}
+	\includegraphics[width=0.65\textwidth]{figuras/seq.PNG}
+	\caption{Fluxo de autentica\c{c}\~{a}o e troca de mensagens}
+\end{figure}
+
 \end{frame}
 
 %\subsection{Resultados}
 \begin{frame}{Resultados}
-res
+
+\begin{table}[h]\centering
+\caption{Testes com a implementa\c{c}\~{a}o final (chaves de 176 bits)} \label{tab:bdcps176final}
+\begin{tabular}{cccccc}\hline
+Opera\c{c}\~{a}o                   & Nokia E51(ms)   &  Nokia 6275(ms) & Emulador(ms)\\\hline
+Set-Public-Value	&	66,9	& 750,6  & 204,5	 \\\hline
+Private-Key-Extract &	379,0 &	4381,7 &	1033,9 \\\hline
+Check-Private-Key	& 1164,9	& 12171,1  & 3209,9	 \\\hline
+Set-Public-Key	& 379,5 &	4332,4 &	1013,3 \\\hline
+Public-Key-Validate	&	1192,6 &	13112,0 & 3455,8 \\\hline
+Signcryption	&302,4 &	1633,5 & 	428,8 \\\hline
+Unsigncryption	&	266,7 &	1957,0 & 492,2 \\\hline
+\end{tabular}
+\end{table}
 \end{frame}
 
 
 \section{Conclus\~{a}o}
+
 \begin{frame}{Conclus\~{a}o}
-concl
+
+\begin{itemize}[<+->]
+\item Projeto motivou a cria\c{c}\~{a}o de um esquema criptogr\'{a}fico inovador
+\item Solu\c{c}\~{a}o implementada com sucesso, alta portabilidade
+\item Possibilidade de comercializa\c{c}\~{a}o para bancos, operadoras, empresas,etc.
+%TODO: algu�m p�e mais
+\end{itemize}
+
 \end{frame}
 
+%??? adeus
 %\subsection{Aplica\c{c}\~{a}o}
-\begin{frame}
-aplic
-\end{frame}
-
-%\subsection{Pesquisa}
-\begin{frame}
-pesq
-\end{frame}
-
-%\subsection{Desenvolvimentos futuros}
-\begin{frame}{Desenvolvimentos futuros}
-fut
-\end{frame}
-
-\begin{frame}{Refer\^{e}ncias}
-fut
-\end{frame}
+%\begin{frame}
+%aplic
+%\end{frame}
 
 \begin{frame}{Contato}
 
@@ -220,76 +330,5 @@ fut
 \end{frame}
 
 
-
-
-
-
-\begin{frame}{Agenda}
-This is a short introduction to Beamer class.
-\end{frame}
-
-\begin{frame}{Motiva\c{c}\~{a}o}
-\begin{itemize}
-\pause \item Beamer is a wonderful class
-\pause \item One can make animations
-\pause \item One uses the \textbf{pause} command, for example
-\pause \item in order to bring in important ideas
-\end{itemize}
-This is a short introduction to Beamer class.
-\end{frame}
-
-\begin{frame}{Introduction}
-\begin{itemize}
-\item<2-> appears from slide 2 on
-\item<2-4> appears from slide 2 to slide 4
-\item<4> appears on slide 4
-\item<3-> appears from slide 3 on
-\item<5-> 5
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Conclus\~{a}o}
-\begin{itemize}[<+->]
-\item L
-\item A
-\item T
-\item E
-\item X
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-
-\begin{itemize}
-\item Language used by Beamer: L\uncover<2->{A}TEX
-\item Language used by Beamer: L\only<2->{A}TEX
-\end{itemize}
-
-\end{frame}
-
-\begin{frame}
-
-\uncover<2->
-{appear from slide 2 on\\}
-\uncover<3-4>
-{appears from 3 to slide 4\\}
-\uncover<4>{appears on slide 4\\}
-\uncover<3->{appears from slide 3 on\\}
-
-\end{frame}
-
-\begin{frame}
-\begin{block}{Block title}
-This is a block in blue
-\end{block}
-
-\begin{alertblock}{Alert-block title}
-This is a block in red
-\end{alertblock}
-
-\begin{exampleblock}{Example-block title}
-This is a block in green
-\end{exampleblock}
-\end{frame}
 
 \end{document}

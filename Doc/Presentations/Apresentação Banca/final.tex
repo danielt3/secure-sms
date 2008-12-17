@@ -72,7 +72,7 @@
 \begin{description}
 \item 2,3 trilh\~{o}es de mensagens em 2010 (previs\~{a}o)
 \end{description}
-\item Aus\^{e}ncia de uma solu\c{c}\~{a}o criptográfica universalmente adotada.
+\item Aus\^{e}ncia de uma solu\c{c}\~{a}o criptogr\'{a}fica universalmente adotada.
 \item Possibilidade de produzir pesquisa: inova\c{c}\~{a}o
 \end{itemize}
 \end{frame}
@@ -139,47 +139,6 @@
 \end{itemize}
 \end{frame}
 
-%\subsection{M\'{e}tricas e Requisitos}
-
-\begin{frame}{M\'{e}tricas e Requisitos}
-\begin{itemize}[<+->]
-\item Tempo de espera
-\item Espa\c{c}o \'{u}til da mensagem
-\item Tamanho da chave
-\item \textit{Overhead} do protocolo
-\end{itemize}
-\end{frame}
-
-\section{Solu\c{c}\~{a}o}
-
-%\subsection{Especifica\c{c}\~{a}o}
-\begin{frame}{Esquema de segurança desenvolvido}
-
-Ao longo do trabalho, foi bolado um esquema de segurança inovador
-
-\begin{itemize}[<+->]
-\item Curvas el\'{i}pticas
-\item Chaves menores para um nível de segurança compatível
-\item Criptografia auto-certificada
-\item Criptografia baseada em identidades
-\item Publicação de artigo no SBSEG'08 definindo o novo esquema
-\item Publicação de artigo no WTICG'08 sobre o nosso projeto de formatura (menção honrosa)
-\end{itemize}
-
-\end{frame}
-
-%\subsection{Arquitetura}
-\begin{frame}{Arquitetura}
-\begin{figure}
-	\centering
-		\includegraphics[width=1.00\textwidth]{figuras/arq.png}
-	\label{fig:arq}
-\end{figure}
-
-
-\end{frame}
-
-
 \begin{frame}{}
 \begin{figure}
 	\centering
@@ -236,16 +195,55 @@ Ao longo do trabalho, foi bolado um esquema de segurança inovador
 \end{figure}
 \end{frame}
 
+%\subsection{M\'{e}tricas e Requisitos}
 
-\section{Implementação}
+\begin{frame}{M\'{e}tricas e Requisitos}
+\begin{itemize}[<+->]
+\item Tempo de espera
+\item Espa\c{c}o \'{u}til da mensagem
+\item Tamanho da chave
+\item \textit{Overhead} do protocolo
+\end{itemize}
+\end{frame}
 
-\begin{frame}{Implementação}
+\section{Solu\c{c}\~{a}o}
+
+%\subsection{Especifica\c{c}\~{a}o}
+\begin{frame}{Esquema de seguran\c{c}a desenvolvido}
+
+Ao longo do trabalho, foi bolado um esquema de seguran\c{c}a inovador
+
+\begin{itemize}[<+->]
+\item Curvas el\'{i}pticas
+\item Chaves menores para um n\'{i}vel de seguran\c{c}a compat\'{i}vel
+\item Criptografia auto-certificada
+\item Criptografia baseada em identidades
+\item Publica\c{c}\~{a}o de artigo no SBSEG'08 definindo o novo esquema
+\item Publica\c{c}\~{a}o de artigo no WTICG'08 sobre o nosso projeto de formatura (men\c{c}\~{a}o honrosa)
+\end{itemize}
+
+\end{frame}
+
+%\subsection{Arquitetura}
+\begin{frame}{Arquitetura}
+\begin{figure}
+	\centering
+		\includegraphics[width=1.00\textwidth]{figuras/arq.png}
+	\label{fig:arq}
+\end{figure}
+
+
+\end{frame}
+
+\section{Implementa\c{c}\~{a}o}
+
+\begin{frame}{Implementa\c{c}\~{a}o}
 \begin{itemize}[<+->]
 \item Esquema implementado em J2ME
 \item Testes de viabilidade: OK
-\item Implementação de protocolo de mensagens
-\item Implementação de persistência: Floggy
-\item Implementação da interface gráfica
+\item Implementa\c{c}\~{a}o de protocolo de mensagens
+\item Implementa\c{c}\~{a}o de persist\^{e}ncia: Floggy
+\item Implementa\c{c}\~{a}o da interface gr\'{a}fica
 \end{itemize}
 \end{frame}
 
@@ -259,13 +257,20 @@ Ao longo do trabalho, foi bolado um esquema de segurança inovador
 
 \end{frame}
 
+\begin{frame}{Troca de Mensagens}
+\begin{figure}
+	\includegraphics[width=0.65\textwidth]{figuras/seq.png}
+	\caption{Fluxo de autentica\c{c}\~{a}o e troca de mensagens}
+\end{figure}
+\end{frame}
+
 %\subsection{Resultados}
 \begin{frame}{Resultados}
 
 \begin{table}[h]\centering
-\caption{Testes com a implementação final (chaves de 176 bits)} \label{tab:bdcps176final}
+\caption{Testes com a implementa\c{c}\~{a}o final (chaves de 176 bits)} \label{tab:bdcps176final}
 \begin{tabular}{cccccc}\hline
-Operação                   & Nokia E51(ms)   &  Nokia 6275(ms) & Emulador(ms)\\\hline
+Opera\c{c}\~{a}o                   & Nokia E51(ms)   &  Nokia 6275(ms) & Emulador(ms)\\\hline
 Set-Public-Value	&	66,9	& 750,6  & 204,5	 \\\hline
 Private-Key-Extract &	379,0 &	4381,7 &	1033,9 \\\hline
 Check-Private-Key	& 1164,9	& 12171,1  & 3209,9	 \\\hline
@@ -283,10 +288,10 @@ Unsigncryption	&	266,7 &	1957,0 & 492,2 \\\hline
 \begin{frame}{Conclus\~{a}o}
 
 \begin{itemize}[<+->]
-\item Projeto motivou a criação de um esquema criptográfico inovador
-\item Solução implementada com sucesso, alta portabilidade
-\item Possibilidade de comercialização para bancos, operadoras, empresas,etc.
-%TODO: alguém põe mais
+\item Projeto motivou a cria\c{c}\~{a}o de um esquema criptogr\'{a}fico inovador
+\item Solu\c{c}\~{a}o implementada com sucesso, alta portabilidade
+\item Possibilidade de comercializa\c{c}\~{a}o para bancos, operadoras, empresas,etc.
+%TODO: alguï¿½m pï¿½e mais
 \end{itemize}
 
 \end{frame}

@@ -2,6 +2,6 @@
 \select@language {brazil}
 \beamer@sectionintoc {1}{Introdu\c {c}\~{a}o}{2}{0}{1}
 \beamer@sectionintoc {2}{Necessidade}{15}{0}{2}
-\beamer@sectionintoc {3}{Solu\c {c}\~{a}o}{29}{0}{3}
-\beamer@sectionintoc {4}{Implementa\c c\~ao}{44}{0}{4}
-\beamer@sectionintoc {5}{Conclus\~{a}o}{52}{0}{5}
+\beamer@sectionintoc {3}{Solu\c {c}\~{a}o}{36}{0}{3}
+\beamer@sectionintoc {4}{Implementa\c {c}\~{a}o}{44}{0}{4}
+\beamer@sectionintoc {5}{Conclus\~{a}o}{53}{0}{5}
