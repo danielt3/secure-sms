@@ -7,6 +7,6 @@ MainFile=Monografia.tex
 UseBibTeX=1
 UseMakeIndex=0
 ActiveProfile=LaTeX => PDF
-ProjectLanguage=
-ProjectDialect=
+ProjectLanguage=de
+ProjectDialect=DE
 
